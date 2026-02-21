@@ -272,11 +272,10 @@
 // --- Netatmo ---
 // 1. Jdi na https://dev.netatmo.com → "Create an app"
 // 2. Zkopíruj client_id a client_secret
-// 3. Vyplň svůj Netatmo email a heslo
-const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';   // např. '60f1a2b3c4d5e6f7a8b9c0d1'
-const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';   // např. 'AbCdEfGhIjKlMnOpQrStUvWx'
-const NETATMO_USERNAME      = 'michal.prouza@hotmail.com';   // tvůj Netatmo email
-const NETATMO_PASSWORD      = 'Uzikal6kat@';   // tvůj Netatmo heslo
+// 3. V nastavení aplikace přidej Redirect URI: URL této stránky (např. https://uzivatel.github.io/home_dashboard/)
+// 4. Klikni "Připojit Netatmo" v dashboardu – přihlásíš se jednorázově přes Netatmo web
+const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';
+const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';
 // Alternativa: vlož přímo access_token (platný ~3 hodiny, pak je třeba obnovit)
 const NETATMO_ACCESS_TOKEN  = '';
 
@@ -335,25 +334,80 @@ async function fetchWeather() {
 }
 
 // ════════════════════════════════════════════════════════
-//  NETATMO
+//  NETATMO  (OAuth2 Authorization Code flow)
 // ════════════════════════════════════════════════════════
-let _netatmoToken = NETATMO_ACCESS_TOKEN;
 
-async function getNetatmoToken() {
-  if (_netatmoToken) return _netatmoToken;
-  if (!NETATMO_CLIENT_ID || !NETATMO_USERNAME) return null;
+// Zpracuje callback od Netatmo po přihlášení (code v URL)
+async function handleNetatmoCallback() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('state') !== 'netatmo' || !params.get('code')) return;
+  const code = params.get('code');
+  history.replaceState({}, '', window.location.pathname);
+  const el = document.getElementById('netatmo-content');
+  el.innerHTML = '<div class="netatmo-notice">Přihlašuji k Netatmo…</div>';
   try {
     const body = new URLSearchParams({
-      grant_type:'password', client_id:NETATMO_CLIENT_ID,
-      client_secret:NETATMO_CLIENT_SECRET,
-      username:NETATMO_USERNAME, password:NETATMO_PASSWORD, scope:'read_station'
+      grant_type: 'authorization_code', client_id: NETATMO_CLIENT_ID,
+      client_secret: NETATMO_CLIENT_SECRET, code,
+      redirect_uri: location.origin + location.pathname
     });
-    const data = await (await fetch('https://api.netatmo.com/oauth2/token',{
-      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body
+    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
+      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
     })).json();
-    if (data.access_token) { _netatmoToken = data.access_token; return _netatmoToken; }
+    if (data.access_token) {
+      localStorage.setItem('netatmo_access_token', data.access_token);
+      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
+      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
+    }
   } catch(e) {}
+}
+
+async function refreshNetatmoToken(refreshToken) {
+  try {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token', client_id: NETATMO_CLIENT_ID,
+      client_secret: NETATMO_CLIENT_SECRET, refresh_token: refreshToken
+    });
+    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
+      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
+    })).json();
+    if (data.access_token) {
+      localStorage.setItem('netatmo_access_token', data.access_token);
+      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
+      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
+      return data.access_token;
+    }
+  } catch(e) {}
+  localStorage.removeItem('netatmo_access_token');
+  localStorage.removeItem('netatmo_refresh_token');
+  localStorage.removeItem('netatmo_expires_at');
   return null;
+}
+
+async function getNetatmoToken() {
+  if (NETATMO_ACCESS_TOKEN) return NETATMO_ACCESS_TOKEN;
+  const expiresAt = parseInt(localStorage.getItem('netatmo_expires_at') || '0');
+  const accessToken = localStorage.getItem('netatmo_access_token');
+  if (accessToken && Date.now() < expiresAt - 60000) return accessToken;
+  const refreshToken = localStorage.getItem('netatmo_refresh_token');
+  if (refreshToken && NETATMO_CLIENT_ID) return await refreshNetatmoToken(refreshToken);
+  return null;
+}
+
+function authorizeNetatmo() {
+  const params = new URLSearchParams({
+    client_id: NETATMO_CLIENT_ID,
+    redirect_uri: location.origin + location.pathname,
+    scope: 'read_station', state: 'netatmo'
+  });
+  window.location.href = `https://api.netatmo.com/oauth2/authorize?${params}`;
+}
+
+function disconnectNetatmo() {
+  localStorage.removeItem('netatmo_access_token');
+  localStorage.removeItem('netatmo_refresh_token');
+  localStorage.removeItem('netatmo_expires_at');
+  fetchNetatmo();
 }
 
 const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
@@ -367,15 +421,19 @@ async function fetchNetatmo() {
   const el = document.getElementById('netatmo-content');
   const token = await getNetatmoToken();
   if (!token) {
-    el.innerHTML='<div class="netatmo-notice">Nastav Netatmo přihlašovací údaje v kódu (NETATMO_CLIENT_ID…).</div>';
+    el.innerHTML = NETATMO_CLIENT_ID
+      ? `<div class="netatmo-notice">Netatmo není připojeno. <button onclick="authorizeNetatmo()" style="font-family:inherit;font-size:0.65rem;padding:2px 8px;border:1px solid var(--rule);background:none;cursor:pointer;margin-left:4px;">Připojit Netatmo →</button></div>`
+      : `<div class="netatmo-notice">Nastav NETATMO_CLIENT_ID a NETATMO_CLIENT_SECRET v kódu.</div>`;
     return;
   }
   try {
-    const data = await (await fetch(`https://api.netatmo.com/api/getstationsdata?access_token=${token}`)).json();
+    const data = await (await fetch('https://api.netatmo.com/api/getstationsdata', {
+      headers: { Authorization: `Bearer ${token}` }
+    })).json();
     const devices = data?.body?.devices;
     if (!devices?.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
 
-    let html='<div class="netatmo-grid">';
+    let html='<div style="text-align:right;margin-bottom:6px"><button onclick="disconnectNetatmo()" style="font-family:var(--font-mono,\'JetBrains Mono\',monospace);font-size:0.58rem;padding:1px 6px;border:1px solid var(--rule);background:none;color:var(--ink-light);cursor:pointer">odpojit</button></div><div class="netatmo-grid">';
     for (const station of devices) {
       const mods = [
         {name: station.module_name||'Vnitřní', dd: station.dashboard_data},
@@ -520,6 +578,7 @@ function renderTasks() {
 // ════════════════════════════════════════════════════════
 async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
+  await handleNetatmoCallback();
   await Promise.all([fetchWeather(), fetchNetatmo(), fetchGrowatt(), fetchCalendar()]);
   renderTasks();
   const now=new Date();
