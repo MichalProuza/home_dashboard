@@ -34,57 +34,20 @@ def safe_float(val, default=0.0):
     except (TypeError, ValueError):
         return default
 
-SERVERS = [
-    "https://openapi.growatt.com/",
-    "https://openapi-eu.growatt.com/",
-    "https://openapi-us.growatt.com/",
-]
-
-BROWSER_HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    ),
-    "Origin": "https://server.growatt.com",
-    "Referer": "https://server.growatt.com/",
-    "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
-}
-
-def try_login(server_url):
+def fetch():
     try:
         api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
         api = growattServer.GrowattApi()
-    # Správný název atributu je server_url (ne server)
-    api.server_url = server_url
-    # Přidej browser-like hlavičky do session
-    if hasattr(api, 'session'):
-        api.session.headers.update(BROWSER_HEADERS)
-    login_res = api.login(USERNAME, PASSWORD)
-    return api, login_res
 
-def fetch():
-    print(f"INFO: growattServer verze: {growattServer.__version__ if hasattr(growattServer, '__version__') else 'neznámá'}")
+    try:
+        login_res = api.login(USERNAME, PASSWORD)
+    except Exception as e:
+        print(f"ERROR: Přihlášení selhalo: {e}")
+        sys.exit(1)
 
-    api = None
-    login_res = None
-    for server_url in SERVERS:
-        print(f"INFO: Zkouším server: {server_url}")
-        try:
-            api, login_res = try_login(server_url)
-            if login_res and login_res.get("result") == 1:
-                print(f"INFO: Přihlášení OK přes {server_url}")
-                break
-            else:
-                print(f"WARN: Server {server_url} vrátil: {login_res}")
-                login_res = None
-        except Exception as e:
-            print(f"WARN: Server {server_url} selhal: {e}")
-            login_res = None
-
-    if not login_res:
-        print("ERROR: Žádný server nefungoval. Growatt API pravděpodobně blokuje IP adresy GitHub Actions.")
+    if not login_res or login_res.get("result") != 1:
+        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba: {login_res}")
         sys.exit(1)
 
     try:
