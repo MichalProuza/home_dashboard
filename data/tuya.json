@@ -1,0 +1,9 @@
+{
+  "updated": null,
+  "error": "Data zatím nebyla stažena. Nastav GitHub Secrets a spusť workflow.",
+  "device_name": null,
+  "online": null,
+  "gate_open": null,
+  "dp_used": null,
+  "raw_dps": []
+}
