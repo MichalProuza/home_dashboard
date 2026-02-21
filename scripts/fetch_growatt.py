@@ -35,19 +35,30 @@ def safe_float(val, default=0.0):
         return default
 
 def fetch():
-    api = growattServer.GrowattApi(add_random_user_id=True)
+    print(f"INFO: growattServer verze: {growattServer.__version__ if hasattr(growattServer, '__version__') else 'neznámá'}")
+
+    try:
+        api = growattServer.GrowattApi(add_random_user_id=True)
+    except TypeError:
+        api = growattServer.GrowattApi()
 
     try:
         login_res = api.login(USERNAME, PASSWORD)
     except Exception as e:
-        print(f"ERROR: Přihlášení selhalo: {e}")
+        print(f"ERROR: Přihlášení selhalo (výjimka): {e}")
         sys.exit(1)
+
+    print(f"DEBUG: login_res keys: {list(login_res.keys()) if isinstance(login_res, dict) else login_res}")
 
     if not login_res or login_res.get("result") != 1:
-        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba: {login_res}")
+        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba. Celá odpověď: {login_res}")
         sys.exit(1)
 
-    user_id = login_res["user"]["id"]
+    try:
+        user_id = login_res["user"]["id"]
+    except (KeyError, TypeError) as e:
+        print(f"ERROR: Nelze získat user_id z login_res: {e}. login_res: {login_res}")
+        sys.exit(1)
     now_utc = datetime.now(timezone.utc).isoformat()
     today = datetime.now().strftime("%Y-%m-%d")
 
