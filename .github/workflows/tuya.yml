@@ -1,0 +1,40 @@
+name: Fetch Tuya Gate Status
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # každých 5 minut
+  workflow_dispatch:           # možnost spustit ručně
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch Tuya gate status
+        env:
+          TUYA_ACCESS_ID:     ${{ secrets.TUYA_ACCESS_ID }}
+          TUYA_ACCESS_SECRET: ${{ secrets.TUYA_ACCESS_SECRET }}
+          TUYA_DEVICE_ID:     ${{ secrets.TUYA_DEVICE_ID }}
+          TUYA_REGION:        ${{ secrets.TUYA_REGION }}
+        run: python scripts/fetch_tuya.py
+
+      - name: Commit & push data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/tuya.json
+          git diff --cached --quiet || git commit -m "chore: update tuya gate status [skip ci]"
+          git push

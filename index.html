@@ -205,6 +205,26 @@
     .task-manage-link:hover { color: var(--ink-mid); }
     .empty-note { font-style: italic; font-size: 0.85rem; color: var(--ink-light); }
 
+    /* ── TUYA BRÁNA ── */
+    .gate-row { display: flex; align-items: center; gap: 14px; }
+    .gate-indicator {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid var(--rule);
+    }
+    .gate-indicator.open    { background: #c0392b; border-color: #c0392b; }
+    .gate-indicator.closed  { background: #27ae60; border-color: #27ae60; }
+    .gate-indicator.unknown { background: var(--paper-dark); }
+    .gate-status-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem; font-weight: 300; line-height: 1;
+    }
+    .gate-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); margin-top: 8px; }
+    .gate-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .gate-dps { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+    .gate-dp-row { display: flex; justify-content: space-between; gap: 8px; }
+    .gate-dp-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
+    .gate-dp-val { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink); }
+
     /* ── FOOTER ── */
     .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
   </style>
@@ -239,6 +259,11 @@
   <section>
     <div class="section-label">Netatmo stanice</div>
     <div id="netatmo-content"><div class="netatmo-notice">načítám…</div></div>
+  </section>
+
+  <section>
+    <div class="section-label">Brána · Tuya</div>
+    <div id="tuya-content"><div class="gate-notice">načítám…</div></div>
   </section>
 
   <section>
@@ -282,6 +307,11 @@ const NETATMO_ACCESS_TOKEN  = '';
 // --- Growatt ---
 // Soubor generovaný GitHub Actions skriptem každých 15 minut
 const GROWATT_JSON_URL = './data/growatt.json';
+
+// --- Tuya ---
+// Soubor generovaný GitHub Actions skriptem každých 5 minut
+// Potřebné GitHub Secrets: TUYA_ACCESS_ID, TUYA_ACCESS_SECRET, TUYA_DEVICE_ID, TUYA_REGION
+const TUYA_JSON_URL = './data/tuya.json';
 
 // --- Google Kalendář ---
 // Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
@@ -468,6 +498,56 @@ async function fetchNetatmo() {
 }
 
 // ════════════════════════════════════════════════════════
+//  TUYA BRÁNA  (čte data/tuya.json z GitHub Pages)
+// ════════════════════════════════════════════════════════
+async function fetchTuya() {
+  const el = document.getElementById('tuya-content');
+  try {
+    const res = await fetch(`${TUYA_JSON_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.error) {
+      el.innerHTML = `<div class="gate-notice">Chyba: ${data.error}</div>`;
+      return;
+    }
+
+    const open   = data.gate_open;   // true | false | null
+    const name   = data.device_name || 'Brána';
+    const online = data.online;
+    const upd    = data.updated
+      ? new Date(data.updated).toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'})
+      : '–';
+
+    const indClass  = open === true ? 'open' : open === false ? 'closed' : 'unknown';
+    const statusTxt = open === true ? 'OTEVŘENA' : open === false ? 'ZAVŘENA' : 'neznámo';
+
+    let dpsHtml = '';
+    if (data.raw_dps?.length) {
+      dpsHtml = '<div class="gate-dps">'
+        + data.raw_dps.map(dp =>
+            `<div class="gate-dp-row">
+               <span class="gate-dp-key">${dp.code}</span>
+               <span class="gate-dp-val">${JSON.stringify(dp.value)}</span>
+             </div>`
+          ).join('')
+        + '</div>';
+    }
+
+    el.innerHTML = `
+      <div class="gate-row">
+        <div class="gate-indicator ${indClass}"></div>
+        <div class="gate-status-text">${statusTxt}</div>
+      </div>
+      <div class="gate-meta">${name}${online === false ? ' · offline' : ''} · data z ${upd}</div>
+      ${dpsHtml}`;
+
+  } catch(e) {
+    el.innerHTML = '<div class="gate-notice">data/tuya.json nenalezen – nastav GitHub Secrets a spusť workflow.</div>';
+  }
+}
+
+// ════════════════════════════════════════════════════════
 //  GROWATT  (čte data/growatt.json z GitHub Pages)
 // ════════════════════════════════════════════════════════
 async function fetchGrowatt() {
@@ -587,7 +667,7 @@ function renderTasks() {
 async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
   await handleNetatmoCallback();
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchGrowatt(), fetchCalendar()]);
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar()]);
   renderTasks();
   const now=new Date();
   document.getElementById('last-update').textContent=
