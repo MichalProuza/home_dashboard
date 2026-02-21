@@ -413,7 +413,15 @@ function disconnectNetatmo() {
 const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
 
 function fmtN(k,v) {
-  const map={Temperature:`${v.toFixed(1)} °C`,Humidity:`${v} %`,CO2:`${v} ppm`,Noise:`${v} dB`,Pressure:`${v.toFixed(1)} hPa`,AbsolutePressure:`${v.toFixed(1)} hPa`,Rain:`${v.toFixed(1)} mm`,sum_rain_1:`${v.toFixed(1)} mm/h`,sum_rain_24:`${v.toFixed(1)} mm/24h`,WindStrength:`${v} km/h`,WindAngle:`${v}°`,GustStrength:`${v} km/h`,GustAngle:`${v}°`};
+  const n = Number(v);
+  const f1 = isNaN(n) ? v : n.toFixed(1);
+  const r  = isNaN(n) ? v : Math.round(n);
+  const map = {
+    Temperature:`${f1} °C`, Humidity:`${r} %`, CO2:`${r} ppm`, Noise:`${r} dB`,
+    Pressure:`${f1} hPa`, AbsolutePressure:`${f1} hPa`,
+    Rain:`${f1} mm`, sum_rain_1:`${f1} mm/h`, sum_rain_24:`${f1} mm/24h`,
+    WindStrength:`${r} km/h`, WindAngle:`${r}°`, GustStrength:`${r} km/h`, GustAngle:`${r}°`
+  };
   return map[k] ?? String(v);
 }
 
