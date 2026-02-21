@@ -35,17 +35,32 @@ def safe_float(val, default=0.0):
         return default
 
 SERVERS = [
-    "https://openapi.growatt.com",
-    "https://server.growatt.com",
-    "https://openapi-us.growatt.com",
+    "https://openapi.growatt.com/",
+    "https://openapi-eu.growatt.com/",
+    "https://openapi-us.growatt.com/",
 ]
+
+BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/122.0.0.0 Safari/537.36"
+    ),
+    "Origin": "https://server.growatt.com",
+    "Referer": "https://server.growatt.com/",
+    "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
+}
 
 def try_login(server_url):
     try:
         api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
         api = growattServer.GrowattApi()
-    api.server = server_url
+    # Správný název atributu je server_url (ne server)
+    api.server_url = server_url
+    # Přidej browser-like hlavičky do session
+    if hasattr(api, 'session'):
+        api.session.headers.update(BROWSER_HEADERS)
     login_res = api.login(USERNAME, PASSWORD)
     return api, login_res
 
