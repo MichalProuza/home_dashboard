@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0a;
+      --ink-mid: #3a3a3a;
+      --ink-light: #888;
+      --ink-faint: #ccc;
+      --paper: #f5f2ec;
+      --paper-dark: #e8e4db;
+      --rule: #d0ccc3;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 24px 40px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .date-line {
+      font-size: 0.82rem;
+      color: var(--ink-mid);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .header-right {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-light);
+      padding-top: 4px;
+    }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid var(--rule);
+      color: var(--ink-mid);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      cursor: pointer;
+      margin-top: 6px;
+      border-radius: 2px;
+      display: block;
+      margin-left: auto;
+    }
+    .refresh-btn:hover { background: var(--paper-dark); }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+    }
+
+    /* ── WEATHER ── */
+    .weather-main {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .weather-temp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.6rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+    .weather-desc { font-size: 1rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
+    .weather-details {
+      display: flex; gap: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--ink-mid); flex-wrap: wrap;
+    }
+    .weather-forecast { display: flex; margin-top: 12px; }
+    .forecast-day {
+      flex: 1; text-align: center; padding: 7px 4px;
+      border-left: 1px solid var(--rule);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .forecast-day:first-child { border-left: none; }
+    .forecast-name { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); }
+    .forecast-icon { font-size: 1.1rem; margin: 4px 0; }
+    .forecast-temps { font-size: 0.68rem; color: var(--ink-mid); }
+    .forecast-high { color: var(--ink); }
+
+    /* ── NETATMO ── */
+    .netatmo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .netatmo-module {
+      padding: 10px 6px 10px 0;
+      border-bottom: 1px solid var(--paper-dark);
+    }
+    .netatmo-module:nth-last-child(-n+2) { border-bottom: none; }
+    .netatmo-module-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-light);
+      margin-bottom: 5px;
+    }
+    .netatmo-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem; font-weight: 300; line-height: 1; margin-bottom: 3px;
+    }
+    .netatmo-rows { display: flex; flex-direction: column; gap: 2px; }
+    .netatmo-row { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+    .netatmo-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
+    .netatmo-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink); }
+    .netatmo-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+
+    /* ── GROWATT ── */
+    .growatt-main { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 12px; }
+    .growatt-power { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 300; line-height: 1; }
+    .growatt-power-label { font-size: 0.82rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
+    .growatt-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+    }
+    .growatt-cell { background: var(--paper); padding: 8px 10px; }
+    .growatt-cell-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-light); margin-bottom: 3px;
+    }
+    .growatt-cell-val { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--ink); }
+    .growatt-cell-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); margin-top: 2px; }
+    .battery-bar-wrap { height: 5px; background: var(--paper-dark); border-radius: 1px; margin-top: 5px; overflow: hidden; }
+    .battery-bar-fill { height: 100%; background: var(--ink-mid); border-radius: 1px; }
+    .direction-badge {
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; padding: 1px 5px; border: 1px solid var(--rule);
+      border-radius: 2px; color: var(--ink-mid); margin-left: 4px;
+    }
+    .growatt-updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 8px; }
+    .growatt-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+
+    /* ── CALENDAR ── */
+    .event-list { display: flex; flex-direction: column; gap: 5px; }
+    .event-item { display: flex; gap: 10px; align-items: baseline; }
+    .event-time { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-light); min-width: 72px; flex-shrink: 0; }
+    .event-dot { width: 4px; height: 4px; background: var(--ink); border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+    .event-title { font-size: 0.92rem; line-height: 1.35; }
+    .cal-meta { font-size: 0.85rem; font-style: italic; color: var(--ink-mid); margin-bottom: 10px; }
+    .ics-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--ink-light); font-style: italic; margin-top: 6px; }
+
+    /* ── TASKS ── */
+    .task-list { display: flex; flex-direction: column; gap: 1px; }
+    .task-item { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--paper-dark); }
+    .task-item:last-child { border-bottom: none; }
+    .task-check { width: 14px; height: 14px; border: 1.5px solid var(--ink-mid); border-radius: 1px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .task-item.done .task-check::after { content: '×'; font-size: 12px; color: var(--ink-mid); }
+    .task-text { font-size: 0.9rem; line-height: 1.4; }
+    .task-item.done .task-text { color: var(--ink-light); text-decoration: line-through; }
+    .task-manage-link { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--ink-light); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .task-manage-link:hover { color: var(--ink-mid); }
+    .empty-note { font-style: italic; font-size: 0.85rem; color: var(--ink-light); }
+
+    /* ── FOOTER ── */
+    .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="time" id="clock">--:--</div>
+      <div class="date-line" id="date-line">načítám…</div>
+    </div>
+    <div class="header-right">
+      <div id="last-update">–</div>
+      <button class="refresh-btn" onclick="initAll()">↺ obnovit</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-label">Počasí · Vranov u Brna</div>
+    <div class="weather-main">
+      <div class="weather-temp" id="w-temp">–</div>
+      <div class="weather-desc" id="w-desc">načítám…</div>
+    </div>
+    <div class="weather-details">
+      <span id="w-wind">💨 –</span>
+      <span id="w-humid">💧 –</span>
+      <span id="w-rain">🌧 –</span>
+    </div>
+    <div class="weather-forecast" id="w-forecast"></div>
+  </section>
+
+  <section>
+    <div class="section-label">Netatmo stanice</div>
+    <div id="netatmo-content"><div class="netatmo-notice">načítám…</div></div>
+  </section>
+
+  <section>
+    <div class="section-label">Solární systém · Growatt</div>
+    <div id="growatt-content"><div class="growatt-notice">načítám…</div></div>
+  </section>
+
+  <section>
+    <div class="section-label">Kalendář</div>
+    <div class="cal-meta" id="cal-meta"></div>
+    <div class="event-list" id="event-list"></div>
+    <div class="ics-notice" id="ics-notice"></div>
+  </section>
+
+  <section>
+    <div class="section-label">Úkoly</div>
+    <div class="task-list" id="task-list"><div class="empty-note">žádné úkoly</div></div>
+    <a href="tasks.html" class="task-manage-link">→ spravovat úkoly</a>
+  </section>
+
+  <footer class="footer">
+    <span>Vranov u Brna</span>
+    <span id="footer-date">–</span>
+  </footer>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  KONFIGURACE
+// ════════════════════════════════════════════════════════
+
+// --- Netatmo ---
+// 1. Jdi na https://dev.netatmo.com → "Create an app"
+// 2. Zkopíruj client_id a client_secret
+// 3. Vyplň svůj Netatmo email a heslo
+const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';   // např. '60f1a2b3c4d5e6f7a8b9c0d1'
+const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';   // např. 'AbCdEfGhIjKlMnOpQrStUvWx'
+const NETATMO_USERNAME      = 'michal.prouza@hotmail.com';   // tvůj Netatmo email
+const NETATMO_PASSWORD      = 'Uzikal6kat@';   // tvůj Netatmo heslo
+// Alternativa: vlož přímo access_token (platný ~3 hodiny, pak je třeba obnovit)
+const NETATMO_ACCESS_TOKEN  = '';
+
+// --- Growatt ---
+// Soubor generovaný GitHub Actions skriptem každých 15 minut
+const GROWATT_JSON_URL = './data/growatt.json';
+
+// --- Google Kalendář ---
+// Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
+// Kvůli CORS zabal přes proxy: 'https://corsproxy.io/?' + encodeURIComponent('https://calendar.google.com/...')
+const ICS_URL = '';
+
+// --- Poloha pro Open-Meteo ---
+const LAT = 49.043, LON = 16.558;   // Vranov u Brna
+
+// ════════════════════════════════════════════════════════
+//  HODINY
+// ════════════════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const days   = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+  const months = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+  document.getElementById('date-line').textContent =
+    `${days[now.getDay()]}, ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('footer-date').textContent =
+    `${now.getDate()}.${now.getMonth()+1}.${now.getFullYear()}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ════════════════════════════════════════════════════════
+//  OPEN-METEO POČASÍ
+// ════════════════════════════════════════════════════════
+const WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím'};
+const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'❄️',75:'❄️',80:'🌦',81:'🌧',82:'🌧',85:'🌨',95:'⛈',96:'⛈'};
+
+async function fetchWeather() {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}`
+      +`&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m,precipitation`
+      +`&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
+    const {current:c, daily:d} = await (await fetch(url)).json();
+    document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
+    document.getElementById('w-desc').textContent = WMO[c.weathercode]||'–';
+    document.getElementById('w-wind').textContent = `💨 ${Math.round(c.windspeed_10m)} km/h`;
+    document.getElementById('w-humid').textContent = `💧 ${c.relativehumidity_2m}%`;
+    document.getElementById('w-rain').textContent = `🌧 ${c.precipitation} mm`;
+    const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
+    document.getElementById('w-forecast').innerHTML = d.time.slice(0,5).map((t,i)=>{
+      const dn=new Date(t), name=i===0?'Dnes':i===1?'Zítra':dayN[dn.getDay()];
+      return `<div class="forecast-day"><div class="forecast-name">${name}</div><div class="forecast-icon">${WMO_ICON[d.weathercode[i]]||'–'}</div><div class="forecast-temps"><span class="forecast-high">${Math.round(d.temperature_2m_max[i])}°</span><span style="color:var(--ink-light)"> / ${Math.round(d.temperature_2m_min[i])}°</span></div></div>`;
+    }).join('');
+  } catch(e) { document.getElementById('w-desc').textContent='chyba načítání'; }
+}
+
+// ════════════════════════════════════════════════════════
+//  NETATMO
+// ════════════════════════════════════════════════════════
+let _netatmoToken = NETATMO_ACCESS_TOKEN;
+
+async function getNetatmoToken() {
+  if (_netatmoToken) return _netatmoToken;
+  if (!NETATMO_CLIENT_ID || !NETATMO_USERNAME) return null;
+  try {
+    const body = new URLSearchParams({
+      grant_type:'password', client_id:NETATMO_CLIENT_ID,
+      client_secret:NETATMO_CLIENT_SECRET,
+      username:NETATMO_USERNAME, password:NETATMO_PASSWORD, scope:'read_station'
+    });
+    const data = await (await fetch('https://api.netatmo.com/oauth2/token',{
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body
+    })).json();
+    if (data.access_token) { _netatmoToken = data.access_token; return _netatmoToken; }
+  } catch(e) {}
+  return null;
+}
+
+const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
+
+function fmtN(k,v) {
+  const map={Temperature:`${v.toFixed(1)} °C`,Humidity:`${v} %`,CO2:`${v} ppm`,Noise:`${v} dB`,Pressure:`${v.toFixed(1)} hPa`,AbsolutePressure:`${v.toFixed(1)} hPa`,Rain:`${v.toFixed(1)} mm`,sum_rain_1:`${v.toFixed(1)} mm/h`,sum_rain_24:`${v.toFixed(1)} mm/24h`,WindStrength:`${v} km/h`,WindAngle:`${v}°`,GustStrength:`${v} km/h`,GustAngle:`${v}°`};
+  return map[k] ?? String(v);
+}
+
+async function fetchNetatmo() {
+  const el = document.getElementById('netatmo-content');
+  const token = await getNetatmoToken();
+  if (!token) {
+    el.innerHTML='<div class="netatmo-notice">Nastav Netatmo přihlašovací údaje v kódu (NETATMO_CLIENT_ID…).</div>';
+    return;
+  }
+  try {
+    const data = await (await fetch(`https://api.netatmo.com/api/getstationsdata?access_token=${token}`)).json();
+    const devices = data?.body?.devices;
+    if (!devices?.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
+
+    let html='<div class="netatmo-grid">';
+    for (const station of devices) {
+      const mods = [
+        {name: station.module_name||'Vnitřní', dd: station.dashboard_data},
+        ...(station.modules||[]).map(m=>({name:m.module_name||m.type, dd:m.dashboard_data}))
+      ];
+      for (const mod of mods) {
+        if (!mod.dd) continue;
+        const skip = new Set(['time_utc','date_max_temp','date_min_temp','min_temp','max_temp','Temperature']);
+        html += `<div class="netatmo-module">
+          <div class="netatmo-module-name">${mod.name}</div>`;
+        if (mod.dd.Temperature !== undefined)
+          html += `<div class="netatmo-big">${mod.dd.Temperature.toFixed(1)}°C</div>`;
+        html += '<div class="netatmo-rows">';
+        for (const [k,v] of Object.entries(mod.dd)) {
+          if (skip.has(k) || v===null || v===undefined) continue;
+          html += `<div class="netatmo-row"><span class="netatmo-key">${NLABELS[k]||k}</span><span class="netatmo-val">${fmtN(k,v)}</span></div>`;
+        }
+        html += '</div></div>';
+      }
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML=`<div class="netatmo-notice">Chyba Netatmo: ${e.message}</div>`; }
+}
+
+// ════════════════════════════════════════════════════════
+//  GROWATT  (čte data/growatt.json z GitHub Pages)
+// ════════════════════════════════════════════════════════
+async function fetchGrowatt() {
+  const el = document.getElementById('growatt-content');
+  try {
+    const res = await fetch(`${GROWATT_JSON_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.error) { el.innerHTML=`<div class="growatt-notice">Chyba: ${data.error}</div>`; return; }
+    if (!data.plants?.length) { el.innerHTML='<div class="growatt-notice">Žádná zařízení.</div>'; return; }
+
+    const plant = data.plants[0];
+    const dev   = plant.devices?.[0];
+    const sf    = (v,d=0)=>typeof v==='number'?v:d;
+
+    const solar_w   = sf(dev?.solar_w   ?? plant.current_w);
+    const batt_pct  = sf(dev?.battery_pct);
+    const batt_w    = sf(dev?.battery_w);
+    const grid_w    = sf(dev?.grid_w);
+    const grid_dir  = dev?.grid_direction || 'export';
+    const load_w    = sf(dev?.load_w);
+    const today_kwh = sf(dev?.today_kwh  ?? plant.today_kwh);
+    const total_kwh = sf(dev?.total_kwh  ?? plant.total_kwh);
+    const exp_kwh   = sf(dev?.today_export_kwh);
+    const imp_kwh   = sf(dev?.today_import_kwh);
+
+    const fmt_w = w => Math.abs(w)>=1000 ? `${(Math.abs(w)/1000).toFixed(2)} kW` : `${Math.round(Math.abs(w))} W`;
+    const upd   = data.updated
+      ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
+      : '–';
+
+    el.innerHTML = `
+      <div class="growatt-main">
+        <div class="growatt-power">${fmt_w(solar_w)}</div>
+        <div class="growatt-power-label">aktuální výkon</div>
+      </div>
+      <div class="growatt-grid">
+        <div class="growatt-cell">
+          <div class="growatt-cell-label">Baterie</div>
+          <div class="growatt-cell-val">${batt_pct.toFixed(0)} %</div>
+          <div class="battery-bar-wrap"><div class="battery-bar-fill" style="width:${Math.min(100,batt_pct)}%"></div></div>
+          <div class="growatt-cell-sub">${batt_w>0?'+':''}${Math.round(batt_w)} W</div>
+        </div>
+        <div class="growatt-cell">
+          <div class="growatt-cell-label">Síť <span class="direction-badge">${grid_dir==='export'?'↑ export':'↓ import'}</span></div>
+          <div class="growatt-cell-val">${fmt_w(grid_w)}</div>
+          <div class="growatt-cell-sub">↑ ${exp_kwh.toFixed(1)} / ↓ ${imp_kwh.toFixed(1)} kWh dnes</div>
+        </div>
+        <div class="growatt-cell">
+          <div class="growatt-cell-label">Spotřeba</div>
+          <div class="growatt-cell-val">${fmt_w(load_w)}</div>
+        </div>
+        <div class="growatt-cell">
+          <div class="growatt-cell-label">Výroba dnes</div>
+          <div class="growatt-cell-val">${today_kwh.toFixed(2)} kWh</div>
+          <div class="growatt-cell-sub">celkem ${total_kwh.toFixed(0)} kWh</div>
+        </div>
+      </div>
+      <div class="growatt-updated">data z ${upd}</div>`;
+
+  } catch(e) {
+    el.innerHTML='<div class="growatt-notice">data/growatt.json nenalezen – nastav GitHub Actions a přidej secrets.</div>';
+  }
+}
+
+// ════════════════════════════════════════════════════════
+//  GOOGLE KALENDÁŘ (ICS)
+// ════════════════════════════════════════════════════════
+function parseICS(text) {
+  const events=[];
+  for (const block of text.split('BEGIN:VEVENT').slice(1)) {
+    const get=k=>{const m=block.match(new RegExp(k+'[^:]*:([^\\r\\n]+)'));return m?m[1].trim():'';};
+    const summary=get('SUMMARY'), dtstart=get('DTSTART');
+    if (!summary||!dtstart) continue;
+    const [y,mo,d]=[dtstart.slice(0,4),dtstart.slice(4,6),dtstart.slice(6,8)];
+    const allDay=!dtstart.includes('T');
+    const date=allDay?new Date(`${y}-${mo}-${d}T00:00:00`):new Date(`${y}-${mo}-${d}T${dtstart.slice(9,11)}:${dtstart.slice(11,13)}:00`);
+    events.push({summary,date,allDay});
+  }
+  return events;
+}
+
+async function fetchCalendar() {
+  const el=document.getElementById('event-list');
+  const meta=document.getElementById('cal-meta');
+  const notice=document.getElementById('ics-notice');
+  if (!ICS_URL) { notice.textContent='Nastav ICS_URL pro Google Kalendář.'; return; }
+  try {
+    const text=await (await fetch(ICS_URL)).text();
+    const now=new Date(), in14=new Date(now.getTime()+14*86400000);
+    const ev=parseICS(text).filter(e=>e.date>=now&&e.date<=in14).sort((a,b)=>a.date-b.date).slice(0,8);
+    if (!ev.length) { meta.textContent='Žádné události v příštích 14 dnech.'; return; }
+    meta.textContent=`Příštích ${ev.length} událostí:`;
+    const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
+    el.innerHTML=ev.map(e=>{
+      const p=n=>String(n).padStart(2,'0');
+      const t=e.allDay?`${dayN[e.date.getDay()]} ${e.date.getDate()}.${e.date.getMonth()+1}.`:`${dayN[e.date.getDay()]} ${e.date.getDate()}.${e.date.getMonth()+1}. ${p(e.date.getHours())}:${p(e.date.getMinutes())}`;
+      return `<div class="event-item"><div class="event-dot"></div><div class="event-time">${t}</div><div class="event-title">${e.summary}</div></div>`;
+    }).join('');
+  } catch(e) { notice.textContent='Chyba načítání kalendáře.'; }
+}
+
+// ════════════════════════════════════════════════════════
+//  ÚKOLY (localStorage)
+// ════════════════════════════════════════════════════════
+function renderTasks() {
+  const tasks=JSON.parse(localStorage.getItem('dashboard_tasks')||'[]');
+  const el=document.getElementById('task-list');
+  if (!tasks.length) { el.innerHTML='<div class="empty-note">žádné úkoly</div>'; return; }
+  el.innerHTML=tasks.map(t=>`<div class="task-item ${t.done?'done':''}"><div class="task-check"></div><div class="task-text">${t.text}</div></div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════
+async function initAll() {
+  document.getElementById('last-update').textContent='aktualizuji…';
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchGrowatt(), fetchCalendar()]);
+  renderTasks();
+  const now=new Date();
+  document.getElementById('last-update').textContent=
+    `↺ ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+
+initAll();
+setInterval(initAll, 15*60*1000);
+</script>
+</body>
+</html>

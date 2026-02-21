@@ -1,0 +1,38 @@
+name: Fetch Growatt Data
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # každých 15 minut
+  workflow_dispatch:           # možnost spustit ručně
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install growattServer
+
+      - name: Fetch Growatt data
+        env:
+          GROWATT_USER: ${{ secrets.GROWATT_USER }}
+          GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
+        run: python scripts/fetch_growatt.py
+
+      - name: Commit & push data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/growatt.json
+          git diff --cached --quiet || git commit -m "chore: update growatt data [skip ci]"
+          git push
