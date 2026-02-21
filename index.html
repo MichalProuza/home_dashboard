@@ -453,7 +453,7 @@ async function fetchNetatmo() {
         html += `<div class="netatmo-module">
           <div class="netatmo-module-name">${mod.name}</div>`;
         if (mod.dd.Temperature !== undefined)
-          html += `<div class="netatmo-big">${mod.dd.Temperature.toFixed(1)}°C</div>`;
+          html += `<div class="netatmo-big">${Number(mod.dd.Temperature).toFixed(1)}°C</div>`;
         html += '<div class="netatmo-rows">';
         for (const [k,v] of Object.entries(mod.dd)) {
           if (skip.has(k) || v===null || v===undefined) continue;
