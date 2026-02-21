@@ -34,30 +34,48 @@ def safe_float(val, default=0.0):
     except (TypeError, ValueError):
         return default
 
-def fetch():
-    print(f"INFO: growattServer verze: {growattServer.__version__ if hasattr(growattServer, '__version__') else 'neznámá'}")
+SERVERS = [
+    "https://openapi.growatt.com",
+    "https://server.growatt.com",
+    "https://openapi-us.growatt.com",
+]
 
+def try_login(server_url):
     try:
         api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
         api = growattServer.GrowattApi()
+    api.server = server_url
+    login_res = api.login(USERNAME, PASSWORD)
+    return api, login_res
 
-    try:
-        login_res = api.login(USERNAME, PASSWORD)
-    except Exception as e:
-        print(f"ERROR: Přihlášení selhalo (výjimka): {e}")
-        sys.exit(1)
+def fetch():
+    print(f"INFO: growattServer verze: {growattServer.__version__ if hasattr(growattServer, '__version__') else 'neznámá'}")
 
-    print(f"DEBUG: login_res keys: {list(login_res.keys()) if isinstance(login_res, dict) else login_res}")
+    api = None
+    login_res = None
+    for server_url in SERVERS:
+        print(f"INFO: Zkouším server: {server_url}")
+        try:
+            api, login_res = try_login(server_url)
+            if login_res and login_res.get("result") == 1:
+                print(f"INFO: Přihlášení OK přes {server_url}")
+                break
+            else:
+                print(f"WARN: Server {server_url} vrátil: {login_res}")
+                login_res = None
+        except Exception as e:
+            print(f"WARN: Server {server_url} selhal: {e}")
+            login_res = None
 
-    if not login_res or login_res.get("result") != 1:
-        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba. Celá odpověď: {login_res}")
+    if not login_res:
+        print("ERROR: Žádný server nefungoval. Growatt API pravděpodobně blokuje IP adresy GitHub Actions.")
         sys.exit(1)
 
     try:
         user_id = login_res["user"]["id"]
     except (KeyError, TypeError) as e:
-        print(f"ERROR: Nelze získat user_id z login_res: {e}. login_res: {login_res}")
+        print(f"ERROR: Nelze získat user_id: {e}. login_res: {login_res}")
         sys.exit(1)
     now_utc = datetime.now(timezone.utc).isoformat()
     today = datetime.now().strftime("%Y-%m-%d")
