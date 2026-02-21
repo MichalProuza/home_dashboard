@@ -96,16 +96,18 @@ def fetch():
                     mix = api.mix_system_status(sn, plant_id)
                     mix_total = api.mix_totals(sn, plant_id)
 
+                    pcharge1    = safe_float(mix.get("pcharge1", 0))
+                    pdischarge1 = safe_float(mix.get("pdischarge1", 0))
                     device_data.update({
                         "solar_w":        safe_float(mix.get("ppv")),
                         "battery_pct":    safe_float(mix.get("SOC")),
-                        "battery_w":      safe_float(mix.get("pcharge1", mix.get("pdischarge1", 0))),
+                        "battery_w":      pcharge1 - pdischarge1,
                         "battery_status": mix.get("batteryType", ""),
                         "grid_w":         safe_float(mix.get("pactogrid", mix.get("pactouser", 0))),
                         "grid_direction": "export" if safe_float(mix.get("pactogrid", 0)) > 0 else "import",
                         "load_w":         safe_float(mix.get("pLocalLoad", mix.get("pLoad", 0))),
-                        "today_kwh":      safe_float(mix_total.get("eChargeToday", mix_total.get("epvToday", 0))),
-                        "total_kwh":      safe_float(mix_total.get("eChargeTotal", mix_total.get("epvTotal", 0))),
+                        "today_kwh":      safe_float(mix_total.get("epvToday", mix_total.get("eChargeToday", 0))),
+                        "total_kwh":      safe_float(mix_total.get("epvTotal", mix_total.get("eChargeTotal", 0))),
                         "today_import_kwh":  safe_float(mix_total.get("etoUserToday", 0)),
                         "today_export_kwh":  safe_float(mix_total.get("etoGridToday", 0)),
                     })
