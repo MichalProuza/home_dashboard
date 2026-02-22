@@ -1,13 +1,11 @@
 name: Fetch Growatt Data
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'   # každých 15 minut
   workflow_dispatch:           # možnost spustit ručně
 
 jobs:
   fetch:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: write
 
