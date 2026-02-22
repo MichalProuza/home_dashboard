@@ -225,6 +225,13 @@
     .gate-dp-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
     .gate-dp-val { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink); }
 
+    /* ── JÍDELNÍČEK MŠ ── */
+    .menu-day-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--ink-mid); margin-bottom: 8px; }
+    .menu-week { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-light); margin-bottom: 10px; }
+    .menu-meals { display: flex; flex-direction: column; gap: 4px; }
+    .menu-meal { font-size: 0.9rem; line-height: 1.45; padding-left: 10px; border-left: 2px solid var(--rule); }
+    .menu-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+
     /* ── FOOTER ── */
     .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
   </style>
@@ -276,6 +283,11 @@
     <div class="cal-meta" id="cal-meta"></div>
     <div class="event-list" id="event-list"></div>
     <div class="ics-notice" id="ics-notice"></div>
+  </section>
+
+  <section>
+    <div class="section-label">Jídelníček MŠ · Vranov</div>
+    <div id="menu-content"><div class="menu-notice">načítám…</div></div>
   </section>
 
   <section>
@@ -662,12 +674,48 @@ function renderTasks() {
 }
 
 // ════════════════════════════════════════════════════════
+//  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
+// ════════════════════════════════════════════════════════
+const SCHOOL_MENU_URL = './data/school_menu.json';
+
+// Sob(6), Ne(0), Po(1) → pondeli; Út(2) → utery; St(3) → streda; Čt(4) → ctvrtek; Pá(5) → patek
+const MENU_DAY_MAP = { 0:'pondeli', 1:'pondeli', 2:'utery', 3:'streda', 4:'ctvrtek', 5:'patek', 6:'pondeli' };
+const MENU_DAY_FULL = { pondeli:'Pondělí', utery:'Úterý', streda:'Středa', ctvrtek:'Čtvrtek', patek:'Pátek' };
+
+async function fetchSchoolMenu() {
+  const el = document.getElementById('menu-content');
+  try {
+    const res = await fetch(`${SCHOOL_MENU_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.error) { el.innerHTML=`<div class="menu-notice">Chyba: ${data.error}</div>`; return; }
+
+    const dayKey  = MENU_DAY_MAP[new Date().getDay()];
+    const dayData = data.days?.[dayKey];
+
+    if (!dayData?.meals?.length) {
+      el.innerHTML=`<div class="menu-notice">Jídelníček pro ${MENU_DAY_FULL[dayKey]} není k dispozici.</div>`;
+      return;
+    }
+
+    el.innerHTML=`
+      <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
+      <div class="menu-week">${data.week||''}</div>
+      <div class="menu-meals">${dayData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
+
+  } catch(e) {
+    el.innerHTML='<div class="menu-notice">data/school_menu.json nenalezen – spusť workflow.</div>';
+  }
+}
+
+// ════════════════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════════════════
 async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
   await handleNetatmoCallback();
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar()]);
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchSchoolMenu()]);
   renderTasks();
   const now=new Date();
   document.getElementById('last-update').textContent=
