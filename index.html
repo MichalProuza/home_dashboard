@@ -205,6 +205,26 @@
     .task-manage-link:hover { color: var(--ink-mid); }
     .empty-note { font-style: italic; font-size: 0.85rem; color: var(--ink-light); }
 
+    /* ── TUYA BRÁNA ── */
+    .gate-row { display: flex; align-items: center; gap: 14px; }
+    .gate-indicator {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid var(--rule);
+    }
+    .gate-indicator.open    { background: #c0392b; border-color: #c0392b; }
+    .gate-indicator.closed  { background: #27ae60; border-color: #27ae60; }
+    .gate-indicator.unknown { background: var(--paper-dark); }
+    .gate-status-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem; font-weight: 300; line-height: 1;
+    }
+    .gate-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); margin-top: 8px; }
+    .gate-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .gate-dps { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+    .gate-dp-row { display: flex; justify-content: space-between; gap: 8px; }
+    .gate-dp-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
+    .gate-dp-val { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink); }
+
     /* ── FOOTER ── */
     .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
   </style>
@@ -242,6 +262,11 @@
   </section>
 
   <section>
+    <div class="section-label">Brána · Tuya</div>
+    <div id="tuya-content"><div class="gate-notice">načítám…</div></div>
+  </section>
+
+  <section>
     <div class="section-label">Solární systém · Growatt</div>
     <div id="growatt-content"><div class="growatt-notice">načítám…</div></div>
   </section>
@@ -272,17 +297,21 @@
 // --- Netatmo ---
 // 1. Jdi na https://dev.netatmo.com → "Create an app"
 // 2. Zkopíruj client_id a client_secret
-// 3. Vyplň svůj Netatmo email a heslo
-const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';   // např. '60f1a2b3c4d5e6f7a8b9c0d1'
-const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';   // např. 'AbCdEfGhIjKlMnOpQrStUvWx'
-const NETATMO_USERNAME      = 'michal.prouza@hotmail.com';   // tvůj Netatmo email
-const NETATMO_PASSWORD      = 'Uzikal6kat@';   // tvůj Netatmo heslo
+// 3. V nastavení aplikace přidej Redirect URI: URL této stránky (např. https://uzivatel.github.io/home_dashboard/)
+// 4. Klikni "Připojit Netatmo" v dashboardu – přihlásíš se jednorázově přes Netatmo web
+const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';
+const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';
 // Alternativa: vlož přímo access_token (platný ~3 hodiny, pak je třeba obnovit)
 const NETATMO_ACCESS_TOKEN  = '';
 
 // --- Growatt ---
 // Soubor generovaný GitHub Actions skriptem každých 15 minut
 const GROWATT_JSON_URL = './data/growatt.json';
+
+// --- Tuya ---
+// Soubor generovaný GitHub Actions skriptem každých 5 minut
+// Potřebné GitHub Secrets: TUYA_ACCESS_ID, TUYA_ACCESS_SECRET, TUYA_DEVICE_ID, TUYA_REGION
+const TUYA_JSON_URL = './data/tuya.json';
 
 // --- Google Kalendář ---
 // Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
@@ -335,31 +364,94 @@ async function fetchWeather() {
 }
 
 // ════════════════════════════════════════════════════════
-//  NETATMO
+//  NETATMO  (OAuth2 Authorization Code flow)
 // ════════════════════════════════════════════════════════
-let _netatmoToken = NETATMO_ACCESS_TOKEN;
 
-async function getNetatmoToken() {
-  if (_netatmoToken) return _netatmoToken;
-  if (!NETATMO_CLIENT_ID || !NETATMO_USERNAME) return null;
+// Zpracuje callback od Netatmo po přihlášení (code v URL)
+async function handleNetatmoCallback() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('state') !== 'netatmo' || !params.get('code')) return;
+  const code = params.get('code');
+  history.replaceState({}, '', window.location.pathname);
+  const el = document.getElementById('netatmo-content');
+  el.innerHTML = '<div class="netatmo-notice">Přihlašuji k Netatmo…</div>';
   try {
     const body = new URLSearchParams({
-      grant_type:'password', client_id:NETATMO_CLIENT_ID,
-      client_secret:NETATMO_CLIENT_SECRET,
-      username:NETATMO_USERNAME, password:NETATMO_PASSWORD, scope:'read_station'
+      grant_type: 'authorization_code', client_id: NETATMO_CLIENT_ID,
+      client_secret: NETATMO_CLIENT_SECRET, code,
+      redirect_uri: location.origin + location.pathname
     });
-    const data = await (await fetch('https://api.netatmo.com/oauth2/token',{
-      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body
+    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
+      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
     })).json();
-    if (data.access_token) { _netatmoToken = data.access_token; return _netatmoToken; }
+    if (data.access_token) {
+      localStorage.setItem('netatmo_access_token', data.access_token);
+      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
+      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
+    }
   } catch(e) {}
+}
+
+async function refreshNetatmoToken(refreshToken) {
+  try {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token', client_id: NETATMO_CLIENT_ID,
+      client_secret: NETATMO_CLIENT_SECRET, refresh_token: refreshToken
+    });
+    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
+      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
+    })).json();
+    if (data.access_token) {
+      localStorage.setItem('netatmo_access_token', data.access_token);
+      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
+      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
+      return data.access_token;
+    }
+  } catch(e) {}
+  localStorage.removeItem('netatmo_access_token');
+  localStorage.removeItem('netatmo_refresh_token');
+  localStorage.removeItem('netatmo_expires_at');
   return null;
+}
+
+async function getNetatmoToken() {
+  if (NETATMO_ACCESS_TOKEN) return NETATMO_ACCESS_TOKEN;
+  const expiresAt = parseInt(localStorage.getItem('netatmo_expires_at') || '0');
+  const accessToken = localStorage.getItem('netatmo_access_token');
+  if (accessToken && Date.now() < expiresAt - 60000) return accessToken;
+  const refreshToken = localStorage.getItem('netatmo_refresh_token');
+  if (refreshToken && NETATMO_CLIENT_ID) return await refreshNetatmoToken(refreshToken);
+  return null;
+}
+
+function authorizeNetatmo() {
+  const params = new URLSearchParams({
+    client_id: NETATMO_CLIENT_ID,
+    redirect_uri: location.origin + location.pathname,
+    scope: 'read_station', state: 'netatmo'
+  });
+  window.location.href = `https://api.netatmo.com/oauth2/authorize?${params}`;
+}
+
+function disconnectNetatmo() {
+  localStorage.removeItem('netatmo_access_token');
+  localStorage.removeItem('netatmo_refresh_token');
+  localStorage.removeItem('netatmo_expires_at');
+  fetchNetatmo();
 }
 
 const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
 
 function fmtN(k,v) {
-  const map={Temperature:`${v.toFixed(1)} °C`,Humidity:`${v} %`,CO2:`${v} ppm`,Noise:`${v} dB`,Pressure:`${v.toFixed(1)} hPa`,AbsolutePressure:`${v.toFixed(1)} hPa`,Rain:`${v.toFixed(1)} mm`,sum_rain_1:`${v.toFixed(1)} mm/h`,sum_rain_24:`${v.toFixed(1)} mm/24h`,WindStrength:`${v} km/h`,WindAngle:`${v}°`,GustStrength:`${v} km/h`,GustAngle:`${v}°`};
+  const n = Number(v);
+  const f1 = isNaN(n) ? v : n.toFixed(1);
+  const r  = isNaN(n) ? v : Math.round(n);
+  const map = {
+    Temperature:`${f1} °C`, Humidity:`${r} %`, CO2:`${r} ppm`, Noise:`${r} dB`,
+    Pressure:`${f1} hPa`, AbsolutePressure:`${f1} hPa`,
+    Rain:`${f1} mm`, sum_rain_1:`${f1} mm/h`, sum_rain_24:`${f1} mm/24h`,
+    WindStrength:`${r} km/h`, WindAngle:`${r}°`, GustStrength:`${r} km/h`, GustAngle:`${r}°`
+  };
   return map[k] ?? String(v);
 }
 
@@ -367,15 +459,19 @@ async function fetchNetatmo() {
   const el = document.getElementById('netatmo-content');
   const token = await getNetatmoToken();
   if (!token) {
-    el.innerHTML='<div class="netatmo-notice">Nastav Netatmo přihlašovací údaje v kódu (NETATMO_CLIENT_ID…).</div>';
+    el.innerHTML = NETATMO_CLIENT_ID
+      ? `<div class="netatmo-notice">Netatmo není připojeno. <button onclick="authorizeNetatmo()" style="font-family:inherit;font-size:0.65rem;padding:2px 8px;border:1px solid var(--rule);background:none;cursor:pointer;margin-left:4px;">Připojit Netatmo →</button></div>`
+      : `<div class="netatmo-notice">Nastav NETATMO_CLIENT_ID a NETATMO_CLIENT_SECRET v kódu.</div>`;
     return;
   }
   try {
-    const data = await (await fetch(`https://api.netatmo.com/api/getstationsdata?access_token=${token}`)).json();
+    const data = await (await fetch('https://api.netatmo.com/api/getstationsdata', {
+      headers: { Authorization: `Bearer ${token}` }
+    })).json();
     const devices = data?.body?.devices;
     if (!devices?.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
 
-    let html='<div class="netatmo-grid">';
+    let html='<div style="text-align:right;margin-bottom:6px"><button onclick="disconnectNetatmo()" style="font-family:var(--font-mono,\'JetBrains Mono\',monospace);font-size:0.58rem;padding:1px 6px;border:1px solid var(--rule);background:none;color:var(--ink-light);cursor:pointer">odpojit</button></div><div class="netatmo-grid">';
     for (const station of devices) {
       const mods = [
         {name: station.module_name||'Vnitřní', dd: station.dashboard_data},
@@ -387,7 +483,7 @@ async function fetchNetatmo() {
         html += `<div class="netatmo-module">
           <div class="netatmo-module-name">${mod.name}</div>`;
         if (mod.dd.Temperature !== undefined)
-          html += `<div class="netatmo-big">${mod.dd.Temperature.toFixed(1)}°C</div>`;
+          html += `<div class="netatmo-big">${Number(mod.dd.Temperature).toFixed(1)}°C</div>`;
         html += '<div class="netatmo-rows">';
         for (const [k,v] of Object.entries(mod.dd)) {
           if (skip.has(k) || v===null || v===undefined) continue;
@@ -399,6 +495,56 @@ async function fetchNetatmo() {
     html += '</div>';
     el.innerHTML = html;
   } catch(e) { el.innerHTML=`<div class="netatmo-notice">Chyba Netatmo: ${e.message}</div>`; }
+}
+
+// ════════════════════════════════════════════════════════
+//  TUYA BRÁNA  (čte data/tuya.json z GitHub Pages)
+// ════════════════════════════════════════════════════════
+async function fetchTuya() {
+  const el = document.getElementById('tuya-content');
+  try {
+    const res = await fetch(`${TUYA_JSON_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.error) {
+      el.innerHTML = `<div class="gate-notice">Chyba: ${data.error}</div>`;
+      return;
+    }
+
+    const open   = data.gate_open;   // true | false | null
+    const name   = data.device_name || 'Brána';
+    const online = data.online;
+    const upd    = data.updated
+      ? new Date(data.updated).toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'})
+      : '–';
+
+    const indClass  = open === true ? 'open' : open === false ? 'closed' : 'unknown';
+    const statusTxt = open === true ? 'OTEVŘENA' : open === false ? 'ZAVŘENA' : 'neznámo';
+
+    let dpsHtml = '';
+    if (data.raw_dps?.length) {
+      dpsHtml = '<div class="gate-dps">'
+        + data.raw_dps.map(dp =>
+            `<div class="gate-dp-row">
+               <span class="gate-dp-key">${dp.code}</span>
+               <span class="gate-dp-val">${JSON.stringify(dp.value)}</span>
+             </div>`
+          ).join('')
+        + '</div>';
+    }
+
+    el.innerHTML = `
+      <div class="gate-row">
+        <div class="gate-indicator ${indClass}"></div>
+        <div class="gate-status-text">${statusTxt}</div>
+      </div>
+      <div class="gate-meta">${name}${online === false ? ' · offline' : ''} · data z ${upd}</div>
+      ${dpsHtml}`;
+
+  } catch(e) {
+    el.innerHTML = '<div class="gate-notice">data/tuya.json nenalezen – nastav GitHub Secrets a spusť workflow.</div>';
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -520,7 +666,8 @@ function renderTasks() {
 // ════════════════════════════════════════════════════════
 async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchGrowatt(), fetchCalendar()]);
+  await handleNetatmoCallback();
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar()]);
   renderTasks();
   const now=new Date();
   document.getElementById('last-update').textContent=
