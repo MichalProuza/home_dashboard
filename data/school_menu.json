@@ -1,0 +1,52 @@
+{
+  "updated": "2026-02-22T07:57:34.114132+00:00",
+  "error": null,
+  "week": "24.2.- 28.2.2025",
+  "days": {
+    "pondeli": {
+      "name": "Pondělí",
+      "meals": [
+        "cereálie s mlékem 1,7",
+        "francouzská polévka 1,9",
+        "bramborový guláš, celozrnné pečivo 1",
+        "dalamánek, vajíčková pomazánka, jablko 1,3,7"
+      ]
+    },
+    "utery": {
+      "name": "Úterý",
+      "meals": [
+        "rohlík, pomazánka s jarní cibulkou, pomeranč 1,7",
+        "selská polévka 1,9",
+        "lívance se šlehaným tvarohem a ovocem 1,3,7",
+        "žitný chléb, máslo, masdamer, zelenina 1,7"
+      ]
+    },
+    "streda": {
+      "name": "Středa",
+      "meals": [
+        "sýrový chlebík , cottage, paprika 1,7",
+        "špenátová polévka 1,3,7",
+        "pečená štika, brambory, listový salát s kukuřicí 1,4,7",
+        "obložená bagetka 1,7"
+      ]
+    },
+    "ctvrtek": {
+      "name": "Čtvrtek",
+      "meals": [
+        "opékaný toust s čokoládovým máslem, banán 1,7",
+        "hovězí polévka s kolečky 1,9",
+        "pene s rajčatovou omáčkou, sypané sýrem, ovoce 1,7",
+        "houska, balkánská pomazánka, kedlubna 1,7"
+      ]
+    },
+    "patek": {
+      "name": "Pátek",
+      "meals": [
+        "žitný chléb, domácí játrová pomazánka, jablko 1,7",
+        "cuketový krém 1,7",
+        "svíčková na smetaně, houskový knedlík 1,3,7",
+        "rybízová bublanina s drobenkou 1,3,7"
+      ]
+    }
+  }
+}
