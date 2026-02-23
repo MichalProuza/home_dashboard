@@ -1,18 +1,5 @@
 {
-  "updated": "2026-02-23T13:33:39.697697+00:00",
-  "error": null,
-  "device_name": "Garáž senzor",
-  "online": true,
-  "gate_open": true,
-  "dp_used": "doorcontact_state",
-  "raw_dps": [
-    {
-      "code": "doorcontact_state",
-      "value": true
-    },
-    {
-      "code": "battery_percentage",
-      "value": 91
-    }
-  ]
+  "updated": null,
+  "error": "Data zatím nebyla stažena. Nastav GitHub Secrets a spusť workflow.",
+  "devices": []
 }
