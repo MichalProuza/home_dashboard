@@ -5,7 +5,7 @@
     {
       "device_name": "Garáž senzor",
       "online": true,
-      "gate_open": false,
+      "gate_open": true,
       "dp_used": "doorcontact_state",
       "raw_dps": [
         {
@@ -15,22 +15,6 @@
         {
           "code": "battery_percentage",
           "value": 91
-        }
-      ]
-    },
-    {
-      "device_name": "Brána",
-      "online": true,
-      "gate_open": true,
-      "dp_used": "doorcontact_state",
-      "raw_dps": [
-        {
-          "code": "doorcontact_state",
-          "value": false
-        },
-        {
-          "code": "battery_percentage",
-          "value": 100
         }
       ]
     }
