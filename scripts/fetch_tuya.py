@@ -130,8 +130,8 @@ def get_device_info(access_token: str, device_id: str) -> dict:
 # ── Interpretace brány ─────────────────────────────────────────────────────────
 # Různá Tuya zařízení používají různé kódy (data points):
 GATE_OPEN_CODES = {
-    # doorcontact_state: true = otevřeno
-    "doorcontact_state": lambda v: v is True,
+    # doorcontact_state: true = zavřeno, false = otevřeno
+    "doorcontact_state": lambda v: v is False,
     # switch_1 / switch: true = zapnuto/otevřeno (záleží na zapojení)
     "switch_1":          lambda v: v is True,
     "switch":            lambda v: v is True,
