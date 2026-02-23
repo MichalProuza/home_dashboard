@@ -524,35 +524,31 @@ async function fetchTuya() {
       return;
     }
 
-    const open   = data.gate_open;   // true | false | null
-    const name   = data.device_name || 'Brána';
-    const online = data.online;
-    const upd    = data.updated
+    const upd = data.updated
       ? new Date(data.updated).toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'})
       : '–';
 
-    const indClass  = open === true ? 'open' : open === false ? 'closed' : 'unknown';
-    const statusTxt = open === true ? 'OTEVŘENA' : open === false ? 'ZAVŘENA' : 'neznámo';
-
-    let dpsHtml = '';
-    if (data.raw_dps?.length) {
-      dpsHtml = '<div class="gate-dps">'
-        + data.raw_dps.map(dp =>
-            `<div class="gate-dp-row">
-               <span class="gate-dp-key">${dp.code}</span>
-               <span class="gate-dp-val">${JSON.stringify(dp.value)}</span>
-             </div>`
-          ).join('')
-        + '</div>';
+    const devices = data.devices || [];
+    if (!devices.length) {
+      el.innerHTML = '<div class="gate-notice">Žádná zařízení.</div>';
+      return;
     }
 
-    el.innerHTML = `
-      <div class="gate-row">
-        <div class="gate-indicator ${indClass}"></div>
-        <div class="gate-status-text">${statusTxt}</div>
-      </div>
-      <div class="gate-meta">${name}${online === false ? ' · offline' : ''} · data z ${upd}</div>
-      ${dpsHtml}`;
+    const rows = devices.map(dev => {
+      const open      = dev.gate_open;
+      const name      = dev.device_name || '–';
+      const online    = dev.online;
+      const indClass  = open === true ? 'open' : open === false ? 'closed' : 'unknown';
+      const statusTxt = open === true ? 'OTEVŘENO' : open === false ? 'ZAVŘENO' : 'neznámo';
+      return `
+        <div class="gate-row">
+          <div class="gate-indicator ${indClass}"></div>
+          <div class="gate-status-text">${statusTxt}</div>
+        </div>
+        <div class="gate-meta">${name}${online === false ? ' · offline' : ''}</div>`;
+    }).join('');
+
+    el.innerHTML = rows + `<div class="gate-meta" style="margin-top:6px">data z ${upd}</div>`;
 
   } catch(e) {
     el.innerHTML = '<div class="gate-notice">data/tuya.json nenalezen – nastav GitHub Secrets a spusť workflow.</div>';
