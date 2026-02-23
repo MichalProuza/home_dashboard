@@ -1,20 +1,20 @@
 {
-  "updated": "2026-02-23T13:52:55.312270+00:00",
+  "updated": "2026-02-23T13:57:49.690571+00:00",
   "error": null,
   "devices": [
     {
-      "device_name": "Garáž senzor",
+      "device_name": "Garáž ",
       "online": true,
       "gate_open": false,
-      "dp_used": "doorcontact_state",
+      "dp_used": "switch",
       "raw_dps": [
         {
-          "code": "doorcontact_state",
-          "value": true
+          "code": "switch",
+          "value": false
         },
         {
-          "code": "battery_percentage",
-          "value": 91
+          "code": "battery",
+          "value": 56
         }
       ]
     },
