@@ -233,6 +233,23 @@
     .menu-meal { font-size: 0.9rem; line-height: 1.45; padding-left: 10px; border-left: 2px solid var(--rule); }
     .menu-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
 
+    /* ── MICROSOFT TO DO ── */
+    .mstodo-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .mstodo-list { display: flex; flex-direction: column; gap: 1px; }
+    .mstodo-item { display: flex; align-items: baseline; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--paper-dark); }
+    .mstodo-item:last-child { border-bottom: none; }
+    .mstodo-check { width: 14px; height: 14px; border: 1.5px solid var(--ink-mid); border-radius: 50%; flex-shrink: 0; margin-top: 1px; }
+    .mstodo-item.important .mstodo-check { border-color: #c0392b; }
+    .mstodo-text { font-size: 0.9rem; line-height: 1.4; flex: 1; }
+    .mstodo-item.important .mstodo-text { color: var(--ink); }
+    .mstodo-due { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); flex-shrink: 0; }
+    .mstodo-due.overdue { color: #c0392b; }
+    .mstodo-list-name { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; color: var(--ink-faint); flex-shrink: 0; }
+    .mstodo-group-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-faint); margin: 10px 0 5px; }
+    .mstodo-group-label:first-child { margin-top: 0; }
+    .mstodo-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .mstodo-disconnect { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; padding: 1px 6px; border: 1px solid var(--rule); background: none; color: var(--ink-light); cursor: pointer; }
+
     /* ── FOOTER ── */
     .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
   </style>
@@ -286,6 +303,11 @@
   </section>
 
   <section>
+    <div class="section-label">Microsoft To Do</div>
+    <div id="mstodo-content"><div class="mstodo-notice">načítám…</div></div>
+  </section>
+
+  <section>
     <div class="section-label">Jídelníček MŠ · Vranov</div>
     <div id="menu-content"><div class="menu-notice">načítám…</div></div>
   </section>
@@ -328,6 +350,16 @@ const TUYA_JSON_URL = './data/tuya.json';
 // --- Google Kalendář ---
 // Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
 const CALENDAR_JSON_URL = './data/calendar.json';
+
+// --- Microsoft To Do ---
+// 1. Jdi na https://portal.azure.com → "Registrace aplikací" → "Nová registrace"
+// 2. Název: libovolný (např. "Home Dashboard")
+// 3. Podporované typy účtů: "Osobní účty Microsoft" (nebo "Všechny typy")
+// 4. Identifikátor URI pro přesměrování: typ "Jednostránková aplikace (SPA)", URL tohoto dashboardu
+//    (např. https://uzivatel.github.io/home_dashboard/)
+// 5. Na stránce přehledu aplikace zkopíruj "ID aplikace (klienta)"
+const MSTODO_CLIENT_ID = '';      // sem vlož Client ID z Azure portálu
+const MSTODO_TENANT    = 'consumers'; // 'consumers' = jen osobní MS účty; 'common' = personal + work
 
 // --- Poloha pro Open-Meteo ---
 const LAT = 49.043, LON = 16.558;   // Vranov u Brna
@@ -661,6 +693,224 @@ function renderTasks() {
 }
 
 // ════════════════════════════════════════════════════════
+//  MICROSOFT TO DO  (Microsoft Graph API, OAuth2 + PKCE)
+// ════════════════════════════════════════════════════════
+
+// --- PKCE helpers ---
+function _b64url(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+}
+function msTodoGenerateVerifier() {
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return _b64url(arr.buffer);
+}
+async function msTodoGenerateChallenge(verifier) {
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+  return _b64url(hash);
+}
+
+// --- Zpracování OAuth callbacku ---
+async function handleMsTodoCallback() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('state') !== 'mstodo') return;
+  history.replaceState({}, '', window.location.pathname);
+
+  if (params.get('error')) {
+    console.warn('MS Todo OAuth chyba:', params.get('error_description'));
+    return;
+  }
+  const code = params.get('code');
+  if (!code) return;
+
+  const verifier = localStorage.getItem('mstodo_code_verifier');
+  if (!verifier) return;
+
+  try {
+    const body = new URLSearchParams({
+      client_id: MSTODO_CLIENT_ID,
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: location.origin + location.pathname,
+      code_verifier: verifier,
+      scope: 'Tasks.Read offline_access',
+    });
+    const data = await (await fetch(
+      `https://login.microsoftonline.com/${MSTODO_TENANT}/oauth2/v2.0/token`,
+      { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body }
+    )).json();
+    if (data.access_token) {
+      localStorage.setItem('mstodo_access_token', data.access_token);
+      if (data.refresh_token)
+        localStorage.setItem('mstodo_refresh_token', data.refresh_token);
+      localStorage.setItem('mstodo_expires_at', Date.now() + data.expires_in * 1000);
+    }
+  } catch(e) {}
+  localStorage.removeItem('mstodo_code_verifier');
+}
+
+// --- Obnovení tokenu ---
+async function _refreshMsTodoToken(refreshToken) {
+  try {
+    const body = new URLSearchParams({
+      client_id: MSTODO_CLIENT_ID,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+      scope: 'Tasks.Read offline_access',
+    });
+    const data = await (await fetch(
+      `https://login.microsoftonline.com/${MSTODO_TENANT}/oauth2/v2.0/token`,
+      { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body }
+    )).json();
+    if (data.access_token) {
+      localStorage.setItem('mstodo_access_token', data.access_token);
+      if (data.refresh_token)
+        localStorage.setItem('mstodo_refresh_token', data.refresh_token);
+      localStorage.setItem('mstodo_expires_at', Date.now() + data.expires_in * 1000);
+      return data.access_token;
+    }
+  } catch(e) {}
+  ['mstodo_access_token','mstodo_refresh_token','mstodo_expires_at'].forEach(k=>localStorage.removeItem(k));
+  return null;
+}
+
+async function getMsTodoToken() {
+  const exp = parseInt(localStorage.getItem('mstodo_expires_at')||'0');
+  const tok = localStorage.getItem('mstodo_access_token');
+  if (tok && Date.now() < exp - 60000) return tok;
+  const ref = localStorage.getItem('mstodo_refresh_token');
+  if (ref) return await _refreshMsTodoToken(ref);
+  return null;
+}
+
+// --- Přihlášení / odhlášení ---
+async function authorizeMsTodo() {
+  const verifier = msTodoGenerateVerifier();
+  const challenge = await msTodoGenerateChallenge(verifier);
+  localStorage.setItem('mstodo_code_verifier', verifier);
+  const params = new URLSearchParams({
+    client_id: MSTODO_CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: location.origin + location.pathname,
+    scope: 'Tasks.Read offline_access',
+    state: 'mstodo',
+    code_challenge: challenge,
+    code_challenge_method: 'S256',
+    response_mode: 'query',
+  });
+  window.location.href =
+    `https://login.microsoftonline.com/${MSTODO_TENANT}/oauth2/v2.0/authorize?${params}`;
+}
+
+function disconnectMsTodo() {
+  ['mstodo_access_token','mstodo_refresh_token','mstodo_expires_at','mstodo_code_verifier']
+    .forEach(k => localStorage.removeItem(k));
+  fetchMsTodo();
+}
+
+// --- Načtení a vykreslení úkolů ---
+async function fetchMsTodo() {
+  const el = document.getElementById('mstodo-content');
+
+  const token = await getMsTodoToken();
+  if (!token) {
+    el.innerHTML = MSTODO_CLIENT_ID
+      ? `<div class="mstodo-notice">Microsoft To Do není připojeno.
+           <button onclick="authorizeMsTodo()"
+             style="font-family:inherit;font-size:0.65rem;padding:2px 8px;border:1px solid var(--rule);background:none;cursor:pointer;margin-left:4px;">
+             Připojit →
+           </button></div>`
+      : `<div class="mstodo-notice">Nastav MSTODO_CLIENT_ID v kódu (Azure portál).</div>`;
+    return;
+  }
+
+  try {
+    // Načti všechny seznamy úkolů
+    const listsRes = await fetch('https://graph.microsoft.com/v1.0/me/todo/lists', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!listsRes.ok) throw new Error(`HTTP ${listsRes.status}`);
+    const { value: lists } = await listsRes.json();
+
+    if (!lists?.length) {
+      el.innerHTML = '<div class="mstodo-notice">Žádné seznamy úkolů.</div>'; return;
+    }
+
+    // Načti nedokončené úkoly ze všech seznamů paralelně
+    const perList = await Promise.all(lists.map(async list => {
+      const url = `https://graph.microsoft.com/v1.0/me/todo/lists/${list.id}/tasks`
+        + `?$filter=status ne 'completed'`
+        + `&$orderby=importance desc,createdDateTime asc`
+        + `&$top=50`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) return [];
+      const { value } = await res.json();
+      return (value || []).map(t => ({ ...t, _listName: list.displayName }));
+    }));
+
+    const allTasks = perList.flat();
+
+    if (!allTasks.length) {
+      el.innerHTML = '<div class="mstodo-notice">Žádné nedokončené úkoly.</div>'; return;
+    }
+
+    // Seřaď: nejdříve se splatností (od nejbližší), pak bez termínu
+    const today = new Date(); today.setHours(0,0,0,0);
+    allTasks.sort((a, b) => {
+      const ad = a.dueDateTime?.dateTime ? new Date(a.dueDateTime.dateTime) : null;
+      const bd = b.dueDateTime?.dateTime ? new Date(b.dueDateTime.dateTime) : null;
+      if (ad && bd) return ad - bd;
+      if (ad) return -1;
+      if (bd) return 1;
+      return new Date(a.createdDateTime) - new Date(b.createdDateTime);
+    });
+
+    // Rozděl na "s termínem" a "bez termínu"
+    const withDue    = allTasks.filter(t => t.dueDateTime?.dateTime);
+    const withoutDue = allTasks.filter(t => !t.dueDateTime?.dateTime);
+
+    function renderItem(task) {
+      const due = task.dueDateTime?.dateTime;
+      let dueStr = '', dueClass = 'mstodo-due';
+      if (due) {
+        const d = new Date(due);
+        const isOverdue = d < today;
+        dueStr = d.toLocaleDateString('cs-CZ', { day:'numeric', month:'numeric' });
+        if (isOverdue) dueClass += ' overdue';
+      }
+      const imp = task.importance === 'high' ? ' important' : '';
+      const listLabel = lists.length > 1
+        ? `<span class="mstodo-list-name">${task._listName}</span>` : '';
+      return `<div class="mstodo-item${imp}">
+        <div class="mstodo-check"></div>
+        <div class="mstodo-text">${task.title}</div>
+        ${due ? `<span class="${dueClass}">${dueStr}</span>` : ''}
+        ${listLabel}
+      </div>`;
+    }
+
+    let html = '';
+    if (withDue.length && withoutDue.length) {
+      html += `<div class="mstodo-group-label">S termínem</div>
+               <div class="mstodo-list">${withDue.map(renderItem).join('')}</div>
+               <div class="mstodo-group-label">Bez termínu</div>
+               <div class="mstodo-list">${withoutDue.slice(0,10).map(renderItem).join('')}</div>`;
+    } else {
+      html += `<div class="mstodo-list">${allTasks.slice(0,20).map(renderItem).join('')}</div>`;
+    }
+    html += `<div class="mstodo-footer">
+      <span></span>
+      <button class="mstodo-disconnect" onclick="disconnectMsTodo()">odpojit</button>
+    </div>`;
+
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = `<div class="mstodo-notice">Chyba: ${e.message}</div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════
 //  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
 // ════════════════════════════════════════════════════════
 const SCHOOL_MENU_URL = './data/school_menu.json';
@@ -702,7 +952,8 @@ async function fetchSchoolMenu() {
 async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
   await handleNetatmoCallback();
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchSchoolMenu()]);
+  await handleMsTodoCallback();
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchMsTodo(), fetchSchoolMenu()]);
   renderTasks();
   const now=new Date();
   document.getElementById('last-update').textContent=
