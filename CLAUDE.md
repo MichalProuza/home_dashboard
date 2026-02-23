@@ -56,6 +56,7 @@ function called inside `initAll()`:
 | Gate status | `fetchTuya()` | `data/tuya.json` |
 | Solar system | `fetchGrowatt()` | `data/growatt.json` |
 | Calendar | `fetchCalendar()` | Google Calendar iCal URL |
+| Microsoft To Do | `fetchMsTodo()` | Microsoft Graph API (OAuth2 + PKCE) via browser |
 | School menu | `fetchSchoolMenu()` | `data/school_menu.json` |
 | Tasks | `renderTasks()` | `localStorage` (`dashboard_tasks`) |
 
@@ -77,6 +78,12 @@ const TUYA_JSON_URL    = './data/tuya.json';
 
 // Google Calendar iCal feed (wrap in a CORS proxy if needed)
 const ICS_URL = '';
+
+// Microsoft To Do (OAuth2 Authorization Code + PKCE — no client_secret needed)
+// Register app at https://portal.azure.com → App registrations
+// Redirect URI type must be "Single-page application (SPA)"
+const MSTODO_CLIENT_ID = '';      // Client ID from Azure portal
+const MSTODO_TENANT    = 'consumers'; // 'consumers' = personal MS accounts only
 
 // Geographic coordinates for Open-Meteo
 const LAT = 49.043, LON = 16.558;  // Vranov u Brna
@@ -108,7 +115,7 @@ GitHub Actions (scheduled / manual)
 
 GitHub Pages serves index.html + data/*.json
   └─► browser fetches data/*.json directly (cache-busted with ?t=Date.now())
-  └─► browser calls Netatmo / Open-Meteo APIs directly
+  └─► browser calls Netatmo / Open-Meteo / Microsoft Graph APIs directly
 ```
 
 No server-side rendering; no API gateway. All dynamic data either comes from
