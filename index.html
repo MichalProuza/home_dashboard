@@ -327,8 +327,7 @@ const TUYA_JSON_URL = './data/tuya.json';
 
 // --- Google Kalendář ---
 // Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
-// Kvůli CORS zabal přes proxy: 'https://corsproxy.io/?' + encodeURIComponent('https://calendar.google.com/...')
-const ICS_URL = 'https://corsproxy.io/?' + encodeURIComponent('https://calendar.google.com/calendar/ical/michal.prouza%40gmail.com/private-34ef9693725557655ab08d804a8e7d21/basic.ics');
+const CALENDAR_JSON_URL = './data/calendar.json';
 
 // --- Poloha pro Open-Meteo ---
 const LAT = 49.043, LON = 16.558;   // Vranov u Brna
@@ -623,62 +622,27 @@ async function fetchGrowatt() {
 }
 
 // ════════════════════════════════════════════════════════
-//  GOOGLE KALENDÁŘ (ICS)
+//  GOOGLE KALENDÁŘ (data/calendar.json)
 // ════════════════════════════════════════════════════════
-function parseICS(text) {
-  // rozbal ICS line-folding (CRLF + mezera/tab = pokračování řádku)
-  const unfolded=text.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');
-  const events=[];
-  for (const block of unfolded.split('BEGIN:VEVENT').slice(1)) {
-    const get=k=>{const m=block.match(new RegExp(k+'[^:]*:([^\\r\\n]+)'));return m?m[1].trim():'';};
-    const summary=get('SUMMARY'), dtstart=get('DTSTART');
-    if (!summary||!dtstart) continue;
-    const [y,mo,d]=[dtstart.slice(0,4),dtstart.slice(4,6),dtstart.slice(6,8)];
-    const allDay=!dtstart.includes('T');
-    let date;
-    if (allDay) {
-      date=new Date(`${y}-${mo}-${d}T00:00:00`);
-    } else {
-      const utc=dtstart.endsWith('Z');
-      const hh=dtstart.slice(9,11), mm=dtstart.slice(11,13);
-      date=new Date(`${y}-${mo}-${d}T${hh}:${mm}:00${utc?'Z':''}`);
-    }
-    events.push({summary,date,allDay});
-  }
-  return events;
-}
-
 async function fetchCalendar() {
   const el=document.getElementById('event-list');
   const meta=document.getElementById('cal-meta');
   const notice=document.getElementById('ics-notice');
-  if (!ICS_URL) { notice.textContent='Nastav ICS_URL pro Google Kalendář.'; return; }
   try {
-    const GCAL_URL='https://calendar.google.com/calendar/ical/michal.prouza%40gmail.com/private-34ef9693725557655ab08d804a8e7d21/basic.ics';
-    const proxies=['https://corsproxy.io/?'+encodeURIComponent(GCAL_URL),'https://api.allorigins.win/raw?url='+encodeURIComponent(GCAL_URL)];
-    let text='';
-    for (const url of proxies) {
-      try { const r=await fetch(url); text=await r.text(); if (text.includes('BEGIN:VCALENDAR')) break; } catch(_){}
-    }
-    if (!text.includes('BEGIN:VCALENDAR')) throw new Error('Nepodařilo se stáhnout ICS přes žádný proxy');
-    const now=new Date();
-    const all=parseICS(text);
-    console.log(`[kal] staženo ${text.length} znaků, nalezeno ${all.length} událostí`);
-    console.log('[kal] začátek odpovědi:', JSON.stringify(text.slice(0,300)));
-    if (all.length) {
-      const sorted=[...all].sort((a,b)=>a.date-b.date);
-      console.log('[kal] nejbližší data:', sorted.slice(0,5).map(e=>`${e.summary}: ${e.date}`));
-    }
-    const ev=all.filter(e=>e.date>=now).sort((a,b)=>a.date-b.date).slice(0,3);
-    if (!ev.length) { meta.textContent=`Žádné nadcházející události (${all.length} celkem v ICS).`; return; }
-    meta.textContent='Příští 3 události:';
+    const data=await (await fetch(CALENDAR_JSON_URL+'?t='+Date.now())).json();
+    if (data.error) { notice.textContent=`Chyba kalendáře: ${data.error}`; return; }
+    const ev=data.events||[];
+    if (!ev.length) { meta.textContent='Žádné nadcházející události.'; return; }
+    meta.textContent='Příští události:';
     const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
     el.innerHTML=ev.map(e=>{
+      const d=new Date(e.date);
       const p=n=>String(n).padStart(2,'0');
-      const t=e.allDay?`${dayN[e.date.getDay()]} ${e.date.getDate()}.${e.date.getMonth()+1}.`:`${dayN[e.date.getDay()]} ${e.date.getDate()}.${e.date.getMonth()+1}. ${p(e.date.getHours())}:${p(e.date.getMinutes())}`;
+      const t=e.all_day?`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`:`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}. ${p(d.getHours())}:${p(d.getMinutes())}`;
       return `<div class="event-item"><div class="event-dot"></div><div class="event-time">${t}</div><div class="event-title">${e.summary}</div></div>`;
     }).join('');
-  } catch(e) { notice.textContent=`Chyba kalendáře: ${e.message}`; console.error('fetchCalendar',e); }
+    if (data.updated) notice.textContent=`Aktualizováno: ${new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}`;
+  } catch(e) { notice.textContent=`Chyba kalendáře: ${e.message}`; }
 }
 
 // ════════════════════════════════════════════════════════
