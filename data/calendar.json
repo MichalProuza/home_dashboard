@@ -1,7 +1,27 @@
 {
-  "updated": "2026-02-23T15:11:42.086131+00:00",
+  "updated": "2026-02-23T15:20:41.574721+00:00",
   "error": null,
-  "events": [
+  "recurring": [
+    {
+      "summary": "Fotbal",
+      "date": "2026-02-24T16:15:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Sokol Lelekovice",
+      "date": "2026-02-25T15:30:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Elis - plavání",
+      "date": "2026-02-26T15:30:00+00:00",
+      "all_day": false,
+      "location": ""
+    }
+  ],
+  "single": [
     {
       "summary": "Turnaj NH Brno",
       "date": "2026-03-08T07:45:00+00:00",
