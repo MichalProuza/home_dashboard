@@ -646,10 +646,10 @@ async function fetchCalendar() {
   if (!ICS_URL) { notice.textContent='Nastav ICS_URL pro Google Kalendář.'; return; }
   try {
     const text=await (await fetch(ICS_URL)).text();
-    const now=new Date(), in14=new Date(now.getTime()+14*86400000);
-    const ev=parseICS(text).filter(e=>e.date>=now&&e.date<=in14).sort((a,b)=>a.date-b.date).slice(0,8);
-    if (!ev.length) { meta.textContent='Žádné události v příštích 14 dnech.'; return; }
-    meta.textContent=`Příštích ${ev.length} událostí:`;
+    const now=new Date();
+    const ev=parseICS(text).filter(e=>e.date>=now).sort((a,b)=>a.date-b.date).slice(0,3);
+    if (!ev.length) { meta.textContent='Žádné nadcházející události.'; return; }
+    meta.textContent='Příští 3 události:';
     const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
     el.innerHTML=ev.map(e=>{
       const p=n=>String(n).padStart(2,'0');
