@@ -1,5 +1,38 @@
 {
-  "updated": null,
-  "error": "Data zatím nebyla stažena. Nastav GitHub Secrets a spusť workflow.",
-  "devices": []
+  "updated": "2026-02-23T13:49:04.705748+00:00",
+  "error": null,
+  "devices": [
+    {
+      "device_name": "Garáž senzor",
+      "online": true,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": true
+        },
+        {
+          "code": "battery_percentage",
+          "value": 91
+        }
+      ]
+    },
+    {
+      "device_name": "Brána",
+      "online": true,
+      "gate_open": true,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 100
+        }
+      ]
+    }
+  ]
 }
