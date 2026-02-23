@@ -1,5 +1,5 @@
 {
-  "updated": "2026-02-23T15:20:41.574721+00:00",
+  "updated": "2026-02-23T16:39:33.401796+00:00",
   "error": null,
   "recurring": [
     {
@@ -22,6 +22,12 @@
     }
   ],
   "single": [
+    {
+      "summary": "Pub Quiz",
+      "date": "2026-02-27T17:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
     {
       "summary": "Turnaj NH Brno",
       "date": "2026-03-08T07:45:00+00:00",
