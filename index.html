@@ -190,7 +190,8 @@
     .event-time { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-light); min-width: 72px; flex-shrink: 0; }
     .event-dot { width: 4px; height: 4px; background: var(--ink); border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
     .event-title { font-size: 0.92rem; line-height: 1.35; }
-    .cal-meta { font-size: 0.85rem; font-style: italic; color: var(--ink-mid); margin-bottom: 10px; }
+    .cal-group-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-faint); margin: 10px 0 5px; }
+    .cal-group-label:first-child { margin-top: 0; }
     .ics-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--ink-light); font-style: italic; margin-top: 6px; }
 
     /* ── TASKS ── */
@@ -280,8 +281,7 @@
 
   <section>
     <div class="section-label">Kalendář</div>
-    <div class="cal-meta" id="cal-meta"></div>
-    <div class="event-list" id="event-list"></div>
+    <div id="cal-content"></div>
     <div class="ics-notice" id="ics-notice"></div>
   </section>
 
@@ -625,22 +625,27 @@ async function fetchGrowatt() {
 //  GOOGLE KALENDÁŘ (data/calendar.json)
 // ════════════════════════════════════════════════════════
 async function fetchCalendar() {
-  const el=document.getElementById('event-list');
-  const meta=document.getElementById('cal-meta');
+  const content=document.getElementById('cal-content');
   const notice=document.getElementById('ics-notice');
-  try {
-    const data=await (await fetch(CALENDAR_JSON_URL+'?t='+Date.now())).json();
-    if (data.error) { notice.textContent=`Chyba kalendáře: ${data.error}`; return; }
-    const ev=data.events||[];
-    if (!ev.length) { meta.textContent='Žádné nadcházející události.'; return; }
-    meta.textContent='Příští události:';
-    const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
-    el.innerHTML=ev.map(e=>{
+  const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
+  function renderEvents(evs) {
+    if (!evs.length) return '<span style="color:var(--ink-light);font-size:0.85rem;font-style:italic;">–</span>';
+    return evs.map(e=>{
       const d=new Date(e.date);
       const p=n=>String(n).padStart(2,'0');
       const t=e.all_day?`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`:`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}. ${p(d.getHours())}:${p(d.getMinutes())}`;
       return `<div class="event-item"><div class="event-dot"></div><div class="event-time">${t}</div><div class="event-title">${e.summary}</div></div>`;
     }).join('');
+  }
+  try {
+    const data=await (await fetch(CALENDAR_JSON_URL+'?t='+Date.now())).json();
+    if (data.error) { notice.textContent=`Chyba kalendáře: ${data.error}`; return; }
+    const recurring=data.recurring||[];
+    const single=data.single||[];
+    if (!recurring.length && !single.length) { content.innerHTML='<span style="color:var(--ink-light);font-size:0.85rem;font-style:italic;">Žádné nadcházející události.</span>'; return; }
+    content.innerHTML=
+      `<div class="cal-group-label">Opakující se</div><div class="event-list">${renderEvents(recurring)}</div>`+
+      `<div class="cal-group-label">Jednorázové</div><div class="event-list">${renderEvents(single)}</div>`;
     if (data.updated) notice.textContent=`Aktualizováno: ${new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}`;
   } catch(e) { notice.textContent=`Chyba kalendáře: ${e.message}`; }
 }
