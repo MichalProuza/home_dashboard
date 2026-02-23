@@ -29,10 +29,14 @@ except ImportError:
 # ── Přihlašovací údaje z GitHub Secrets ──────────────────────────────────────
 ACCESS_ID     = os.environ.get("TUYA_ACCESS_ID", "")
 ACCESS_SECRET = os.environ.get("TUYA_ACCESS_SECRET", "")
-DEVICE_ID     = os.environ.get("TUYA_DEVICE_ID", "")
 REGION        = os.environ.get("TUYA_REGION", "eu").lower()
 
-if not ACCESS_ID or not ACCESS_SECRET or not DEVICE_ID:
+# Jedno nebo dvě zařízení – TUYA_DEVICE_ID_2 je volitelné
+_d1 = os.environ.get("TUYA_DEVICE_ID", "")
+_d2 = os.environ.get("TUYA_DEVICE_ID_2", "")
+DEVICE_IDS = [d for d in [_d1, _d2] if d]
+
+if not ACCESS_ID or not ACCESS_SECRET or not DEVICE_IDS:
     print("ERROR: Chybí TUYA_ACCESS_ID, TUYA_ACCESS_SECRET nebo TUYA_DEVICE_ID.")
     sys.exit(1)
 
@@ -130,8 +134,8 @@ def get_device_info(access_token: str, device_id: str) -> dict:
 # ── Interpretace brány ─────────────────────────────────────────────────────────
 # Různá Tuya zařízení používají různé kódy (data points):
 GATE_OPEN_CODES = {
-    # doorcontact_state: true = otevřeno
-    "doorcontact_state": lambda v: v is True,
+    # doorcontact_state: true = zavřeno, false = otevřeno
+    "doorcontact_state": lambda v: v is False,
     # switch_1 / switch: true = zapnuto/otevřeno (záleží na zapojení)
     "switch_1":          lambda v: v is True,
     "switch":            lambda v: v is True,
@@ -169,6 +173,29 @@ def interpret_gate(dps: list) -> dict:
     }
 
 
+# ── Pomocná funkce pro jedno zařízení ─────────────────────────────────────────
+def fetch_device(token: str, device_id: str) -> dict:
+    """Stáhne info a stav jednoho zařízení, vrátí slovník pro výstupní JSON."""
+    info = get_device_info(token, device_id)
+    device_name = info.get("name", device_id)
+    online = info.get("online", None)
+    print(f"INFO: Zařízení: {device_name}, online: {online}")
+
+    dps = get_device_status(token, device_id)
+    print(f"INFO: Data pointy: {dps}")
+
+    gate = interpret_gate(dps)
+    print(f"  → {'OTEVŘENO' if gate['open'] else 'ZAVŘENO' if gate['open'] is False else 'NEZNÁMO'}")
+
+    return {
+        "device_name": device_name,
+        "online":      online,
+        "gate_open":   gate["open"],
+        "dp_used":     gate["dp_used"],
+        "raw_dps":     gate["raw_dps"],
+    }
+
+
 # ── Hlavní funkce ──────────────────────────────────────────────────────────────
 def fetch():
     now_utc = datetime.now(timezone.utc).isoformat()
@@ -176,39 +203,25 @@ def fetch():
     try:
         print(f"INFO: Připojuji se k Tuya OpenAPI ({HOST})…")
         token = get_token()
-        print("INFO: Token získán.")
+        print(f"INFO: Token získán. Zpracovávám {len(DEVICE_IDS)} zařízení.")
 
-        info = get_device_info(token, DEVICE_ID)
-        device_name = info.get("name", DEVICE_ID)
-        online = info.get("online", None)
-        print(f"INFO: Zařízení: {device_name}, online: {online}")
-
-        dps = get_device_status(token, DEVICE_ID)
-        print(f"INFO: Data pointy: {dps}")
-
-        gate = interpret_gate(dps)
+        devices = []
+        for device_id in DEVICE_IDS:
+            print(f"INFO: Načítám zařízení {device_id}…")
+            devices.append(fetch_device(token, device_id))
 
         output = {
-            "updated":     now_utc,
-            "error":       None,
-            "device_name": device_name,
-            "online":      online,
-            "gate_open":   gate["open"],
-            "dp_used":     gate["dp_used"],
-            "raw_dps":     gate["raw_dps"],
+            "updated": now_utc,
+            "error":   None,
+            "devices": devices,
         }
-        print(f"✓ Brána: {'OTEVŘENA' if gate['open'] else 'ZAVŘENA' if gate['open'] is False else 'NEZNÁMO'}")
 
     except Exception as e:
         print(f"ERROR: {e}")
         output = {
             "updated": now_utc,
             "error":   str(e),
-            "device_name": None,
-            "online":  None,
-            "gate_open": None,
-            "dp_used": None,
-            "raw_dps": [],
+            "devices": [],
         }
 
     OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
