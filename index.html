@@ -635,7 +635,7 @@ async function fetchCalendar() {
     if (!ev.length) { meta.textContent='Žádné nadcházející události.'; return; }
     meta.textContent='Příští události:';
     const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
-    el.innerHTML=ev.map(e=>{
+    el.innerHTML=ev.slice(0,3).map(e=>{
       const d=new Date(e.date);
       const p=n=>String(n).padStart(2,'0');
       const t=e.all_day?`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`:`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}. ${p(d.getHours())}:${p(d.getMinutes())}`;
