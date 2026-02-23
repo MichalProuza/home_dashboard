@@ -1,5 +1,18 @@
 {
-  "updated": null,
+  "updated": "2026-02-23T15:11:42.086131+00:00",
   "error": null,
-  "events": []
+  "events": [
+    {
+      "summary": "Turnaj NH Brno",
+      "date": "2026-03-08T07:45:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "🏊‍♀️Městský přebor",
+      "date": "2026-03-21T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    }
+  ]
 }
