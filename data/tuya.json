@@ -1,70 +1,18 @@
 {
-  "updated": "2026-02-23T13:30:50.473020+00:00",
+  "updated": "2026-02-23T13:33:39.697697+00:00",
   "error": null,
-  "device_name": "WiFi Temperature & Humidity Sensor",
-  "online": false,
+  "device_name": "Garáž senzor",
+  "online": true,
   "gate_open": true,
-  "dp_used": "switch",
+  "dp_used": "doorcontact_state",
   "raw_dps": [
     {
-      "code": "va_temperature",
-      "value": 142
-    },
-    {
-      "code": "va_humidity",
-      "value": 37
-    },
-    {
-      "code": "battery_state",
-      "value": "low"
-    },
-    {
-      "code": "temp_unit_convert",
-      "value": "c"
-    },
-    {
-      "code": "maxtemp_set",
-      "value": 390
-    },
-    {
-      "code": "minitemp_set",
-      "value": -60
-    },
-    {
-      "code": "maxhum_set",
-      "value": 100
-    },
-    {
-      "code": "minihum_set",
-      "value": 20
-    },
-    {
-      "code": "temp_alarm",
-      "value": "cancel"
-    },
-    {
-      "code": "hum_alarm",
-      "value": "cancel"
-    },
-    {
-      "code": "temp_periodic_report",
-      "value": 5
-    },
-    {
-      "code": "hum_periodic_report",
-      "value": 5
-    },
-    {
-      "code": "temp_sensitivity",
-      "value": 6
-    },
-    {
-      "code": "hum_sensitivity",
-      "value": 6
-    },
-    {
-      "code": "switch",
+      "code": "doorcontact_state",
       "value": true
+    },
+    {
+      "code": "battery_percentage",
+      "value": 91
     }
   ]
 }
