@@ -833,72 +833,44 @@ async function fetchMsTodo() {
     if (!listsRes.ok) throw new Error(`HTTP ${listsRes.status}`);
     const { value: lists } = await listsRes.json();
 
-    if (!lists?.length) {
-      el.innerHTML = '<div class="mstodo-notice">Žádné seznamy úkolů.</div>'; return;
+    const vranovList = lists?.find(l => l.displayName === 'Vranov');
+    if (!vranovList) {
+      el.innerHTML = '<div class="mstodo-notice">Seznam „Vranov" nenalezen.</div>'; return;
     }
 
-    // Načti nedokončené úkoly ze všech seznamů paralelně
-    const perList = await Promise.all(lists.map(async list => {
-      const url = `https://graph.microsoft.com/v1.0/me/todo/lists/${list.id}/tasks`
-        + `?$filter=status ne 'completed'`
-        + `&$orderby=importance desc,createdDateTime asc`
-        + `&$top=50`;
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) return [];
-      const { value } = await res.json();
-      return (value || []).map(t => ({ ...t, _listName: list.displayName }));
-    }));
+    // Načti nedokončené úkoly ze seznamu Vranov
+    const url = `https://graph.microsoft.com/v1.0/me/todo/lists/${vranovList.id}/tasks`
+      + `?$filter=status ne 'completed'`
+      + `&$orderby=importance desc,createdDateTime asc`
+      + `&$top=50`;
+    const tasksRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!tasksRes.ok) throw new Error(`HTTP ${tasksRes.status}`);
+    const { value: rawTasks } = await tasksRes.json();
 
-    const allTasks = perList.flat();
-
-    if (!allTasks.length) {
-      el.innerHTML = '<div class="mstodo-notice">Žádné nedokončené úkoly.</div>'; return;
-    }
-
-    // Seřaď: nejdříve se splatností (od nejbližší), pak bez termínu
+    // Zobraz jen úkoly s deadlinem
     const today = new Date(); today.setHours(0,0,0,0);
-    allTasks.sort((a, b) => {
-      const ad = a.dueDateTime?.dateTime ? new Date(a.dueDateTime.dateTime) : null;
-      const bd = b.dueDateTime?.dateTime ? new Date(b.dueDateTime.dateTime) : null;
-      if (ad && bd) return ad - bd;
-      if (ad) return -1;
-      if (bd) return 1;
-      return new Date(a.createdDateTime) - new Date(b.createdDateTime);
-    });
+    const tasks = (rawTasks || [])
+      .filter(t => t.dueDateTime?.dateTime)
+      .sort((a, b) => new Date(a.dueDateTime.dateTime) - new Date(b.dueDateTime.dateTime));
 
-    // Rozděl na "s termínem" a "bez termínu"
-    const withDue    = allTasks.filter(t => t.dueDateTime?.dateTime);
-    const withoutDue = allTasks.filter(t => !t.dueDateTime?.dateTime);
+    if (!tasks.length) {
+      el.innerHTML = '<div class="mstodo-notice">Žádné úkoly s termínem.</div>'; return;
+    }
 
     function renderItem(task) {
-      const due = task.dueDateTime?.dateTime;
-      let dueStr = '', dueClass = 'mstodo-due';
-      if (due) {
-        const d = new Date(due);
-        const isOverdue = d < today;
-        dueStr = d.toLocaleDateString('cs-CZ', { day:'numeric', month:'numeric' });
-        if (isOverdue) dueClass += ' overdue';
-      }
+      const d = new Date(task.dueDateTime.dateTime);
+      const isOverdue = d < today;
+      const dueStr = d.toLocaleDateString('cs-CZ', { day:'numeric', month:'numeric' });
+      const dueClass = 'mstodo-due' + (isOverdue ? ' overdue' : '');
       const imp = task.importance === 'high' ? ' important' : '';
-      const listLabel = lists.length > 1
-        ? `<span class="mstodo-list-name">${task._listName}</span>` : '';
       return `<div class="mstodo-item${imp}">
         <div class="mstodo-check"></div>
         <div class="mstodo-text">${task.title}</div>
-        ${due ? `<span class="${dueClass}">${dueStr}</span>` : ''}
-        ${listLabel}
+        <span class="${dueClass}">${dueStr}</span>
       </div>`;
     }
 
-    let html = '';
-    if (withDue.length && withoutDue.length) {
-      html += `<div class="mstodo-group-label">S termínem</div>
-               <div class="mstodo-list">${withDue.map(renderItem).join('')}</div>
-               <div class="mstodo-group-label">Bez termínu</div>
-               <div class="mstodo-list">${withoutDue.slice(0,10).map(renderItem).join('')}</div>`;
-    } else {
-      html += `<div class="mstodo-list">${allTasks.slice(0,20).map(renderItem).join('')}</div>`;
-    }
+    let html = `<div class="mstodo-list">${tasks.map(renderItem).join('')}</div>`;
     html += `<div class="mstodo-footer">
       <span></span>
       <button class="mstodo-disconnect" onclick="disconnectMsTodo()">odpojit</button>
