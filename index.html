@@ -569,8 +569,8 @@ async function fetchTuya() {
       const open      = dev.gate_open;
       const name      = dev.device_name || '–';
       const online    = dev.online;
-      const indClass  = open === true ? 'open' : open === false ? 'closed' : 'unknown';
-      const statusTxt = open === true ? 'OTEVŘENO' : open === false ? 'ZAVŘENO' : 'neznámo';
+      const indClass  = open === true ? 'closed' : open === false ? 'open' : 'unknown';
+      const statusTxt = open === true ? 'ZAVŘENO' : open === false ? 'OTEVŘENO' : 'neznámo';
       return `
         <div class="gate-row">
           <div class="gate-indicator ${indClass}"></div>
