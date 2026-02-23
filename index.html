@@ -654,10 +654,17 @@ async function fetchCalendar() {
   const notice=document.getElementById('ics-notice');
   if (!ICS_URL) { notice.textContent='Nastav ICS_URL pro Google Kalendář.'; return; }
   try {
-    const text=await (await fetch(ICS_URL)).text();
+    const GCAL_URL='https://calendar.google.com/calendar/ical/michal.prouza%40gmail.com/private-34ef9693725557655ab08d804a8e7d21/basic.ics';
+    const proxies=['https://corsproxy.io/?'+encodeURIComponent(GCAL_URL),'https://api.allorigins.win/raw?url='+encodeURIComponent(GCAL_URL)];
+    let text='';
+    for (const url of proxies) {
+      try { const r=await fetch(url); text=await r.text(); if (text.includes('BEGIN:VCALENDAR')) break; } catch(_){}
+    }
+    if (!text.includes('BEGIN:VCALENDAR')) throw new Error('Nepodařilo se stáhnout ICS přes žádný proxy');
     const now=new Date();
     const all=parseICS(text);
     console.log(`[kal] staženo ${text.length} znaků, nalezeno ${all.length} událostí`);
+    console.log('[kal] začátek odpovědi:', JSON.stringify(text.slice(0,300)));
     if (all.length) {
       const sorted=[...all].sort((a,b)=>a.date-b.date);
       console.log('[kal] nejbližší data:', sorted.slice(0,5).map(e=>`${e.summary}: ${e.date}`));
