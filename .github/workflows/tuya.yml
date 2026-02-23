@@ -2,6 +2,8 @@ name: Fetch Tuya Gate Status
 
 on:
   workflow_dispatch:           # možnost spustit ručně
+  schedule:
+    - cron: '*/30 * * * *'     # každých 30 minut automaticky
 
 jobs:
   fetch:
