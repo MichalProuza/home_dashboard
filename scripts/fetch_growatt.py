@@ -36,9 +36,10 @@ def safe_float(val, default=0.0):
 
 def fetch():
     try:
-        api = growattServer.GrowattApi(add_random_user_id=True, server="https://openapi-eu.growatt.com")
+        api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
-        api = growattServer.GrowattApi(server="https://openapi-eu.growatt.com")
+        api = growattServer.GrowattApi()
+    api.server = "https://openapi-eu.growatt.com"
 
     try:
         login_res = api.login(USERNAME, PASSWORD)
