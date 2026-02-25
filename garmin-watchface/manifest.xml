@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<iq:manifest xmlns:iq="http://www.garmin.com/xml/connectiq" version="4">
+    <iq:application id="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    type="watchface"
+                    name="@Strings.AppName"
+                    entry="HomeDashboardApp"
+                    launcherIcon="@Drawables.LauncherIcon"
+                    minApiLevel="3.1.0">
+
+        <iq:permissions>
+        </iq:permissions>
+
+        <iq:languages>
+            <iq:language>ces</iq:language>
+            <iq:language>eng</iq:language>
+        </iq:languages>
+
+        <iq:barrels>
+        </iq:barrels>
+
+        <iq:products>
+            <iq:product id="fenix7" />
+            <iq:product id="fenix7s" />
+            <iq:product id="fenix7x" />
+            <iq:product id="fr265" />
+            <iq:product id="fr265s" />
+            <iq:product id="fr965" />
+            <iq:product id="venu2" />
+            <iq:product id="venu2s" />
+            <iq:product id="venu3" />
+            <iq:product id="venu3s" />
+            <iq:product id="venusq2" />
+            <iq:product id="venusq2m" />
+            <iq:product id="epix2" />
+            <iq:product id="epix2pro42mm" />
+            <iq:product id="epix2pro47mm" />
+            <iq:product id="epix2pro51mm" />
+            <iq:product id="fr255" />
+            <iq:product id="fr255s" />
+            <iq:product id="fr955" />
+            <iq:product id="approachs7042mm" />
+            <iq:product id="approachs7047mm" />
+            <iq:product id="d2airx10" />
+        </iq:products>
+
+    </iq:application>
+</iq:manifest>
