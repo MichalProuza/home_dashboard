@@ -1,5 +1,5 @@
 {
-  "updated": "2026-02-27T20:16:17.222522+00:00",
+  "updated": "2026-02-27T21:16:54.671326+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "Pub Quiz",
-      "date": "2026-02-27T17:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Turnaj NH Brno",
       "date": "2026-03-08T07:45:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "🏊‍♀️Městský přebor",
       "date": "2026-03-21T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "1/2maraton Vranov",
+      "date": "2026-03-21T11:00:00+00:00",
       "all_day": false,
       "location": ""
     }
