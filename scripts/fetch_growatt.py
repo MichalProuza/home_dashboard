@@ -61,6 +61,8 @@ def fetch():
 
     # Získej seznam plantáží
     plants = api.plant_list(user_id)
+    print(f"DEBUG plant_list keys: {list(plants.keys()) if isinstance(plants, dict) else type(plants)}")
+    print(f"DEBUG plant_list: {json.dumps(plants, ensure_ascii=False)[:500]}")
     if not plants or not plants.get("data"):
         print("WARN: Žádné plantáže nenalezeny.")
         output = {"updated": now_utc, "error": "no_plants", "plants": []}
