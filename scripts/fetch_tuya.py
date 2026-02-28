@@ -8,6 +8,8 @@ Potřebné GitHub Secrets:
   TUYA_ACCESS_ID     – Access ID z Tuya IoT Console (Cloud → projekt → Overview)
   TUYA_ACCESS_SECRET – Access Secret ze stejného místa
   TUYA_DEVICE_ID     – Device ID brány (IoT Console → Devices → Device ID)
+  TUYA_DEVICE_ID_2   – Device ID druhého zařízení (volitelné)
+  TUYA_DEVICE_ID_3   – Device ID třetího zařízení (volitelné, sklep)
   TUYA_REGION        – Datové centrum: "eu" | "us" | "cn" | "in"  (default: eu)
 """
 
@@ -31,10 +33,11 @@ ACCESS_ID     = os.environ.get("TUYA_ACCESS_ID", "")
 ACCESS_SECRET = os.environ.get("TUYA_ACCESS_SECRET", "")
 REGION        = os.environ.get("TUYA_REGION", "eu").lower()
 
-# Jedno nebo dvě zařízení – TUYA_DEVICE_ID_2 je volitelné
+# Jedno až tři zařízení – TUYA_DEVICE_ID_2 a TUYA_DEVICE_ID_3 jsou volitelné
 _d1 = os.environ.get("TUYA_DEVICE_ID", "")
 _d2 = os.environ.get("TUYA_DEVICE_ID_2", "")
-DEVICE_IDS = [d for d in [_d1, _d2] if d]
+_d3 = os.environ.get("TUYA_DEVICE_ID_3", "")
+DEVICE_IDS = [d for d in [_d1, _d2, _d3] if d]
 
 if not ACCESS_ID or not ACCESS_SECRET or not DEVICE_IDS:
     print("ERROR: Chybí TUYA_ACCESS_ID, TUYA_ACCESS_SECRET nebo TUYA_DEVICE_ID.")
