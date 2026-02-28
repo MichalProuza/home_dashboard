@@ -47,12 +47,19 @@ def fetch():
         print(f"ERROR: Přihlášení selhalo: {e}")
         sys.exit(1)
 
-    if not login_res or login_res.get("result") != 1:
+    print(f"DEBUG login_res keys: {list(login_res.keys()) if isinstance(login_res, dict) else type(login_res)}")
+    print(f"DEBUG login_res: {json.dumps(login_res, ensure_ascii=False)[:500]}")
+
+    result_val = login_res.get("result") if isinstance(login_res, dict) else None
+    if not login_res or str(result_val) not in ("1", "True", "true"):
         print(f"ERROR: Špatné přihlašovací údaje nebo API chyba: {login_res}")
         sys.exit(1)
 
     try:
-        user_id = login_res["user"]["id"]
+        user_info = login_res.get("user") or login_res
+        user_id = user_info.get("id") or user_info.get("userId") or user_info.get("user_id")
+        if not user_id:
+            raise KeyError("id/userId/user_id nenalezeno")
     except (KeyError, TypeError) as e:
         print(f"ERROR: Nelze získat user_id: {e}. login_res: {login_res}")
         sys.exit(1)
@@ -61,6 +68,8 @@ def fetch():
 
     # Získej seznam plantáží
     plants = api.plant_list(user_id)
+    print(f"DEBUG plant_list keys: {list(plants.keys()) if isinstance(plants, dict) else type(plants)}")
+    print(f"DEBUG plant_list: {json.dumps(plants, ensure_ascii=False)[:500]}")
     if not plants or not plants.get("data"):
         print("WARN: Žádné plantáže nenalezeny.")
         output = {"updated": now_utc, "error": "no_plants", "plants": []}
