@@ -39,7 +39,7 @@ def fetch():
         api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
         api = growattServer.GrowattApi()
-    api.server_url = "https://openapi-eu.growatt.com/"
+    api.server_url = "https://server.growatt.com/"
 
     try:
         login_res = api.login(USERNAME, PASSWORD)
