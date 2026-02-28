@@ -24,39 +24,26 @@ OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 MAX_EVENTS = 5
 
-# Mapování českých názvů měsíců na čísla
-MONTHS_CS = {
-    "ledna": 1, "února": 2, "března": 3, "dubna": 4,
-    "května": 5, "června": 6, "července": 7, "srpna": 8,
-    "září": 9, "října": 10, "listopadu": 11, "prosince": 12,
-}
 
-
-def parse_date(kdy_text: str) -> str | None:
+def parse_date(action_date_text: str) -> str | None:
     """
     Parsuje datum z textu tvaru:
-      "Kdy: sobota 7. března 2026 začátek od 9:00, délka 2:30"
-      "Kdy: pondělí 2. – středa 4. března 2026"
-    Vrací ISO datum (YYYY-MM-DD) začátku události nebo None.
+      "6. 3. 2026 začátek od 08:00"
+      "13. 3. 2026 začátek od 07:45, délka 285 minut"
+    Vrací ISO datum (YYYY-MM-DD) nebo None.
     """
-    # Hledáme vzor: číslo den + tečka + název měsíce + rok
-    m = re.search(r"(\d{1,2})\.\s+(\w+)\s+(\d{4})", kdy_text)
+    m = re.search(r"(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})", action_date_text)
     if not m:
         return None
-    day = int(m.group(1))
-    month = MONTHS_CS.get(m.group(2).lower())
-    year = int(m.group(3))
-    if not month:
-        return None
     try:
-        return date(year, month, day).isoformat()
+        return date(int(m.group(3)), int(m.group(2)), int(m.group(1))).isoformat()
     except ValueError:
         return None
 
 
-def parse_time(kdy_text: str) -> str | None:
+def parse_time(action_date_text: str) -> str | None:
     """Extrahuje čas začátku ve formátu HH:MM nebo None."""
-    m = re.search(r"začátek od (\d{1,2}):(\d{2})", kdy_text)
+    m = re.search(r"začátek od (\d{1,2}):(\d{2})", action_date_text)
     if not m:
         return None
     return f"{int(m.group(1)):02d}:{m.group(2)}"
@@ -75,25 +62,25 @@ def fetch():
 
         events = []
 
-        # Události jsou jako <a href="..."> obsahující <h3> nadpis
-        # a text s "Kdy:" a "Kde:" informacemi
-        for link in soup.find_all("a", href=re.compile(r"/zakladni-skola/plan-akci-zs/.+\.html")):
-            h3 = link.find("h3")
-            if not h3:
+        # Každá událost je div.readable_item obsahující a.event-link
+        for item in soup.find_all("div", class_="readable_item"):
+            link = item.find("a", class_="event-link")
+            if not link:
                 continue
 
-            title = h3.get_text(" ", strip=True)
-            full_text = link.get_text(" ", strip=True)
+            # Název
+            h3 = link.find("h3", class_="event-name")
+            if not h3:
+                continue
+            title = h3.get_text(strip=True)
 
-            # Najdi blok "Kdy: ..."
-            kdy_match = re.search(r"Kdy:\s*(.+?)(?:Kde:|$)", full_text, re.DOTALL)
-            kdy_text = kdy_match.group(1).strip() if kdy_match else ""
+            # Datum a čas
+            action_date_div = link.find("div", class_="action_date")
+            if not action_date_div:
+                continue
+            action_date_text = action_date_div.get_text(" ", strip=True)
 
-            # Najdi blok "Kde: ..."
-            kde_match = re.search(r"Kde:\s*(.+?)(?:\n|$)", full_text)
-            kde_text = kde_match.group(1).strip() if kde_match else ""
-
-            event_date = parse_date(kdy_text)
+            event_date = parse_date(action_date_text)
             if not event_date:
                 continue
 
@@ -101,8 +88,13 @@ def fetch():
             if event_date < today.isoformat():
                 continue
 
-            event_time = parse_time(kdy_text)
+            event_time = parse_time(action_date_text)
 
+            # Místo konání
+            venues_div = link.find("div", class_="venues")
+            kde_text = venues_div.get_text(strip=True) if venues_div else ""
+
+            # URL detailu
             href = link.get("href", "")
             if href.startswith("/"):
                 href = "https://www.skolavranov.cz" + href
