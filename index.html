@@ -233,6 +233,15 @@
     .menu-meal { font-size: 0.9rem; line-height: 1.45; padding-left: 10px; border-left: 2px solid var(--rule); }
     .menu-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
 
+    /* ── KALENDÁŘ ZŠ ── */
+    .zs-cal-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .zs-cal-list { display: flex; flex-direction: column; gap: 5px; }
+    .zs-cal-item { display: flex; gap: 10px; align-items: baseline; }
+    .zs-cal-date { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-light); min-width: 80px; flex-shrink: 0; }
+    .zs-cal-title { font-size: 0.92rem; line-height: 1.35; }
+    .zs-cal-title a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .zs-cal-title a:hover { border-bottom-color: var(--ink-mid); }
+
     /* ── MICROSOFT TO DO ── */
     .mstodo-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
     .mstodo-list { display: flex; flex-direction: column; gap: 1px; }
@@ -313,6 +322,11 @@
   </section>
 
   <section>
+    <div class="section-label">Plán akcí ZŠ</div>
+    <div id="zs-cal-content"><div class="zs-cal-notice">načítám…</div></div>
+  </section>
+
+  <section>
     <div class="section-label">Úkoly</div>
     <div class="task-list" id="task-list"><div class="empty-note">žádné úkoly</div></div>
     <a href="tasks.html" class="task-manage-link">→ spravovat úkoly</a>
@@ -360,6 +374,9 @@ const CALENDAR_JSON_URL = './data/calendar.json';
 // 5. Na stránce přehledu aplikace zkopíruj "ID aplikace (klienta)"
 const MSTODO_CLIENT_ID = '8b6821fc-8ef4-4c4f-b825-eef8255766d5';
 const MSTODO_TENANT    = 'consumers'; // 'consumers' = jen osobní MS účty; 'common' = personal + work
+
+// --- Plán akcí ZŠ ---
+const ZS_CALENDAR_JSON_URL = './data/school_calendar.json';
 
 // --- Poloha pro Open-Meteo ---
 const LAT = 49.043, LON = 16.558;   // Vranov u Brna
@@ -883,6 +900,48 @@ async function fetchMsTodo() {
 }
 
 // ════════════════════════════════════════════════════════
+//  PLÁN AKCÍ ZŠ  (čte data/school_calendar.json)
+// ════════════════════════════════════════════════════════
+async function fetchZsCalendar() {
+  const el = document.getElementById('zs-cal-content');
+  const dayN = ['Ne','Po','Út','St','Čt','Pá','So'];
+  try {
+    const res = await fetch(`${ZS_CALENDAR_JSON_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.error) {
+      el.innerHTML = `<div class="zs-cal-notice">Chyba: ${data.error}</div>`;
+      return;
+    }
+
+    const events = data.events || [];
+    if (!events.length) {
+      el.innerHTML = '<div class="zs-cal-notice">Žádné nadcházející akce.</div>';
+      return;
+    }
+
+    const items = events.map(ev => {
+      const d = new Date(ev.date + 'T12:00:00');
+      const dayLabel = `${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`;
+      const timeStr = ev.time ? ` ${ev.time}` : '';
+      const titleHtml = ev.url
+        ? `<a href="${ev.url}" target="_blank" rel="noopener">${ev.title}</a>`
+        : ev.title;
+      return `<div class="zs-cal-item">` +
+        `<div class="zs-cal-date">${dayLabel}${timeStr}</div>` +
+        `<div class="zs-cal-title">${titleHtml}</div>` +
+        `</div>`;
+    }).join('');
+
+    el.innerHTML = `<div class="zs-cal-list">${items}</div>`;
+
+  } catch(e) {
+    el.innerHTML = '<div class="zs-cal-notice">data/school_calendar.json nenalezen – spusť workflow.</div>';
+  }
+}
+
+// ════════════════════════════════════════════════════════
 //  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
 // ════════════════════════════════════════════════════════
 const SCHOOL_MENU_URL = './data/school_menu.json';
@@ -925,7 +984,7 @@ async function initAll() {
   document.getElementById('last-update').textContent='aktualizuji…';
   await handleNetatmoCallback();
   await handleMsTodoCallback();
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchMsTodo(), fetchSchoolMenu()]);
+  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchMsTodo(), fetchSchoolMenu(), fetchZsCalendar()]);
   renderTasks();
   const now=new Date();
   document.getElementById('last-update').textContent=
