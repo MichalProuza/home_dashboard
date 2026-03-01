@@ -1,5 +1,5 @@
 {
-  "updated": "2026-02-28T19:44:19.994785+00:00",
+  "updated": "2026-03-01T13:56:13.709843+00:00",
   "error": null,
   "devices": [
     {
@@ -37,16 +37,16 @@
     {
       "device_name": "Sklep",
       "online": true,
-      "gate_open": false,
+      "gate_open": true,
       "dp_used": "doorcontact_state",
       "raw_dps": [
         {
           "code": "doorcontact_state",
-          "value": false
+          "value": true
         },
         {
           "code": "battery_percentage",
-          "value": 94
+          "value": 73
         }
       ]
     }
