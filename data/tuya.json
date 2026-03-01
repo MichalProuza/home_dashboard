@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-01T08:38:35.979067+00:00",
+  "updated": "2026-03-01T09:36:07.467378+00:00",
   "error": null,
   "devices": [
     {
@@ -20,13 +20,13 @@
     },
     {
       "device_name": "Brána",
-      "online": false,
-      "gate_open": false,
+      "online": true,
+      "gate_open": true,
       "dp_used": "doorcontact_state",
       "raw_dps": [
         {
           "code": "doorcontact_state",
-          "value": false
+          "value": true
         },
         {
           "code": "battery_percentage",
