@@ -90,9 +90,14 @@ def fetch():
 
             event_time = parse_time(action_date_text)
 
-            # Místo konání
-            venues_div = link.find("div", class_="venues")
-            kde_text = venues_div.get_text(strip=True) if venues_div else ""
+            # Místo konání — odstraníme text ze skrytého <span class="sr-only">Kde:</span>
+            kde_text = ""
+            if venues_div := link.find("div", class_="venues"):
+                for tag in venues_div.find_all("span", class_="sr-only"):
+                    tag.decompose()
+                for tag in venues_div.find_all("i"):
+                    tag.decompose()
+                kde_text = venues_div.get_text(strip=True)
 
             # URL detailu
             href = link.get("href", "")
