@@ -1,51 +1,51 @@
 {
-  "updated": "2026-02-27T05:50:21.321905+00:00",
+  "updated": "2026-03-02T05:51:05.770347+00:00",
   "error": null,
-  "week": "24.2.- 28.2.2025",
+  "week": "2.3. – 6.3.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
       "meals": [
-        "cereálie s mlékem 1,7",
-        "francouzská polévka 1,9",
-        "bramborový guláš, celozrnné pečivo 1",
-        "dalamánek, vajíčková pomazánka, jablko 1,3,7"
+        "grahamový plátek, přírodní tvarohový sýr 1,7",
+        "frankfurtská polévka 1,9",
+        "opékané nudle s kuřecím masem 1",
+        "houska, hermelínová pomazánka, pomeranč 1,7"
       ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "rohlík, pomazánka s jarní cibulkou, pomeranč 1,7",
-        "selská polévka 1,9",
-        "lívance se šlehaným tvarohem a ovocem 1,3,7",
-        "žitný chléb, máslo, masdamer, zelenina 1,7"
+        "chléb, švýcarská pomazánka, rajče 1,7",
+        "hovězí vývar s masovým kapáním 1,9",
+        "pečený maso, kysané zelí, houskový knedlík 1,3,7",
+        "máslový croasant 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "sýrový chlebík , cottage, paprika 1,7",
-        "špenátová polévka 1,3,7",
-        "pečená štika, brambory, listový salát s kukuřicí 1,4,7",
-        "obložená bagetka 1,7"
+        "kaiserka, jahodová marmeláda , jablko 1,7",
+        "drožďová polévka s kapáním 1,7",
+        "čočka na kyselo, vejce, okurek, chléb 1,3",
+        "jablečný řez 1, 7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "opékaný toust s čokoládovým máslem, banán 1,7",
-        "hovězí polévka s kolečky 1,9",
-        "pene s rajčatovou omáčkou, sypané sýrem, ovoce 1,7",
-        "houska, balkánská pomazánka, kedlubna 1,7"
+        "zapékaný toust 1,7",
+        "bramborová polévka 1,9",
+        "šunková pizza 1,3,7",
+        "dalamánek, máslo, parenička, paprika 1,3,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "žitný chléb, domácí játrová pomazánka, jablko 1,7",
-        "cuketový krém 1,7",
-        "svíčková na smetaně, houskový knedlík 1,3,7",
-        "rybízová bublanina s drobenkou 1,3,7"
+        "ovocný jogurt 7",
+        "květákovolilkový krém s muškátovým oříškem 1,7",
+        "masové nudličky po srbsku s jasmínovou rýží 1,7",
+        "žitný chléb, debrecínka, okurek 1,7"
       ]
     }
   }
