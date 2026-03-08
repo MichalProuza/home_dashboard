@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-08T17:13:04.297248+00:00",
+  "updated": "2026-03-08T18:15:52.905050+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "Turnaj NH Brno",
-      "date": "2026-03-08T07:45:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "🏊‍♀️Městský přebor",
       "date": "2026-03-21T07:00:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "1/2maraton Vranov",
       "date": "2026-03-21T11:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Geriatrie - odběry",
+      "date": "2026-03-27T06:00:00+00:00",
       "all_day": false,
       "location": ""
     }
