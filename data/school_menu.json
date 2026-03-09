@@ -1,51 +1,51 @@
 {
-  "updated": "2026-03-06T05:42:28.132860+00:00",
+  "updated": "2026-03-09T05:55:47.698218+00:00",
   "error": null,
-  "week": "2.3. – 6.3.2026",
+  "week": "9.3. - 13.3.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
       "meals": [
-        "grahamový plátek, přírodní tvarohový sýr 1,7",
-        "frankfurtská polévka 1,9",
-        "opékané nudle s kuřecím masem 1",
-        "houska, hermelínová pomazánka, pomeranč 1,7"
+        "cereálie s mlékem 1,7",
+        "brokolicový krém s krutonky 1,7",
+        "pečená ryba, brambory, listový salátek 1,4,7",
+        "kaiserka , tuňáková pomazánka, okurek 1,4,7"
       ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "chléb, švýcarská pomazánka, rajče 1,7",
-        "hovězí vývar s masovým kapáním 1,9",
-        "pečený maso, kysané zelí, houskový knedlík 1,3,7",
-        "máslový croasant 1,7"
+        "houska, pomazánkové máslo s pažitkou, okurek 1,7",
+        "masový vývar s játrovým kapáním 1,3,9",
+        "srbské rizoto, sýr, okurek 7",
+        "žitný chléb, česneková pomazánka, cherry rajče 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "kaiserka, jahodová marmeláda , jablko 1,7",
-        "drožďová polévka s kapáním 1,7",
-        "čočka na kyselo, vejce, okurek, chléb 1,3",
-        "jablečný řez 1, 7"
+        "opékaný toust s nutelou, jablko 1,7",
+        "polévka z jarní zeleninky 1,9",
+        "rajská omáčka s masovými koulemi, těstovinové copánky 1,9",
+        "rohlík, pomazánka z míchaných vajec, paprika 1,3,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "zapékaný toust 1,7",
-        "bramborová polévka 1,9",
-        "šunková pizza 1,3,7",
-        "dalamánek, máslo, parenička, paprika 1,3,7"
+        "podmáslový chléb, žervé, pomeranč 1,7",
+        "fazolová polévka 1,9",
+        "dukátové buchtičky s krémem 1,7",
+        "vícezrnný chléb, massdamer, zelenina 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "ovocný jogurt 7",
-        "květákovolilkový krém s muškátovým oříškem 1,7",
-        "masové nudličky po srbsku s jasmínovou rýží 1,7",
-        "žitný chléb, debrecínka, okurek 1,7"
+        "kukuřičný chlebík , ovoce 1,7",
+        "masový vývar s písmenky 1,9",
+        "kuřecí řízek, šťouchané brambory s jarní cibulkou 1,3",
+        "sýrový croassant, okurek 1,7"
       ]
     }
   }
