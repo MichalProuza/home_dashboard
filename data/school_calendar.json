@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-10T05:44:28.896201+00:00",
+  "updated": "2026-03-11T05:47:44.698574+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Návštěva knihovny Brno Lesná",
-      "date": "2026-03-10",
-      "time": "08:00",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-navsteva-knihovny-brno-lesna-386_239cs.html"
-    },
     {
       "title": "MŠ - Pyžamový den obě třídy",
       "date": "2026-03-11",
@@ -36,6 +29,13 @@
       "time": "13:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zapis-do-ms-na-novy-skolni-rok-2026-2027-319_203cs.html"
+    },
+    {
+      "title": "MŠ - Zvířátka, kterých se nemusíme bát",
+      "date": "2026-03-19",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zviratka-kterych-se-nemusime-bat-396_246cs.html"
     }
   ]
 }
