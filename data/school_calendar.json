@@ -1,21 +1,7 @@
 {
-  "updated": "2026-03-11T05:47:44.698574+00:00",
+  "updated": "2026-03-12T05:50:41.959399+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Pyžamový den obě třídy",
-      "date": "2026-03-11",
-      "time": "07:38",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-pyzamovy-den-obe-tridy-387_240cs.html"
-    },
-    {
-      "title": "ZŠ - Beseda o zraku",
-      "date": "2026-03-11",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-beseda-o-zraku-404_248cs.html"
-    },
     {
       "title": "ZŠ - Bruslení Blansko II",
       "date": "2026-03-13",
@@ -36,6 +22,20 @@
       "time": "08:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zviratka-kterych-se-nemusime-bat-396_246cs.html"
+    },
+    {
+      "title": "ZŠ - matematický klokan",
+      "date": "2026-03-20",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-matematicky-klokan-283_172cs.html"
+    },
+    {
+      "title": "MŠ - Bubnování ve školce",
+      "date": "2026-03-24",
+      "time": "09:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-bubnovani-ve-skolce-388_241cs.html"
     }
   ]
 }
