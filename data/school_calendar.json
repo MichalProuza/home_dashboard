@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-13T05:48:31.382239+00:00",
+  "updated": "2026-03-14T05:43:52.192749+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Bruslení Blansko II",
-      "date": "2026-03-13",
-      "time": "07:45",
-      "location": "Zimní stadion Blansko",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-brusleni-blansko-ii-370_235cs.html"
-    },
     {
       "title": "MŠ  - Zápis do MŠ na nový školní rok 2026-2027",
       "date": "2026-03-18",
@@ -36,6 +29,13 @@
       "time": "09:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-bubnovani-ve-skolce-388_241cs.html"
+    },
+    {
+      "title": "MŠ - Velikonoční dílničky (obě třídy)",
+      "date": "2026-03-24",
+      "time": "15:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-obe-tridy-321_205cs.html"
     }
   ]
 }
