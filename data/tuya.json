@@ -1,16 +1,16 @@
 {
-  "updated": "2026-03-15T13:05:52.623049+00:00",
+  "updated": "2026-03-15T14:02:56.820064+00:00",
   "error": null,
   "devices": [
     {
       "device_name": "Garáž ",
       "online": true,
-      "gate_open": false,
+      "gate_open": true,
       "dp_used": "switch",
       "raw_dps": [
         {
           "code": "switch",
-          "value": false
+          "value": true
         },
         {
           "code": "battery",
