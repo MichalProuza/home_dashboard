@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-18T06:02:04.508520+00:00",
+  "updated": "2026-03-19T05:57:50.859301+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ  - Zápis do MŠ na nový školní rok 2026-2027",
-      "date": "2026-03-18",
-      "time": "13:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zapis-do-ms-na-novy-skolni-rok-2026-2027-319_203cs.html"
-    },
     {
       "title": "MŠ - Zvířátka, kterých se nemusíme bát",
       "date": "2026-03-19",
@@ -36,6 +29,13 @@
       "time": "15:30",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-obe-tridy-321_205cs.html"
+    },
+    {
+      "title": "MŠ - Velikonoční dílničky",
+      "date": "2026-03-24",
+      "time": "15:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-389_242cs.html"
     }
   ]
 }
