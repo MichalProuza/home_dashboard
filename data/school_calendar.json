@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-19T05:57:50.859301+00:00",
+  "updated": "2026-03-20T05:51:34.635116+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Zvířátka, kterých se nemusíme bát",
-      "date": "2026-03-19",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zviratka-kterych-se-nemusime-bat-396_246cs.html"
-    },
     {
       "title": "ZŠ - matematický klokan",
       "date": "2026-03-20",
@@ -36,6 +29,13 @@
       "time": "15:30",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-389_242cs.html"
+    },
+    {
+      "title": "ŠD - Turnaj deskových her",
+      "date": "2026-03-26",
+      "time": "08:00",
+      "location": "Nebovidy",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-turnaj-deskovych-her-307_191cs.html"
     }
   ]
 }
