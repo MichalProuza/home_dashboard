@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-21T16:14:15.023367+00:00",
+  "updated": "2026-03-21T17:14:39.920537+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "🏊‍♀️Městský přebor",
-      "date": "2026-03-21T07:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Geriatrie - odběry",
       "date": "2026-03-27T06:00:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "🏊‍♀️ Jarní cena Boskovic",
       "date": "2026-03-28T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Geriatrie",
+      "date": "2026-04-10T08:00:00+00:00",
       "all_day": false,
       "location": ""
     }
