@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-21T14:14:52.995990+00:00",
+  "updated": "2026-03-21T15:13:55.096815+00:00",
   "error": null,
   "recurring": [
     {
@@ -29,14 +29,14 @@
       "location": ""
     },
     {
-      "summary": "1/2maraton Vranov",
-      "date": "2026-03-21T11:00:00+00:00",
+      "summary": "Geriatrie - odběry",
+      "date": "2026-03-27T06:00:00+00:00",
       "all_day": false,
       "location": ""
     },
     {
-      "summary": "Geriatrie - odběry",
-      "date": "2026-03-27T06:00:00+00:00",
+      "summary": "🏊‍♀️ Jarní cena Boskovic",
+      "date": "2026-03-28T07:00:00+00:00",
       "all_day": false,
       "location": ""
     }
