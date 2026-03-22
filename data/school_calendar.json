@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-20T05:51:34.635116+00:00",
+  "updated": "2026-03-22T05:53:06.250062+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - matematický klokan",
-      "date": "2026-03-20",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-matematicky-klokan-283_172cs.html"
-    },
     {
       "title": "MŠ - Bubnování ve školce",
       "date": "2026-03-24",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Nebovidy",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-turnaj-deskovych-her-307_191cs.html"
+    },
+    {
+      "title": "ŠD - velikonoční jarmak",
+      "date": "2026-04-01",
+      "time": "13:00",
+      "location": "ZŠ Vranov - ŠD",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-velikonocni-jarmak-284_173cs.html"
     }
   ]
 }
