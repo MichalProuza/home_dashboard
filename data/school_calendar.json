@@ -1,28 +1,7 @@
 {
-  "updated": "2026-03-24T05:59:12.879101+00:00",
+  "updated": "2026-03-25T06:00:36.919239+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Bubnování ve školce",
-      "date": "2026-03-24",
-      "time": "09:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-bubnovani-ve-skolce-388_241cs.html"
-    },
-    {
-      "title": "MŠ - Velikonoční dílničky (obě třídy)",
-      "date": "2026-03-24",
-      "time": "15:30",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-obe-tridy-321_205cs.html"
-    },
-    {
-      "title": "MŠ - Velikonoční dílničky",
-      "date": "2026-03-24",
-      "time": "15:30",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-velikonocni-dilnicky-389_242cs.html"
-    },
     {
       "title": "ŠD - Turnaj deskových her",
       "date": "2026-03-26",
@@ -36,6 +15,27 @@
       "time": "13:00",
       "location": "ZŠ Vranov - ŠD",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-velikonocni-jarmak-284_173cs.html"
+    },
+    {
+      "title": "MŠ - Den naruby (obě třídy)",
+      "date": "2026-04-15",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-den-naruby-obe-tridy-322_206cs.html"
+    },
+    {
+      "title": "ZŠ - Zážitkový workshop: Kdo je vítěz",
+      "date": "2026-04-17",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zazitkovy-workshop-kdo-je-vitez-402_247cs.html"
+    },
+    {
+      "title": "MŠ - Flétnička s kytarou",
+      "date": "2026-04-20",
+      "time": "09:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fletnicka-s-kytarou-341_223cs.html"
     }
   ]
 }
