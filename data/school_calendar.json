@@ -1,14 +1,7 @@
 {
-  "updated": "2026-03-26T06:12:06.076577+00:00",
+  "updated": "2026-03-27T06:12:31.957354+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ŠD - Turnaj deskových her",
-      "date": "2026-03-26",
-      "time": "08:00",
-      "location": "Nebovidy",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-turnaj-deskovych-her-307_191cs.html"
-    },
     {
       "title": "ŠD - velikonoční jarmak",
       "date": "2026-04-01",
@@ -36,6 +29,13 @@
       "time": "09:30",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fletnicka-s-kytarou-341_223cs.html"
+    },
+    {
+      "title": "ZŠ - třídní schůzky",
+      "date": "2026-04-22",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
     }
   ]
 }
