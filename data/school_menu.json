@@ -1,52 +1,47 @@
 {
-  "updated": "2026-03-27T06:10:59.062535+00:00",
+  "updated": "2026-03-30T06:28:26.322659+00:00",
   "error": null,
-  "week": "23.3. - 27.3.2026",
+  "week": "30.3. – 3.4.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
       "meals": [
-        "čokokuličky s mlékem 7",
-        "masový vývar s nudlemi 1,9",
-        "segedinský guláš, houskový knedlík 1,3,7",
-        "rohlík, máslo, parenička, paprika 1,7"
+        "žitný plátek, žervé, jablko 1,7",
+        "brokolicová polévka 7",
+        "štika na másle, brambory, anglická zelenina 7",
+        "rohlík, máslo, jahodová marmeláda, banán 1,7"
       ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "kmínový chléb, pažitková pomazánka, pomeranč 1,7",
-        "hrstková polévka 1,9",
-        "vdolky s povidly a tvarohem 1,3,7",
-        "kaiserka, krůtí šunka, okurek 1,7"
+        "vanilkový pudink 7",
+        "česneková polévka 1,3,9",
+        "hovězí tokáň, jasmínová rýže, salát 1",
+        "chléb, pomazánka z kuřecích jater, okurek 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "opékaný toust s máslem, ovoce 1,7",
-        "rajská polévka 1",
-        "vepřové žebírko, kuskus, grilovaná zelenina s parmazánem 1,7",
-        "houska, tuňáková pomazánka, rajče 1,4,7"
+        "žitný chléb, máslo, ementaler, rajče 1,7",
+        "masový vývar s nudlemi 1,9",
+        "těstovinový salát s kuřecím masem 1,7",
+        "ovocná bublanina 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "kakaový pudink s piškotem 1,7",
-        "francouzská polévka 1,9",
-        "koprová omáčka, vařené brambory, vejce 1,3,7",
-        "žitný chléb, pomazánka z blaťáckého zlata, kedlubna 1,7"
+        "cereálie s mlékem 1,7",
+        "jarní polévka 1,9",
+        "smetanový špenát, vejce, brambory 1,3,7",
+        "croissant 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
-      "meals": [
-        "ovocná miska, kukuřičný chlebík",
-        "hráškový krém 1,7",
-        "BBQ kuřecí paličky sypané sezam, jasmínová rýže, zelný salát 11",
-        "kynutý táč se švestkami a tvarohem 1,3,7"
-      ]
+      "meals": []
     }
   }
 }
