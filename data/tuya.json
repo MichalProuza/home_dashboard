@@ -1,5 +1,54 @@
 {
-  "updated": "2026-03-31T10:09:12.036757+00:00",
-  "error": "Status chyba: No permissions. Your subscription to cloud development plan has expired.",
-  "devices": []
+  "updated": "2026-03-31T11:27:41.312535+00:00",
+  "error": null,
+  "devices": [
+    {
+      "device_name": "Garáž ",
+      "online": true,
+      "gate_open": false,
+      "dp_used": "switch",
+      "raw_dps": [
+        {
+          "code": "switch",
+          "value": false
+        },
+        {
+          "code": "battery",
+          "value": 52
+        }
+      ]
+    },
+    {
+      "device_name": "Brána",
+      "online": true,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 100
+        }
+      ]
+    },
+    {
+      "device_name": "Sklep",
+      "online": false,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 44
+        }
+      ]
+    }
+  ]
 }
