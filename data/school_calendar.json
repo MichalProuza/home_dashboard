@@ -1,14 +1,7 @@
 {
-  "updated": "2026-04-01T06:25:40.209544+00:00",
+  "updated": "2026-04-02T06:11:20.410897+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ŠD - velikonoční jarmak",
-      "date": "2026-04-01",
-      "time": "13:00",
-      "location": "ZŠ Vranov - ŠD",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-velikonocni-jarmak-284_173cs.html"
-    },
     {
       "title": "MŠ - Den naruby (obě třídy)",
       "date": "2026-04-15",
@@ -36,6 +29,13 @@
       "time": "17:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
+    },
+    {
+      "title": "MŠ - Čarodějnický den",
+      "date": "2026-04-30",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
     }
   ]
 }
