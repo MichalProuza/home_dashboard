@@ -1,47 +1,47 @@
 {
-  "updated": "2026-04-02T06:10:56.523482+00:00",
+  "updated": "2026-04-03T06:10:40.125401+00:00",
   "error": null,
-  "week": "30.3. – 3.4.2026",
+  "week": "6.4.- 10.4. 2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
-      "meals": [
-        "žitný plátek, žervé, jablko 1,7",
-        "brokolicová polévka 7",
-        "štika na másle, brambory, anglická zelenina 7",
-        "rohlík, máslo, jahodová marmeláda, banán 1,7"
-      ]
+      "meals": []
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "vanilkový pudink 7",
-        "česneková polévka 1,3,9",
-        "hovězí tokáň, jasmínová rýže, salát 1",
-        "chléb, pomazánka z kuřecích jater, okurek 1,7"
+        "čokokuličky s mlékem 1,7",
+        "hovězí vývar s těstovinou 1,9",
+        "žebírko na žampionech s rýží, zeleninový salátek 1,7",
+        "rohlík, česneková pomazánka, cherry rajčátko 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "žitný chléb, máslo, ementaler, rajče 1,7",
-        "masový vývar s nudlemi 1,9",
-        "těstovinový salát s kuřecím masem 1,7",
-        "ovocná bublanina 1,7"
+        "opékaný toust, bylinkové máslo, kedlubna 1,7",
+        "krém z pečeného česneku, krutonky 1,7",
+        "smažený květák, brambory, jogurtový dip 1,3,7",
+        "chléb, šunková pěna, banán 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "cereálie s mlékem 1,7",
-        "jarní polévka 1,9",
-        "smetanový špenát, vejce, brambory 1,3,7",
-        "croissant 1,7"
+        "sýrové šneky 1,7",
+        "zeleninová polévka 1,9",
+        "čočka na kyselo, vejce, okurek, chléb 1,3",
+        "žitný chléb, námořnická pomazánka, mandarinka 1,4,7"
       ]
     },
     "patek": {
       "name": "Pátek",
-      "meals": []
+      "meals": [
+        "ovocná miska",
+        "italská polévka 1",
+        "pečené kachní stehýnko, kysané zelí, bramborový knedlík 1",
+        "dalamánek, debrecínská pečeně, paprika 1,7"
+      ]
     }
   }
 }
