@@ -1,5 +1,41 @@
 {
-  "updated": "2026-04-04T05:56:06.137678+00:00",
-  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
-  "events": []
+  "updated": "2026-04-05T06:13:32.015280+00:00",
+  "error": null,
+  "events": [
+    {
+      "title": "MŠ - Den naruby (obě třídy)",
+      "date": "2026-04-15",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-den-naruby-obe-tridy-322_206cs.html"
+    },
+    {
+      "title": "ZŠ - Zážitkový workshop: Kdo je vítěz",
+      "date": "2026-04-17",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zazitkovy-workshop-kdo-je-vitez-402_247cs.html"
+    },
+    {
+      "title": "MŠ - Flétnička s kytarou",
+      "date": "2026-04-20",
+      "time": "09:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fletnicka-s-kytarou-341_223cs.html"
+    },
+    {
+      "title": "ZŠ - třídní schůzky",
+      "date": "2026-04-22",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
+    },
+    {
+      "title": "MŠ - Čarodějnický den",
+      "date": "2026-04-30",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
+    }
+  ]
 }
