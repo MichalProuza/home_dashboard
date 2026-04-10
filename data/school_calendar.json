@@ -1,7 +1,14 @@
 {
-  "updated": "2026-04-09T06:20:58.705151+00:00",
+  "updated": "2026-04-10T06:52:10.341807+00:00",
   "error": null,
   "events": [
+    {
+      "title": "ZŠ - McDonald´s Cup",
+      "date": "2026-04-13",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-mcdonalds-cup-408_249cs.html"
+    },
     {
       "title": "MŠ - Den naruby (obě třídy)",
       "date": "2026-04-15",
@@ -24,18 +31,11 @@
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fletnicka-s-kytarou-341_223cs.html"
     },
     {
-      "title": "ZŠ - třídní schůzky",
+      "title": "ZŠ - McDonald´s Cup - starší",
       "date": "2026-04-22",
-      "time": "17:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
-    },
-    {
-      "title": "MŠ - Čarodějnický den",
-      "date": "2026-04-30",
       "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-mcdonalds-cup-starsi-409_250cs.html"
     }
   ]
 }
