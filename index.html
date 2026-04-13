@@ -157,6 +157,15 @@
     .netatmo-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
     .netatmo-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink); }
     .netatmo-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .noise-graph-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-light);
+      margin-bottom: 4px; margin-top: 10px;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .noise-graph-range { color: var(--ink); }
+    .noise-graph-svg { width: 100%; overflow: visible; display: block; }
 
     /* ── GROWATT ── */
     .growatt-main { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 12px; }
@@ -515,6 +524,60 @@ function fmtN(k,v) {
   return map[k] ?? String(v);
 }
 
+async function fetchNetatmoNoiseHistory(token, deviceId) {
+  const now = Math.floor(Date.now() / 1000);
+  const dayAgo = now - 86400;
+  const params = new URLSearchParams({
+    device_id: deviceId, type: 'noise', scale: '30min',
+    date_begin: dayAgo, date_end: now, optimize: 'true'
+  });
+  const data = await (await fetch(`https://api.netatmo.com/api/getmeasure?${params}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })).json();
+  if (!data?.body?.length) return [];
+  const series = data.body[0];
+  const points = [];
+  let t = series.beg_time;
+  for (const [val] of series.value) {
+    if (val !== null) points.push({ t, v: val });
+    t += series.step_time;
+  }
+  return points;
+}
+
+function renderNoiseGraph(points) {
+  if (points.length < 2) return '';
+  const W = 400, H = 48;
+  const vals = points.map(p => p.v);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const range = maxV - minV || 1;
+  const tMin = points[0].t, tMax = points[points.length - 1].t;
+  const tRange = tMax - tMin || 1;
+  const px = t => ((t - tMin) / tRange) * W;
+  const py = v => H - 2 - ((v - minV) / range) * (H - 6);
+  const linePath = points.map((p, i) =>
+    `${i === 0 ? 'M' : 'L'} ${px(p.t).toFixed(1)} ${py(p.v).toFixed(1)}`
+  ).join(' ');
+  const areaPath = `${linePath} L ${px(tMax).toFixed(1)} ${H} L ${px(tMin).toFixed(1)} ${H} Z`;
+  const labels = [];
+  const step6h = 6 * 3600;
+  const firstLabel = Math.ceil(tMin / step6h) * step6h;
+  for (let t = firstLabel; t <= tMax; t += step6h) {
+    const lx = px(t);
+    const d = new Date(t * 1000);
+    const hh = String(d.getHours()).padStart(2, '0');
+    labels.push(`<text x="${lx.toFixed(1)}" y="${H + 12}" font-size="8" fill="var(--ink-faint)" text-anchor="middle" font-family="JetBrains Mono, monospace">${hh}:00</text>`);
+  }
+  return `<div>
+    <div class="noise-graph-label">Hluk / 24h<span class="noise-graph-range">${minV}–${maxV} dB</span></div>
+    <svg viewBox="0 0 ${W} ${H + 16}" class="noise-graph-svg">
+      <path d="${areaPath}" fill="var(--paper-dark)" stroke="none"/>
+      <path d="${linePath}" fill="none" stroke="var(--ink-mid)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${labels.join('')}
+    </svg>
+  </div>`;
+}
+
 async function fetchNetatmo() {
   const el = document.getElementById('netatmo-content');
   const token = await getNetatmoToken();
@@ -553,6 +616,16 @@ async function fetchNetatmo() {
       }
     }
     html += '</div>';
+
+    // Graf hluku za posledních 24 h (pouze pro první stanici, která má Noise)
+    const firstStation = devices[0];
+    if (firstStation?.dashboard_data?.Noise !== undefined) {
+      try {
+        const noisePoints = await fetchNetatmoNoiseHistory(token, firstStation._id);
+        html += renderNoiseGraph(noisePoints);
+      } catch(e) { /* hluk: ignorovat chyby grafu */ }
+    }
+
     el.innerHTML = html;
   } catch(e) { el.innerHTML=`<div class="netatmo-notice">Chyba Netatmo: ${e.message}</div>`; }
 }
