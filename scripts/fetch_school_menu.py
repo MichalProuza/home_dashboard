@@ -7,6 +7,7 @@ Spouští se přes GitHub Actions každý pracovní den.
 import json
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,6 +21,8 @@ except ImportError:
 URL = "https://www.skolavranov.cz/skolni-jidelna/jidelnicek/"
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "school_menu.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+MAX_RETRIES = 3
 
 # Mapování názvů dnů (jak se objevují v HTML) na klíče
 DAY_NAMES = {
@@ -42,11 +45,33 @@ DAY_LABELS = {
 def fetch():
     now_utc = datetime.now(timezone.utc).isoformat()
 
-    try:
-        print(f"INFO: Stahuju {URL} …")
-        resp = requests.get(URL, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
-        resp.raise_for_status()
+    last_exc = None
+    resp = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            print(f"INFO: Stahuju {URL} … (pokus {attempt}/{MAX_RETRIES})")
+            resp = requests.get(URL, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+            resp.raise_for_status()
+            break
+        except Exception as exc:
+            last_exc = exc
+            print(f"WARN: Pokus {attempt} selhal: {exc}")
+            if attempt < MAX_RETRIES:
+                time.sleep(2 ** attempt)
 
+    if resp is None or not resp.ok:
+        print(f"ERROR: Všechny pokusy selhaly: {last_exc}")
+        output = {
+            "updated": now_utc,
+            "error":   str(last_exc),
+            "week":    "",
+            "days":    {},
+        }
+        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+        print(f"✓ Uloženo do {OUTPUT_PATH}")
+        return
+
+    try:
         soup = BeautifulSoup(resp.text, "html.parser")
 
         # MŠ jídelníček je v záložce pane_220_1

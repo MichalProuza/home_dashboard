@@ -910,12 +910,13 @@ async function fetchZsCalendar() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    if (data.error) {
-      el.innerHTML = `<div class="zs-cal-notice">Chyba: ${data.error}</div>`;
+    const events = data.events || [];
+
+    if (data.error && !events.length) {
+      el.innerHTML = '<div class="zs-cal-notice">Akce ZŠ se nepodařilo načíst – zkus znovu později.</div>';
       return;
     }
 
-    const events = data.events || [];
     if (!events.length) {
       el.innerHTML = '<div class="zs-cal-notice">Žádné nadcházející akce.</div>';
       return;
@@ -934,7 +935,10 @@ async function fetchZsCalendar() {
         `</div>`;
     }).join('');
 
-    el.innerHTML = `<div class="zs-cal-list">${items}</div>`;
+    const staleNote = data.error
+      ? '<div class="zs-cal-notice" style="margin-bottom:6px">⚠ data se nepodařilo obnovit, zobrazuji poslední známé akce</div>'
+      : '';
+    el.innerHTML = `${staleNote}<div class="zs-cal-list">${items}</div>`;
 
   } catch(e) {
     el.innerHTML = '<div class="zs-cal-notice">data/school_calendar.json nenalezen – spusť workflow.</div>';
@@ -957,20 +961,34 @@ async function fetchSchoolMenu() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    if (data.error) { el.innerHTML=`<div class="menu-notice">Chyba: ${data.error}</div>`; return; }
+    if (data.error) { el.innerHTML=`<div class="menu-notice">Jídelníček se nepodařilo načíst – zkus znovu později.</div>`; return; }
 
     const dayKey  = MENU_DAY_MAP[new Date().getDay()];
     const dayData = data.days?.[dayKey];
 
-    if (!dayData?.meals?.length) {
-      el.innerHTML=`<div class="menu-notice">Jídelníček pro ${MENU_DAY_FULL[dayKey]} není k dispozici.</div>`;
+    if (dayData?.meals?.length) {
+      el.innerHTML=`
+        <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
+        <div class="menu-week">${data.week||''}</div>
+        <div class="menu-meals">${dayData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
       return;
     }
 
-    el.innerHTML=`
-      <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
-      <div class="menu-week">${data.week||''}</div>
-      <div class="menu-meals">${dayData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
+    // Dnešní den nemá jídla – zkus zobrazit nejbližší dostupný den v týdnu
+    const dayOrder = ['pondeli','utery','streda','ctvrtek','patek'];
+    const todayIdx = dayOrder.indexOf(dayKey);
+    const fallbackKey = dayOrder.slice(todayIdx + 1).find(k => data.days?.[k]?.meals?.length);
+    const fallbackData = fallbackKey ? data.days[fallbackKey] : null;
+
+    if (fallbackData) {
+      el.innerHTML=`
+        <div class="menu-day-label">${MENU_DAY_FULL[fallbackKey]}</div>
+        <div class="menu-week">${data.week||''}</div>
+        <div class="menu-meals">${fallbackData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
+      return;
+    }
+
+    el.innerHTML=`<div class="menu-notice">Jídelníček pro tento týden zatím není k dispozici${data.week ? ' ('+data.week+')' : ''}.</div>`;
 
   } catch(e) {
     el.innerHTML='<div class="menu-notice">data/school_menu.json nenalezen – spusť workflow.</div>';
