@@ -1,46 +1,51 @@
 {
-  "updated": "2026-04-10T06:51:50.368311+00:00",
+  "updated": "2026-04-13T06:52:08.898818+00:00",
   "error": null,
-  "week": "6.4.- 10.4. 2026",
+  "week": "13.4. – 17.4.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
-      "meals": []
+      "meals": [
+        "ovocný jogurt 7",
+        "květáková polévka 1,9",
+        "poctivý staročeský guláš se špaldovým knedlíkem 1,3,7",
+        "rohlík, žervé, okurek 1,7"
+      ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "čokokuličky s mlékem 1,7",
-        "hovězí vývar s těstovinou 1,9",
-        "žebírko na žampionech s rýží, zeleninový salátek 1,7",
-        "rohlík, česneková pomazánka, cherry rajčátko 1,7"
+        "zapékaný toust, paprika 1,7",
+        "frankfurtská polévka 1,9",
+        "nudle s mákem 1,7",
+        "žitný chléb, máslo, ementáler, blumy 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "opékaný toust, bylinkové máslo, kedlubna 1,7",
-        "krém z pečeného česneku, krutonky 1,7",
-        "smažený květák, brambory, jogurtový dip 1,3,7",
-        "chléb, šunková pěna, banán 1,7"
+        "sýrový chlebík, budapešťská pomazánka, cherry rajče 1, 7",
+        "kuřecí vývar s písmenky 1,9",
+        "argentinská štika, šťouchané brambory, listový salát 1,4,7",
+        "dalamánek, dřevorubecká pomazánka, kedlubna 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "sýrové šneky 1,7",
-        "zeleninová polévka 1,9",
-        "čočka na kyselo, vejce, okurek, chléb 1,3",
-        "žitný chléb, námořnická pomazánka, mandarinka 1,4,7"
+        "skořicové čtverečky s mlékem 1,7",
+        "polévka z červené čočky 1,9",
+        "hovězí nudličky po cikánsku, jasmínová rýže 1,7",
+        "houska, masová pomazánka, jablko 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "ovocná miska",
-        "italská polévka 1",
-        "pečené kachní stehýnko, kysané zelí, bramborový knedlík 1",
-        "dalamánek, debrecínská pečeně, paprika 1,7"
+        "chléb, meruňkové máslo, hruška 1,7",
+        "kmínová polévka s kapáním 1,3,9",
+        "vepřový gyros, brambory, tzatziky 1,7",
+        "máslový croisant 1,7"
       ]
     }
   }

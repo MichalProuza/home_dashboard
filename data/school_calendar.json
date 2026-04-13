@@ -1,5 +1,41 @@
 {
-  "updated": "2026-04-12T06:22:45.069455+00:00",
-  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
-  "events": []
+  "updated": "2026-04-13T06:52:12.656828+00:00",
+  "error": null,
+  "events": [
+    {
+      "title": "ZŠ - McDonald´s Cup",
+      "date": "2026-04-13",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-mcdonalds-cup-408_249cs.html"
+    },
+    {
+      "title": "MŠ - Den naruby (obě třídy)",
+      "date": "2026-04-15",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-den-naruby-obe-tridy-322_206cs.html"
+    },
+    {
+      "title": "ZŠ - Zážitkový workshop: Kdo je vítěz",
+      "date": "2026-04-17",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zazitkovy-workshop-kdo-je-vitez-402_247cs.html"
+    },
+    {
+      "title": "MŠ - Flétnička s kytarou",
+      "date": "2026-04-20",
+      "time": "09:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fletnicka-s-kytarou-341_223cs.html"
+    },
+    {
+      "title": "ZŠ - McDonald´s Cup - starší",
+      "date": "2026-04-22",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-mcdonalds-cup-starsi-409_250cs.html"
+    }
+  ]
 }
