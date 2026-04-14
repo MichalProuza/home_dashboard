@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-14T18:53:54.562143+00:00",
+  "updated": "2026-04-14T19:57:36.243373+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,6 +23,12 @@
   ],
   "single": [
     {
+      "summary": "Střih",
+      "date": "2026-04-21T08:30:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
       "summary": "Dentální hygiena",
       "date": "2026-05-05T07:00:00+00:00",
       "all_day": false,
@@ -31,12 +37,6 @@
     {
       "summary": "Plavání - Velká cena Kuřimi",
       "date": "2026-05-08T06:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
-      "summary": "Zubař",
-      "date": "2026-05-12T07:00:00+00:00",
       "all_day": false,
       "location": ""
     }
