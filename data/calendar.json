@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-16T06:26:00.676444+00:00",
+  "updated": "2026-04-16T08:19:29.543810+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,20 +23,20 @@
   ],
   "single": [
     {
+      "summary": "Draken Turnaj",
+      "date": "2026-04-18T06:15:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Přezutí C3",
+      "date": "2026-04-19T11:30:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
       "summary": "Střih",
       "date": "2026-04-21T08:30:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
-      "summary": "Dentální hygiena",
-      "date": "2026-05-05T07:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
-      "summary": "Plavání - Velká cena Kuřimi",
-      "date": "2026-05-08T06:00:00+00:00",
       "all_day": false,
       "location": ""
     }
