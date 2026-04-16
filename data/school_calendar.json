@@ -1,14 +1,7 @@
 {
-  "updated": "2026-04-15T06:53:21.113465+00:00",
+  "updated": "2026-04-16T06:55:59.476972+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Den naruby (obě třídy)",
-      "date": "2026-04-15",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-den-naruby-obe-tridy-322_206cs.html"
-    },
     {
       "title": "ZŠ - Zážitkový workshop: Kdo je vítěz",
       "date": "2026-04-17",
@@ -36,6 +29,13 @@
       "time": "17:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
+    },
+    {
+      "title": "ZŠ - florbal Lelekovice",
+      "date": "2026-04-24",
+      "time": "08:00",
+      "location": "Lelekovice sokolovna",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbal-lelekovice-414_251cs.html"
     }
   ]
 }
