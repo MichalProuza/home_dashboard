@@ -1,13 +1,7 @@
 {
-  "updated": "2026-04-16T16:13:26.820995+00:00",
+  "updated": "2026-04-16T18:00:53.635280+00:00",
   "error": null,
   "recurring": [
-    {
-      "summary": "Elis - plavání",
-      "date": "2026-04-16T14:30:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Fotbal",
       "date": "2026-04-21T15:15:00+00:00",
@@ -17,6 +11,12 @@
     {
       "summary": "Sokol Lelekovice",
       "date": "2026-04-22T14:30:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Elis - plavání",
+      "date": "2026-04-23T14:30:00+00:00",
       "all_day": false,
       "location": ""
     }
