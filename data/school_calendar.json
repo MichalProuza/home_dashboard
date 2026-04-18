@@ -1,14 +1,7 @@
 {
-  "updated": "2026-04-17T06:56:57.559634+00:00",
+  "updated": "2026-04-18T06:12:37.031117+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Zážitkový workshop: Kdo je vítěz",
-      "date": "2026-04-17",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zazitkovy-workshop-kdo-je-vitez-402_247cs.html"
-    },
     {
       "title": "MŠ - Flétnička s kytarou",
       "date": "2026-04-20",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Lelekovice sokolovna",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbal-lelekovice-414_251cs.html"
+    },
+    {
+      "title": "MŠ - Čarodějnický den",
+      "date": "2026-04-30",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
     }
   ]
 }
