@@ -1,51 +1,51 @@
 {
-  "updated": "2026-04-17T06:56:18.914550+00:00",
+  "updated": "2026-04-20T07:13:45.204463+00:00",
   "error": null,
-  "week": "13.4. – 17.4.2026",
+  "week": "20.4.- 2 4.4.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
       "meals": [
-        "ovocný jogurt 7",
-        "květáková polévka 1,9",
-        "poctivý staročeský guláš se špaldovým knedlíkem 1,3,7",
-        "rohlík, žervé, okurek 1,7"
+        "cereálie s mlékem 7",
+        "bramborová polévka 1,9",
+        "maso po lotrinsku, kukuřičné těstoviny, banán 1",
+        "kaiserka, cottage, cherry rajčátko 1,7"
       ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "zapékaný toust, paprika 1,7",
-        "frankfurtská polévka 1,9",
-        "nudle s mákem 1,7",
-        "žitný chléb, máslo, ementáler, blumy 1,7"
+        "ovocná miska",
+        "polévka risi bisi 9",
+        "čufty v rajské omáčce, celozrný knedlík 1,3,7",
+        "rohlík, sýrová pomazánka, okurek 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "sýrový chlebík, budapešťská pomazánka, cherry rajče 1, 7",
-        "kuřecí vývar s písmenky 1,9",
-        "argentinská štika, šťouchané brambory, listový salát 1,4,7",
-        "dalamánek, dřevorubecká pomazánka, kedlubna 1,7"
+        "kmínový chléb, pomazánka z míchaných vajec, ředkvička 1,3,7",
+        "luštěninová polévka 1,7",
+        "srbské rizoto, sýr, salát z červeného zelí 7",
+        "vánočka, šlehané máslo, hruška 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "skořicové čtverečky s mlékem 1,7",
-        "polévka z červené čočky 1,9",
-        "hovězí nudličky po cikánsku, jasmínová rýže 1,7",
-        "houska, masová pomazánka, jablko 1,7"
+        "rohlík, pažitkové žervé, pomeranč 7",
+        "hovězí vývar se celestýnskými nudlemi 1,9",
+        "hrachová kaše, masové výpečky, okurek, pečivo 1",
+        "žitný chléb, námořnická pomazánka, kedlubna 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "chléb, meruňkové máslo, hruška 1,7",
-        "kmínová polévka s kapáním 1,3,9",
-        "vepřový gyros, brambory, tzatziky 1,7",
-        "máslový croisant 1,7"
+        "dalamánek, pomazánka z grilované zeleniny 1,7",
+        "pórkový krém 1,9",
+        "kuřecí kapsa plněná mozzarelou a špenátem, šťouchané brambory, zeleninový salátek 7",
+        "loupáček, jablko 1"
       ]
     }
   }
