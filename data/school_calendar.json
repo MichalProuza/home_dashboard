@@ -1,28 +1,7 @@
 {
-  "updated": "2026-04-22T06:57:10.226353+00:00",
+  "updated": "2026-04-23T06:59:58.350942+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - McDonald´s Cup - starší",
-      "date": "2026-04-22",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-mcdonalds-cup-starsi-409_250cs.html"
-    },
-    {
-      "title": "ŠD - Aerobic",
-      "date": "2026-04-22",
-      "time": "13:30",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-aerobic-417_253cs.html"
-    },
-    {
-      "title": "ZŠ - třídní schůzky",
-      "date": "2026-04-22",
-      "time": "17:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-285_174cs.html"
-    },
     {
       "title": "ZŠ - florbal Lelekovice",
       "date": "2026-04-24",
@@ -36,6 +15,27 @@
       "time": "08:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
+    },
+    {
+      "title": "ZŠ - čarodějnické dopoledne",
+      "date": "2026-04-30",
+      "time": "10:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-carodejnicke-dopoledne-286_175cs.html"
+    },
+    {
+      "title": "ZŠ - výstava žáků školy",
+      "date": "2026-05-07",
+      "time": "12:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vystava-zaku-skoly-287_176cs.html"
+    },
+    {
+      "title": "MŠ - Vystoupení pro maminky ve třídě Soviček",
+      "date": "2026-05-13",
+      "time": "16:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-vystoupeni-pro-maminky-ve-tride-sovicek-324_208cs.html"
     }
   ]
 }
