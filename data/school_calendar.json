@@ -1,6 +1,6 @@
 {
-  "updated": "2026-04-23T06:59:58.350942+00:00",
-  "error": null,
+  "updated": "2026-04-24T07:03:41.289727+00:00",
+  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
   "events": [
     {
       "title": "ZŠ - florbal Lelekovice",
