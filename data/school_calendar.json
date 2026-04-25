@@ -1,14 +1,7 @@
 {
-  "updated": "2026-04-24T07:03:41.289727+00:00",
-  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
+  "updated": "2026-04-25T06:19:52.475536+00:00",
+  "error": null,
   "events": [
-    {
-      "title": "ZŠ - florbal Lelekovice",
-      "date": "2026-04-24",
-      "time": "08:00",
-      "location": "Lelekovice sokolovna",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbal-lelekovice-414_251cs.html"
-    },
     {
       "title": "MŠ - Čarodějnický den",
       "date": "2026-04-30",
@@ -36,6 +29,13 @@
       "time": "16:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-vystoupeni-pro-maminky-ve-tride-sovicek-324_208cs.html"
+    },
+    {
+      "title": "MŠ - Vystoupení pro maminky ve třídě Motýlků",
+      "date": "2026-05-14",
+      "time": "16:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-vystoupeni-pro-maminky-ve-tride-motylku-326_209cs.html"
     }
   ]
 }
