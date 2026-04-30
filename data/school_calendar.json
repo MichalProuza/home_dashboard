@@ -1,20 +1,20 @@
 {
-  "updated": "2026-04-29T07:22:16.703895+00:00",
+  "updated": "2026-04-30T07:27:02.974011+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Čarodějnický den",
-      "date": "2026-04-30",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
-    },
     {
       "title": "ZŠ - čarodějnické dopoledne",
       "date": "2026-04-30",
       "time": "10:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-carodejnicke-dopoledne-286_175cs.html"
+    },
+    {
+      "title": "MŠ - Čarodějnický den",
+      "date": "2026-04-30",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
     },
     {
       "title": "ZŠ - výstava žáků školy",
