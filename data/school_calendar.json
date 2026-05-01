@@ -1,6 +1,6 @@
 {
-  "updated": "2026-04-30T07:27:02.974011+00:00",
-  "error": null,
+  "updated": "2026-05-01T07:24:44.379493+00:00",
+  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
   "events": [
     {
       "title": "ZŠ - čarodějnické dopoledne",
