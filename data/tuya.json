@@ -1,16 +1,16 @@
 {
-  "updated": "2026-05-02T12:08:55.627137+00:00",
+  "updated": "2026-05-02T13:53:54.908682+00:00",
   "error": null,
   "devices": [
     {
       "device_name": "Garáž ",
       "online": true,
-      "gate_open": false,
+      "gate_open": true,
       "dp_used": "switch",
       "raw_dps": [
         {
           "code": "switch",
-          "value": false
+          "value": true
         },
         {
           "code": "battery",
@@ -21,12 +21,12 @@
     {
       "device_name": "Brána",
       "online": true,
-      "gate_open": false,
+      "gate_open": true,
       "dp_used": "doorcontact_state",
       "raw_dps": [
         {
           "code": "doorcontact_state",
-          "value": false
+          "value": true
         },
         {
           "code": "battery_percentage",
