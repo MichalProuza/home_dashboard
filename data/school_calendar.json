@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-01T07:24:44.379493+00:00",
-  "error": "HTTPSConnectionPool(host='www.skolavranov.cz', port=443): Max retries exceeded with url: /zakladni-skola/plan-akci-zs/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.skolavranov.cz', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
+  "updated": "2026-05-02T07:00:05.597620+00:00",
+  "error": null,
   "events": [
-    {
-      "title": "ZŠ - čarodějnické dopoledne",
-      "date": "2026-04-30",
-      "time": "10:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-carodejnicke-dopoledne-286_175cs.html"
-    },
-    {
-      "title": "MŠ - Čarodějnický den",
-      "date": "2026-04-30",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-carodejnicky-den-323_207cs.html"
-    },
     {
       "title": "ZŠ - výstava žáků školy",
       "date": "2026-05-07",
@@ -36,6 +22,20 @@
       "time": "16:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-vystoupeni-pro-maminky-ve-tride-motylku-326_209cs.html"
+    },
+    {
+      "title": "ZŠ - dvoudenní výlet do Prahy 5. roč.",
+      "date": "2026-05-15",
+      "time": "07:00",
+      "location": "Praha",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-dvoudenni-vylet-do-prahy-5-roc-379_236cs.html"
+    },
+    {
+      "title": "ZŠ- fotbal Lelekovice",
+      "date": "2026-05-15",
+      "time": "08:00",
+      "location": "Lelekovice hřiště",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fotbal-lelekovice-415_252cs.html"
     }
   ]
 }
