@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-08T10:12:51.927658+00:00",
+  "updated": "2026-05-08T12:01:14.558601+00:00",
   "error": null,
   "recurring": [
     {
@@ -22,12 +22,6 @@
     }
   ],
   "single": [
-    {
-      "summary": "Plavání - Velká cena Kuřimi",
-      "date": "2026-05-08T06:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Zubař",
       "date": "2026-05-12T07:00:00+00:00",
