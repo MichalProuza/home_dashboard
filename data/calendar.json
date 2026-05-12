@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-12T05:26:40.956341+00:00",
+  "updated": "2026-05-12T08:15:47.532542+00:00",
   "error": null,
   "recurring": [
     {
@@ -21,12 +21,5 @@
       "location": ""
     }
   ],
-  "single": [
-    {
-      "summary": "Zubař",
-      "date": "2026-05-12T07:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    }
-  ]
+  "single": []
 }
