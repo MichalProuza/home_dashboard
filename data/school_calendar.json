@@ -1,14 +1,7 @@
 {
-  "updated": "2026-05-13T07:48:28.844211+00:00",
+  "updated": "2026-05-14T07:40:31.116569+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Vystoupení pro maminky ve třídě Soviček",
-      "date": "2026-05-13",
-      "time": "16:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-vystoupeni-pro-maminky-ve-tride-sovicek-324_208cs.html"
-    },
     {
       "title": "MŠ - Vystoupení pro maminky ve třídě Motýlků",
       "date": "2026-05-14",
@@ -36,6 +29,13 @@
       "time": "07:00",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-zoo-zlin-423_257cs.html"
+    },
+    {
+      "title": "MŠ - Lesy Kuřim (předškoláci)",
+      "date": "2026-05-20",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-lesy-kurim-predskolaci-327_210cs.html"
     }
   ]
 }
