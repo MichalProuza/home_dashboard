@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-15T07:50:30.334987+00:00",
+  "updated": "2026-05-16T07:13:25.426764+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ- fotbal Lelekovice",
-      "date": "2026-05-15",
-      "time": "08:00",
-      "location": "Lelekovice hřiště",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fotbal-lelekovice-415_252cs.html"
-    },
-    {
-      "title": "ZŠ - dvoudenní výlet do Prahy 5. roč.",
-      "date": "2026-05-15",
-      "time": "07:00",
-      "location": "Praha",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-dvoudenni-vylet-do-prahy-5-roc-379_236cs.html"
-    },
     {
       "title": "Výlet ZOO Zlín",
       "date": "2026-05-20",
@@ -31,11 +17,25 @@
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-lesy-kurim-predskolaci-327_210cs.html"
     },
     {
+      "title": "MŠ - Celodenní výlet Valtice",
+      "date": "2026-05-22",
+      "time": "08:00",
+      "location": "Valtice",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-celodenni-vylet-valtice-432_261cs.html"
+    },
+    {
       "title": "MŠ - Jezírko  pro mladší  - Jak sedlák k žížale přišel",
       "date": "2026-05-26",
       "time": "08:00",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-jezirko-pro-mladsi-jak-sedlak-k-zizale-prisel-329_212cs.html"
+    },
+    {
+      "title": "MŠ - Předškoláci Nemocnice zvířátek",
+      "date": "2026-05-27",
+      "time": "08:10",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-predskolaci-nemocnice-zviratek-433_262cs.html"
     }
   ]
 }
