@@ -1,20 +1,20 @@
 {
-  "updated": "2026-05-19T08:26:30.401684+00:00",
+  "updated": "2026-05-20T08:24:35.601055+00:00",
   "error": null,
   "events": [
-    {
-      "title": "Výlet ZOO Zlín",
-      "date": "2026-05-20",
-      "time": "07:00",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-zoo-zlin-423_257cs.html"
-    },
     {
       "title": "MŠ - Lesy Kuřim (předškoláci)",
       "date": "2026-05-20",
       "time": "08:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-lesy-kurim-predskolaci-327_210cs.html"
+    },
+    {
+      "title": "Výlet ZOO Zlín",
+      "date": "2026-05-20",
+      "time": "07:00",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-zoo-zlin-423_257cs.html"
     },
     {
       "title": "MŠ - Celodenní výlet Valtice",
