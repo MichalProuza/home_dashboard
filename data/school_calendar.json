@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-20T08:24:35.601055+00:00",
+  "updated": "2026-05-21T08:31:10.251422+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Lesy Kuřim (předškoláci)",
-      "date": "2026-05-20",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-lesy-kurim-predskolaci-327_210cs.html"
-    },
-    {
-      "title": "Výlet ZOO Zlín",
-      "date": "2026-05-20",
-      "time": "07:00",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-zoo-zlin-423_257cs.html"
-    },
     {
       "title": "MŠ - Celodenní výlet Valtice",
       "date": "2026-05-22",
@@ -36,6 +22,20 @@
       "time": "08:10",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-predskolaci-nemocnice-zviratek-433_262cs.html"
+    },
+    {
+      "title": "MŠ - Pasování předškoláků",
+      "date": "2026-05-27",
+      "time": "16:30",
+      "location": "MŠ - třída Soviček",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-pasovani-predskolaku-434_263cs.html"
+    },
+    {
+      "title": "ZŠ - RunVran 2026",
+      "date": "2026-05-29",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-runvran-2026-288_177cs.html"
     }
   ]
 }
