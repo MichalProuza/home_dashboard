@@ -1,14 +1,7 @@
 {
-  "updated": "2026-05-22T08:20:28.199852+00:00",
+  "updated": "2026-05-23T07:30:22.177439+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Celodenní výlet Valtice",
-      "date": "2026-05-22",
-      "time": "08:00",
-      "location": "Valtice",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-celodenni-vylet-valtice-432_261cs.html"
-    },
     {
       "title": "MŠ - Jezírko  pro mladší  - Jak sedlák k žížale přišel",
       "date": "2026-05-26",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-runvran-2026-288_177cs.html"
+    },
+    {
+      "title": "MŠ - Projektový týden Líhneme ve školce",
+      "date": "2026-06-01",
+      "time": "07:53",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-projektovy-tyden-lihneme-ve-skolce-435_264cs.html"
     }
   ]
 }
