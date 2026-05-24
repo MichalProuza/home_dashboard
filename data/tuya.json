@@ -1,5 +1,54 @@
 {
-  "updated": "2026-05-24T16:33:16.859472+00:00",
-  "error": "503 Server Error: Service Temporarily Unavailable for url: https://openapi.tuyaeu.com/v1.0/token?grant_type=1",
-  "devices": []
+  "updated": "2026-05-24T18:01:23.942348+00:00",
+  "error": null,
+  "devices": [
+    {
+      "device_name": "Garáž ",
+      "online": true,
+      "gate_open": true,
+      "dp_used": "switch",
+      "raw_dps": [
+        {
+          "code": "switch",
+          "value": true
+        },
+        {
+          "code": "battery",
+          "value": 47
+        }
+      ]
+    },
+    {
+      "device_name": "Brána",
+      "online": true,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 100
+        }
+      ]
+    },
+    {
+      "device_name": "Sklep",
+      "online": false,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 44
+        }
+      ]
+    }
+  ]
 }
