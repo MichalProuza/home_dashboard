@@ -1,6 +1,52 @@
 {
-  "updated": "2026-05-22T08:19:21.917919+00:00",
-  "error": "Žádné dny nenalezeny – struktura stránky se možná změnila",
-  "week": "",
-  "days": {}
+  "updated": "2026-05-25T08:53:12.891848+00:00",
+  "error": null,
+  "week": "25.5. – 29.5.2026",
+  "days": {
+    "pondeli": {
+      "name": "Pondělí",
+      "meals": [
+        "cereálie s mlékem 1,7",
+        "luštěninová se zeleninou 1,9",
+        "boloňské špagety 1",
+        "rohlíček, námořnická pomazánka, rajče 1,4,7"
+      ]
+    },
+    "utery": {
+      "name": "Úterý",
+      "meals": [
+        "opékaný toust s čokoládovým máslem, nektarinka 1, 7",
+        "hovězí vývar s těstovinou 1,9",
+        "pečený losos po provensálsku, brambory, anglická zeleninka 1,4,7",
+        "žitný chléb, tvarohová pomazánka, mrkev 1, 7"
+      ]
+    },
+    "streda": {
+      "name": "Středa",
+      "meals": [
+        "ovocná miska",
+        "zeleninový vývar s kapáním 1,9",
+        "svíčková na smetaně, houskový knedlík 1,7",
+        "žitný chléb, šunková pěna, paprika 1,7"
+      ]
+    },
+    "ctvrtek": {
+      "name": "Čtvrtek",
+      "meals": [
+        "kukuřičný plátek, lučina, jablko 1,7",
+        "gulášová polévka 1, 9",
+        "lívance s jahodovou pěnou a tvarohem 1,7",
+        "houska, máslo, maasdamer, hruška 1,7"
+      ]
+    },
+    "patek": {
+      "name": "Pátek",
+      "meals": [
+        "kmínový chléb, brokolicová pomazánka, okurek 1,7",
+        "cuketový krém 1,7",
+        "vepřové kotlety na jalovci s hořčicí, dušená rýže 1",
+        "croasant, jablko 1,7"
+      ]
+    }
+  }
 }
