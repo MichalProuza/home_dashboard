@@ -1,13 +1,13 @@
 {
-  "updated": "2026-05-26T08:30:16.769041+00:00",
+  "updated": "2026-05-27T08:37:44.283608+00:00",
   "error": null,
   "events": [
     {
-      "title": "MŠ - Jezírko  pro mladší  - Jak sedlák k žížale přišel",
-      "date": "2026-05-26",
-      "time": "08:00",
+      "title": "MŠ - Předškoláci Nemocnice zvířátek",
+      "date": "2026-05-27",
+      "time": "08:10",
       "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-jezirko-pro-mladsi-jak-sedlak-k-zizale-prisel-329_212cs.html"
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-predskolaci-nemocnice-zviratek-433_262cs.html"
     },
     {
       "title": "Cyklo výlet 1. třída",
@@ -15,13 +15,6 @@
       "time": "08:00",
       "location": "Obec, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/cyklo-vylet-1-trida-438_265cs.html"
-    },
-    {
-      "title": "MŠ - Předškoláci Nemocnice zvířátek",
-      "date": "2026-05-27",
-      "time": "08:10",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-predskolaci-nemocnice-zviratek-433_262cs.html"
     },
     {
       "title": "MŠ - Pasování předškoláků",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-runvran-2026-288_177cs.html"
+    },
+    {
+      "title": "MŠ - Projektový týden Líhneme ve školce",
+      "date": "2026-06-01",
+      "time": "07:53",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-projektovy-tyden-lihneme-ve-skolce-435_264cs.html"
     }
   ]
 }
