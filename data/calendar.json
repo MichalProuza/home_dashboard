@@ -1,13 +1,7 @@
 {
-  "updated": "2026-05-28T09:45:20.557623+00:00",
+  "updated": "2026-05-28T12:57:32.596453+00:00",
   "error": null,
   "recurring": [
-    {
-      "summary": "Poslat mail ohledně docházky do SP",
-      "date": "2026-05-28T11:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Elis - plavání",
       "date": "2026-05-28T14:30:00+00:00",
@@ -17,6 +11,12 @@
     {
       "summary": "Fotbal",
       "date": "2026-06-02T15:15:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Elis - plavání",
+      "date": "2026-06-04T14:30:00+00:00",
       "all_day": false,
       "location": ""
     }
