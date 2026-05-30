@@ -1,14 +1,7 @@
 {
-  "updated": "2026-05-29T08:40:52.530807+00:00",
+  "updated": "2026-05-30T07:40:15.438950+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - RunVran 2026",
-      "date": "2026-05-29",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-runvran-2026-288_177cs.html"
-    },
     {
       "title": "MŠ - Projektový týden Líhneme ve školce",
       "date": "2026-06-01",
@@ -36,6 +29,13 @@
       "time": "08:30",
       "location": "Brno, Lanové centrum Proud, Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/lanove-centrum-zaci-2-a-3-tr-425_259cs.html"
+    },
+    {
+      "title": "ZŠ - Maják - branně vědomostní závod - 4.třída",
+      "date": "2026-06-11",
+      "time": "07:45",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-majak-branne-vedomostni-zavod-4trida-421_255cs.html"
     }
   ]
 }
