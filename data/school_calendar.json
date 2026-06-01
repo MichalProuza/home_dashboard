@@ -1,20 +1,20 @@
 {
-  "updated": "2026-05-31T08:13:14.584253+00:00",
+  "updated": "2026-06-01T10:17:12.622802+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Projektový týden Líhneme ve školce",
-      "date": "2026-06-01",
-      "time": "07:53",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-projektovy-tyden-lihneme-ve-skolce-435_264cs.html"
-    },
     {
       "title": "ZŠ - Workshop Kdo je vítěz - 4.třída",
       "date": "2026-06-01",
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-workshop-kdo-je-vitez-4trida-422_256cs.html"
+    },
+    {
+      "title": "MŠ - Projektový týden Líhneme ve školce",
+      "date": "2026-06-01",
+      "time": "07:53",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-projektovy-tyden-lihneme-ve-skolce-435_264cs.html"
     },
     {
       "title": "MŠ  - Školka v přírodě ve Svojanově",
