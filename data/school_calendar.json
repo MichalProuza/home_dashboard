@@ -1,21 +1,7 @@
 {
-  "updated": "2026-06-01T10:17:12.622802+00:00",
+  "updated": "2026-06-02T09:05:00.529290+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Workshop Kdo je vítěz - 4.třída",
-      "date": "2026-06-01",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-workshop-kdo-je-vitez-4trida-422_256cs.html"
-    },
-    {
-      "title": "MŠ - Projektový týden Líhneme ve školce",
-      "date": "2026-06-01",
-      "time": "07:53",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-projektovy-tyden-lihneme-ve-skolce-435_264cs.html"
-    },
     {
       "title": "MŠ  - Školka v přírodě ve Svojanově",
       "date": "2026-06-07",
@@ -36,6 +22,20 @@
       "time": "07:45",
       "location": "Kuřim",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-majak-branne-vedomostni-zavod-4trida-421_255cs.html"
+    },
+    {
+      "title": "ZŠ - zahradní slavnost",
+      "date": "2026-06-12",
+      "time": "16:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zahradni-slavnost-289_178cs.html"
+    },
+    {
+      "title": "ZŠ - škola v přírodě Jedovnice 3.-5. roč.",
+      "date": "2026-06-14",
+      "time": "13:00",
+      "location": "stanový tábor Budkovan - Jedovnice",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-3-5-roc-247_139cs.html"
     }
   ]
 }
