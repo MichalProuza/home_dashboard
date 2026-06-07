@@ -1,54 +1,5 @@
 {
-  "updated": "2026-06-07T19:55:32.373441+00:00",
-  "error": null,
-  "devices": [
-    {
-      "device_name": "Garáž ",
-      "online": true,
-      "gate_open": false,
-      "dp_used": "switch",
-      "raw_dps": [
-        {
-          "code": "switch",
-          "value": false
-        },
-        {
-          "code": "battery",
-          "value": 46
-        }
-      ]
-    },
-    {
-      "device_name": "Brána",
-      "online": true,
-      "gate_open": false,
-      "dp_used": "doorcontact_state",
-      "raw_dps": [
-        {
-          "code": "doorcontact_state",
-          "value": false
-        },
-        {
-          "code": "battery_percentage",
-          "value": 100
-        }
-      ]
-    },
-    {
-      "device_name": "Sklep",
-      "online": false,
-      "gate_open": false,
-      "dp_used": "doorcontact_state",
-      "raw_dps": [
-        {
-          "code": "doorcontact_state",
-          "value": false
-        },
-        {
-          "code": "battery_percentage",
-          "value": 44
-        }
-      ]
-    }
-  ]
+  "updated": "2026-06-07T21:19:11.675933+00:00",
+  "error": "HTTPSConnectionPool(host='openapi.tuyaeu.com', port=443): Max retries exceeded with url: /v1.0/token?grant_type=1 (Caused by NewConnectionError(\"HTTPSConnection(host='openapi.tuyaeu.com', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
+  "devices": []
 }
