@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-07T08:22:39.817261+00:00",
+  "updated": "2026-06-08T09:21:23.076034+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ  - Školka v přírodě ve Svojanově",
-      "date": "2026-06-07",
-      "time": "16:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-skolka-v-prirode-ve-svojanove-333_216cs.html"
-    },
     {
       "title": "Lanové centrum, žáci 2. a 3. tř.",
       "date": "2026-06-10",
@@ -36,6 +29,13 @@
       "time": "13:00",
       "location": "stanový tábor Budkovan - Jedovnice",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-3-5-roc-247_139cs.html"
+    },
+    {
+      "title": "ZŠ  - škola v přírodě Jedovnice - 1. a 2. roč.",
+      "date": "2026-06-21",
+      "time": "10:45",
+      "location": "stanový tábor Budkovan - Jedovnice",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-1-a-2-roc-248_140cs.html"
     }
   ]
 }
