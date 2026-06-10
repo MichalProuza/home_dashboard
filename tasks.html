@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Úkoly · Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0a;
+      --ink-mid: #3a3a3a;
+      --ink-light: #888;
+      --ink-faint: #ccc;
+      --paper: #f5f2ec;
+      --paper-dark: #e8e4db;
+      --rule: #d0ccc3;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 24px 40px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .title { font-size: 1.6rem; font-weight: 300; }
+    .back-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--ink-light); text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+    }
+    .back-link:hover { color: var(--ink-mid); }
+
+    .add-row { display: flex; gap: 8px; margin-top: 20px; }
+    .add-input {
+      flex: 1; padding: 8px 10px;
+      font-family: 'Spectral', Georgia, serif; font-size: 0.95rem;
+      background: none; border: 1px solid var(--rule); border-radius: 2px;
+      color: var(--ink);
+    }
+    .add-input:focus { outline: none; border-color: var(--ink-mid); }
+    .add-btn {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      padding: 8px 14px; border: 1px solid var(--ink-mid); border-radius: 2px;
+      background: none; color: var(--ink-mid); cursor: pointer;
+    }
+    .add-btn:hover { background: var(--paper-dark); }
+
+    .task-list { display: flex; flex-direction: column; gap: 1px; margin-top: 20px; }
+    .task-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--paper-dark);
+    }
+    .task-check {
+      width: 16px; height: 16px; border: 1.5px solid var(--ink-mid); border-radius: 1px;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; background: none;
+    }
+    .task-item.done .task-check::after { content: '×'; font-size: 13px; color: var(--ink-mid); }
+    .task-text { font-size: 0.95rem; line-height: 1.4; flex: 1; cursor: pointer; }
+    .task-item.done .task-text { color: var(--ink-light); text-decoration: line-through; }
+    .task-delete {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      border: none; background: none; color: var(--ink-faint); cursor: pointer;
+      padding: 2px 6px; flex-shrink: 0;
+    }
+    .task-delete:hover { color: #c0392b; }
+    .empty-note { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-top: 20px; }
+
+    .footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .task-count { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
+    .clear-done-btn {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+      padding: 3px 8px; border: 1px solid var(--rule); border-radius: 2px;
+      background: none; color: var(--ink-light); cursor: pointer;
+    }
+    .clear-done-btn:hover { background: var(--paper-dark); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="title">Úkoly</div>
+    <a href="index.html" class="back-link">← zpět na dashboard</a>
+  </header>
+
+  <form class="add-row" id="add-form">
+    <input type="text" class="add-input" id="add-input" placeholder="Nový úkol…" maxlength="200" autocomplete="off" />
+    <button type="submit" class="add-btn">přidat</button>
+  </form>
+
+  <div class="task-list" id="task-list"></div>
+
+  <div class="footer-row">
+    <span class="task-count" id="task-count"></span>
+    <button class="clear-done-btn" id="clear-done" hidden>smazat hotové</button>
+  </div>
+
+<script>
+const STORAGE_KEY = 'dashboard_tasks';
+
+const ESC_MAP = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC_MAP[c]);
+
+function loadTasks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveTasks(tasks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+function render() {
+  const tasks = loadTasks();
+  const list = document.getElementById('task-list');
+  const count = document.getElementById('task-count');
+  const clearBtn = document.getElementById('clear-done');
+
+  if (!tasks.length) {
+    list.innerHTML = '<div class="empty-note">žádné úkoly</div>';
+    count.textContent = '';
+    clearBtn.hidden = true;
+    return;
+  }
+
+  list.innerHTML = tasks.map((t, i) => `
+    <div class="task-item ${t.done ? 'done' : ''}" data-i="${i}">
+      <button class="task-check" data-action="toggle" aria-label="hotovo"></button>
+      <div class="task-text" data-action="toggle">${esc(t.text)}</div>
+      <button class="task-delete" data-action="delete" aria-label="smazat">✕</button>
+    </div>`).join('');
+
+  const doneCount = tasks.filter(t => t.done).length;
+  count.textContent = `${doneCount}/${tasks.length} hotovo`;
+  clearBtn.hidden = doneCount === 0;
+}
+
+document.getElementById('add-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const input = document.getElementById('add-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const tasks = loadTasks();
+  tasks.push({ text, done: false });
+  saveTasks(tasks);
+  input.value = '';
+  render();
+});
+
+document.getElementById('task-list').addEventListener('click', e => {
+  const action = e.target.dataset.action;
+  if (!action) return;
+  const item = e.target.closest('.task-item');
+  const i = Number(item?.dataset.i);
+  const tasks = loadTasks();
+  if (!(i >= 0 && i < tasks.length)) return;
+  if (action === 'toggle') tasks[i].done = !tasks[i].done;
+  else if (action === 'delete') tasks.splice(i, 1);
+  saveTasks(tasks);
+  render();
+});
+
+document.getElementById('clear-done').addEventListener('click', () => {
+  saveTasks(loadTasks().filter(t => !t.done));
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
