@@ -27,4 +27,4 @@ jobs:
         run: python scripts/fetch_school_menu.py
 
       - name: Publish data
-        run: bash scripts/publish_data.sh "chore: update school menu" school_menu.json
+        run: 'bash scripts/publish_data.sh "chore: update school menu" school_menu.json'

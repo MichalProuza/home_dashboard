@@ -42,4 +42,4 @@ jobs:
         run: python scripts/fetch_netatmo.py
 
       - name: Publish data
-        run: bash scripts/publish_data.sh "chore: update netatmo data" netatmo.json netatmo_token.enc
+        run: 'bash scripts/publish_data.sh "chore: update netatmo data" netatmo.json netatmo_token.enc'

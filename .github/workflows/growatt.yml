@@ -31,4 +31,4 @@ jobs:
         run: python scripts/fetch_growatt.py
 
       - name: Publish data
-        run: bash scripts/publish_data.sh "chore: update growatt data" growatt.json
+        run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json'

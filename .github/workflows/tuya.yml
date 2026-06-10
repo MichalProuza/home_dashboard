@@ -34,4 +34,4 @@ jobs:
         run: python scripts/fetch_tuya.py
 
       - name: Publish data
-        run: bash scripts/publish_data.sh "chore: update tuya gate status" tuya.json
+        run: 'bash scripts/publish_data.sh "chore: update tuya gate status" tuya.json'

@@ -27,4 +27,4 @@ jobs:
         run: python scripts/fetch_school_calendar.py
 
       - name: Publish data
-        run: bash scripts/publish_data.sh "chore: update school calendar ZS" school_calendar.json
+        run: 'bash scripts/publish_data.sh "chore: update school calendar ZS" school_calendar.json'
