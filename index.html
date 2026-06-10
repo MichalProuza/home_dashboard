@@ -462,7 +462,7 @@ async function fetchWeather() {
 }
 
 // ════════════════════════════════════════════════════════
-//  NETATMO  (čte data/netatmo.json generovaný GitHub Actions)
+//  NETATMO  (čte netatmo.json z větve data)
 // ════════════════════════════════════════════════════════
 
 const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
@@ -554,7 +554,7 @@ async function fetchNetatmo() {
 }
 
 // ════════════════════════════════════════════════════════
-//  TUYA BRÁNA  (čte data/tuya.json z GitHub Pages)
+//  TUYA BRÁNA  (čte tuya.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchTuya() {
   const el = document.getElementById('tuya-content');
@@ -598,7 +598,7 @@ async function fetchTuya() {
 }
 
 // ════════════════════════════════════════════════════════
-//  GROWATT  (čte data/growatt.json z GitHub Pages)
+//  GROWATT  (čte growatt.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchGrowatt() {
   const el = document.getElementById('growatt-content');
@@ -899,7 +899,7 @@ async function fetchMsTodo() {
 }
 
 // ════════════════════════════════════════════════════════
-//  PLÁN AKCÍ ZŠ  (čte data/school_calendar.json)
+//  PLÁN AKCÍ ZŠ  (čte school_calendar.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchZsCalendar() {
   const el = document.getElementById('zs-cal-content');
@@ -943,7 +943,7 @@ async function fetchZsCalendar() {
 }
 
 // ════════════════════════════════════════════════════════
-//  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
+//  JÍDELNÍČEK MŠ  (čte school_menu.json z větve data)
 // ════════════════════════════════════════════════════════
 // Sob(6), Ne(0), Po(1) → pondeli; Út(2) → utery; St(3) → streda; Čt(4) → ctvrtek; Pá(5) → patek
 const MENU_DAY_MAP = { 0:'pondeli', 1:'pondeli', 2:'utery', 3:'streda', 4:'ctvrtek', 5:'patek', 6:'pondeli' };
