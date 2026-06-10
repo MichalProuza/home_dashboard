@@ -133,8 +133,7 @@ are injected only during GitHub Actions runs.
 
 | Secret | Used by |
 |--------|---------|
-| `GROWATT_USER` | `fetch_growatt.py` |
-| `GROWATT_PASS` | `fetch_growatt.py` |
+| `GROWATT_API_TOKEN` | `fetch_growatt.py` (token z aplikace ShinePhone: Já → účet → API Token; heslové přihlášení Growatt zablokoval) |
 | `TUYA_ACCESS_ID` | `fetch_tuya.py` |
 | `TUYA_ACCESS_SECRET` | `fetch_tuya.py` |
 | `TUYA_DEVICE_ID` | `fetch_tuya.py` |
@@ -179,7 +178,7 @@ the pre-built JSON files or is fetched client-side.
 |----------|----------|--------|-------------|
 | `school_menu.yml` | `0 5 * * 1-5` (05:00 UTC weekdays) + manual | `ubuntu-latest` | — |
 | `school_calendar.yml` | `0 5 * * *` (05:00 UTC daily) + manual | `ubuntu-latest` | — |
-| `growatt.yml` | `*/15 4-19 * * *` + hourly at night + manual | `ubuntu-latest` | `GROWATT_USER`, `GROWATT_PASS` |
+| `growatt.yml` | `*/15 4-19 * * *` + hourly at night + manual | `ubuntu-latest` | `GROWATT_API_TOKEN` |
 | `tuya.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | `TUYA_*` |
 | `netatmo.yml` | `*/15 * * * *` (every 15 min) + manual | `ubuntu-latest` | `NETATMO_*` |
 | `calendar.yml` | `0 * * * *` (every hour) + manual | `ubuntu-latest` | `CALENDAR_ICS_URL` |
@@ -207,7 +206,7 @@ two runs can't invalidate each other's rotating token.
 
 Local test run example:
 ```bash
-GROWATT_USER=me GROWATT_PASS=secret python scripts/fetch_growatt.py
+GROWATT_API_TOKEN=token123 python scripts/fetch_growatt.py
 ```
 
 ---

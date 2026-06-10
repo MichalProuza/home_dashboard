@@ -27,8 +27,7 @@ jobs:
 
       - name: Fetch Growatt data
         env:
-          GROWATT_USER: ${{ secrets.GROWATT_USER }}
-          GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
+          GROWATT_API_TOKEN: ${{ secrets.GROWATT_API_TOKEN }}
         run: python scripts/fetch_growatt.py
 
       - name: Publish data
