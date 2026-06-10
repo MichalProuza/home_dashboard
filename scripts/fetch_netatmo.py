@@ -70,6 +70,10 @@ def load_refresh_candidates() -> list:
                 candidates.append(FERNET.decrypt(raw).decode())
             except InvalidToken:
                 print("WARN: netatmo_token.enc nelze dešifrovat (změnil se NETATMO_TOKEN_KEY?)")
+        else:
+            # Prázdný soubor (selhalo načtení z větve data) – smazat, aby
+            # publish_data.sh nepřepsal platný token v repu prázdným obsahem
+            TOKEN_PATH.unlink()
     if SEED_REFRESH and SEED_REFRESH not in candidates:
         candidates.append(SEED_REFRESH)
     return candidates
