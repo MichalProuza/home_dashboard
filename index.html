@@ -362,18 +362,16 @@ const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';
 // Alternativa: vlož přímo access_token (platný ~3 hodiny, pak je třeba obnovit)
 const NETATMO_ACCESS_TOKEN  = '';
 
-// --- Growatt ---
-// Soubor generovaný GitHub Actions skriptem každých 15 minut
-const GROWATT_JSON_URL = './data/growatt.json';
-
-// --- Tuya ---
-// Soubor generovaný GitHub Actions skriptem každých 5 minut
-// Potřebné GitHub Secrets: TUYA_ACCESS_ID, TUYA_ACCESS_SECRET, TUYA_DEVICE_ID, TUYA_REGION
-const TUYA_JSON_URL = './data/tuya.json';
-
-// --- Google Kalendář ---
-// Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
-const CALENDAR_JSON_URL = './data/calendar.json';
+// --- Data generovaná GitHub Actions ---
+// Workflows publikují JSON do větve "data", aby botí commity nezaplavovaly
+// historii main. Při nedostupnosti se použije lokální ./data/ (seed v main).
+const DATA_BRANCH_BASE = 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/';
+const GROWATT_JSON_URL     = 'growatt.json';
+const TUYA_JSON_URL        = 'tuya.json';
+const CALENDAR_JSON_URL    = 'calendar.json';
+const SCHOOL_MENU_URL      = 'school_menu.json';
+const ZS_CALENDAR_JSON_URL = 'school_calendar.json';
+const NETATMO_JSON_URL     = 'netatmo.json';
 
 // --- Microsoft To Do ---
 // 1. Jdi na https://portal.azure.com → "Registrace aplikací" → "Nová registrace"
@@ -384,9 +382,6 @@ const CALENDAR_JSON_URL = './data/calendar.json';
 // 5. Na stránce přehledu aplikace zkopíruj "ID aplikace (klienta)"
 const MSTODO_CLIENT_ID = '8b6821fc-8ef4-4c4f-b825-eef8255766d5';
 const MSTODO_TENANT    = 'consumers'; // 'consumers' = jen osobní MS účty; 'common' = personal + work
-
-// --- Plán akcí ZŠ ---
-const ZS_CALENDAR_JSON_URL = './data/school_calendar.json';
 
 // --- Poloha pro Open-Meteo ---
 const LAT = 49.043, LON = 16.558;   // Vranov u Brna
@@ -407,6 +402,15 @@ async function fetchJson(url, opts = {}) {
   const res = await fetch(url, { cache: 'no-store', signal: fetchTimeout(15000), ...opts });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
+}
+
+// JSON generovaný workflows: primárně z větve "data", fallback lokální ./data/
+async function fetchDataJson(name) {
+  try {
+    return await fetchJson(`${DATA_BRANCH_BASE}${name}?t=${Date.now()}`);
+  } catch (e) {
+    return fetchJson(`./data/${name}?t=${Date.now()}`);
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -672,7 +676,7 @@ async function fetchNetatmo() {
 async function fetchTuya() {
   const el = document.getElementById('tuya-content');
   try {
-    const data = await fetchJson(`${TUYA_JSON_URL}?t=${Date.now()}`);
+    const data = await fetchDataJson(TUYA_JSON_URL);
 
     if (data.error) {
       el.innerHTML = `<div class="gate-notice">Chyba: ${esc(data.error)}</div>`;
@@ -716,7 +720,7 @@ async function fetchTuya() {
 async function fetchGrowatt() {
   const el = document.getElementById('growatt-content');
   try {
-    const data = await fetchJson(`${GROWATT_JSON_URL}?t=${Date.now()}`);
+    const data = await fetchDataJson(GROWATT_JSON_URL);
 
     if (data.error) { el.innerHTML=`<div class="growatt-notice">Chyba: ${esc(data.error)}</div>`; return; }
     if (!data.plants?.length) { el.innerHTML='<div class="growatt-notice">Žádná zařízení.</div>'; return; }
@@ -792,7 +796,7 @@ async function fetchCalendar() {
     }).join('');
   }
   try {
-    const data=await fetchJson(CALENDAR_JSON_URL+'?t='+Date.now());
+    const data=await fetchDataJson(CALENDAR_JSON_URL);
     if (data.error) { notice.textContent=`Chyba kalendáře: ${data.error}`; return; }
     const recurring=data.recurring||[];
     const single=data.single||[];
@@ -1018,7 +1022,7 @@ async function fetchZsCalendar() {
   const el = document.getElementById('zs-cal-content');
   const dayN = ['Ne','Po','Út','St','Čt','Pá','So'];
   try {
-    const data = await fetchJson(`${ZS_CALENDAR_JSON_URL}?t=${Date.now()}`);
+    const data = await fetchDataJson(ZS_CALENDAR_JSON_URL);
 
     const events = data.events || [];
 
@@ -1058,8 +1062,6 @@ async function fetchZsCalendar() {
 // ════════════════════════════════════════════════════════
 //  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
 // ════════════════════════════════════════════════════════
-const SCHOOL_MENU_URL = './data/school_menu.json';
-
 // Sob(6), Ne(0), Po(1) → pondeli; Út(2) → utery; St(3) → streda; Čt(4) → ctvrtek; Pá(5) → patek
 const MENU_DAY_MAP = { 0:'pondeli', 1:'pondeli', 2:'utery', 3:'streda', 4:'ctvrtek', 5:'patek', 6:'pondeli' };
 const MENU_DAY_FULL = { pondeli:'Pondělí', utery:'Úterý', streda:'Středa', ctvrtek:'Čtvrtek', patek:'Pátek' };
@@ -1074,7 +1076,7 @@ function renderMenuDay(dayKey, data) {
 async function fetchSchoolMenu() {
   const el = document.getElementById('menu-content');
   try {
-    const data = await fetchJson(`${SCHOOL_MENU_URL}?t=${Date.now()}`);
+    const data = await fetchDataJson(SCHOOL_MENU_URL);
 
     if (data.error) { el.innerHTML=`<div class="menu-notice">Jídelníček se nepodařilo načíst – zkus znovu později.</div>`; return; }
 
