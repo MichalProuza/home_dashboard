@@ -32,6 +32,12 @@ MAX_EACH = int(os.environ.get("CALENDAR_MAX_EACH", "3"))  # max na každou skupi
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "calendar.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+try:
+    from zoneinfo import ZoneInfo
+    LOCAL_TZ = ZoneInfo("Europe/Prague")
+except Exception:
+    LOCAL_TZ = timezone(timedelta(hours=1))
+
 
 def safe_write_error(msg: str):
     now_utc = datetime.now(timezone.utc).isoformat()
@@ -39,7 +45,8 @@ def safe_write_error(msg: str):
         json.dumps(
             {"updated": now_utc, "error": msg, "recurring": [], "single": []},
             ensure_ascii=False, indent=2,
-        )
+        ),
+        encoding="utf-8",
     )
     print(f"ERROR: {msg}")
 
@@ -48,11 +55,7 @@ def to_utc(dt_val) -> datetime:
     """Převede datum nebo datetime na timezone-aware UTC datetime."""
     if isinstance(dt_val, datetime):
         if dt_val.tzinfo is None:
-            try:
-                from zoneinfo import ZoneInfo
-                dt_val = dt_val.replace(tzinfo=ZoneInfo("Europe/Prague"))
-            except Exception:
-                dt_val = dt_val.replace(tzinfo=timezone(timedelta(hours=1)))
+            dt_val = dt_val.replace(tzinfo=LOCAL_TZ)
         return dt_val.astimezone(timezone.utc)
     elif isinstance(dt_val, date):
         return datetime(dt_val.year, dt_val.month, dt_val.day, tzinfo=timezone.utc)
@@ -148,7 +151,7 @@ def fetch():
         "single": single,
     }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
         f"✓ Uloženo: {len(recurring)} opakujících se, {len(single)} jednorázových "
         f"→ {OUTPUT_PATH}  ({now_utc_str})"

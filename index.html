@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -157,6 +158,7 @@
     .netatmo-key { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); }
     .netatmo-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink); }
     .netatmo-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
+    .netatmo-updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 8px; }
     .noise-graph-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem; letter-spacing: 0.1em;
@@ -352,27 +354,20 @@
 // ════════════════════════════════════════════════════════
 
 // --- Netatmo ---
-// 1. Jdi na https://dev.netatmo.com → "Create an app"
-// 2. Zkopíruj client_id a client_secret
-// 3. V nastavení aplikace přidej Redirect URI: URL této stránky (např. https://uzivatel.github.io/home_dashboard/)
-// 4. Klikni "Připojit Netatmo" v dashboardu – přihlásíš se jednorázově přes Netatmo web
-const NETATMO_CLIENT_ID     = '6999df538c183536540712b8';
-const NETATMO_CLIENT_SECRET = '80FEIu8kBhqVopb2TCALKHFtj65132qzo9h7r';
-// Alternativa: vlož přímo access_token (platný ~3 hodiny, pak je třeba obnovit)
-const NETATMO_ACCESS_TOKEN  = '';
+// Data stahuje GitHub Actions (scripts/fetch_netatmo.py) – credentials jsou
+// v GitHub Secrets (NETATMO_*), nic citlivého není v tomto souboru.
+// Postup nastavení viz docstring scripts/fetch_netatmo.py.
 
-// --- Growatt ---
-// Soubor generovaný GitHub Actions skriptem každých 15 minut
-const GROWATT_JSON_URL = './data/growatt.json';
-
-// --- Tuya ---
-// Soubor generovaný GitHub Actions skriptem každých 5 minut
-// Potřebné GitHub Secrets: TUYA_ACCESS_ID, TUYA_ACCESS_SECRET, TUYA_DEVICE_ID, TUYA_REGION
-const TUYA_JSON_URL = './data/tuya.json';
-
-// --- Google Kalendář ---
-// Nastav → Nastavení kalendáře → "Tajná adresa ve formátu iCal"
-const CALENDAR_JSON_URL = './data/calendar.json';
+// --- Data generovaná GitHub Actions ---
+// Workflows publikují JSON do větve "data", aby botí commity nezaplavovaly
+// historii main. Při nedostupnosti se použije lokální ./data/ (seed v main).
+const DATA_BRANCH_BASE = 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/';
+const GROWATT_JSON_URL     = 'growatt.json';
+const TUYA_JSON_URL        = 'tuya.json';
+const CALENDAR_JSON_URL    = 'calendar.json';
+const SCHOOL_MENU_URL      = 'school_menu.json';
+const ZS_CALENDAR_JSON_URL = 'school_calendar.json';
+const NETATMO_JSON_URL     = 'netatmo.json';
 
 // --- Microsoft To Do ---
 // 1. Jdi na https://portal.azure.com → "Registrace aplikací" → "Nová registrace"
@@ -384,25 +379,59 @@ const CALENDAR_JSON_URL = './data/calendar.json';
 const MSTODO_CLIENT_ID = '8b6821fc-8ef4-4c4f-b825-eef8255766d5';
 const MSTODO_TENANT    = 'consumers'; // 'consumers' = jen osobní MS účty; 'common' = personal + work
 
-// --- Plán akcí ZŠ ---
-const ZS_CALENDAR_JSON_URL = './data/school_calendar.json';
-
 // --- Poloha pro Open-Meteo ---
 const LAT = 49.043, LON = 16.558;   // Vranov u Brna
 
 // ════════════════════════════════════════════════════════
+//  SPOLEČNÉ POMOCNÉ FUNKCE
+// ════════════════════════════════════════════════════════
+
+// Escapování externích textů před vložením do innerHTML
+const ESC_MAP = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC_MAP[c]);
+
+// fetch s timeoutem, vypnutou cache a kontrolou HTTP stavu
+function fetchTimeout(ms) {
+  return (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(ms) : undefined;
+}
+async function fetchJson(url, opts = {}) {
+  const res = await fetch(url, { cache: 'no-store', signal: fetchTimeout(15000), ...opts });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+// JSON generovaný workflows: primárně z větve "data", fallback lokální ./data/
+async function fetchDataJson(name) {
+  try {
+    return await fetchJson(`${DATA_BRANCH_BASE}${name}?t=${Date.now()}`);
+  } catch (e) {
+    return fetchJson(`./data/${name}?t=${Date.now()}`);
+  }
+}
+
+// ════════════════════════════════════════════════════════
 //  HODINY
 // ════════════════════════════════════════════════════════
+const CZ_DAYS   = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+const clockEl      = document.getElementById('clock');
+const dateLineEl   = document.getElementById('date-line');
+const footerDateEl = document.getElementById('footer-date');
+let _lastClockStr = '', _lastDateStr = '';
+
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent =
-    `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const days   = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
-  const months = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
-  document.getElementById('date-line').textContent =
-    `${days[now.getDay()]}, ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
-  document.getElementById('footer-date').textContent =
-    `${now.getDate()}.${now.getMonth()+1}.${now.getFullYear()}`;
+  const clockStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  if (clockStr !== _lastClockStr) {
+    _lastClockStr = clockStr;
+    clockEl.textContent = clockStr;
+  }
+  const dateStr = `${CZ_DAYS[now.getDay()]}, ${now.getDate()}. ${CZ_MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  if (dateStr !== _lastDateStr) {
+    _lastDateStr = dateStr;
+    dateLineEl.textContent = dateStr;
+    footerDateEl.textContent = `${now.getDate()}.${now.getMonth()+1}.${now.getFullYear()}`;
+  }
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -410,15 +439,15 @@ updateClock();
 // ════════════════════════════════════════════════════════
 //  OPEN-METEO POČASÍ
 // ════════════════════════════════════════════════════════
-const WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím'};
-const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'❄️',75:'❄️',80:'🌦',81:'🌧',82:'🌧',85:'🌨',95:'⛈',96:'⛈'};
+const WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',56:'mrznoucí mrholení',57:'silné mrznoucí mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',66:'mrznoucí déšť',67:'silný mrznoucí déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',77:'sněhová zrna',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',86:'silné sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím',99:'silná bouřka s krupobitím'};
+const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',56:'🌧',57:'🌧',61:'🌧',63:'🌧',65:'🌧',66:'🌧',67:'🌧',71:'🌨',73:'❄️',75:'❄️',77:'🌨',80:'🌦',81:'🌧',82:'🌧',85:'🌨',86:'❄️',95:'⛈',96:'⛈',99:'⛈'};
 
 async function fetchWeather() {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}`
       +`&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m,precipitation`
       +`&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
-    const {current:c, daily:d} = await (await fetch(url)).json();
+    const {current:c, daily:d} = await fetchJson(url);
     document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
     document.getElementById('w-desc').textContent = WMO[c.weathercode]||'–';
     document.getElementById('w-wind').textContent = `💨 ${Math.round(c.windspeed_10m)} km/h`;
@@ -433,81 +462,8 @@ async function fetchWeather() {
 }
 
 // ════════════════════════════════════════════════════════
-//  NETATMO  (OAuth2 Authorization Code flow)
+//  NETATMO  (čte netatmo.json z větve data)
 // ════════════════════════════════════════════════════════
-
-// Zpracuje callback od Netatmo po přihlášení (code v URL)
-async function handleNetatmoCallback() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('state') !== 'netatmo' || !params.get('code')) return;
-  const code = params.get('code');
-  history.replaceState({}, '', window.location.pathname);
-  const el = document.getElementById('netatmo-content');
-  el.innerHTML = '<div class="netatmo-notice">Přihlašuji k Netatmo…</div>';
-  try {
-    const body = new URLSearchParams({
-      grant_type: 'authorization_code', client_id: NETATMO_CLIENT_ID,
-      client_secret: NETATMO_CLIENT_SECRET, code,
-      redirect_uri: location.origin + location.pathname
-    });
-    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
-      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
-    })).json();
-    if (data.access_token) {
-      localStorage.setItem('netatmo_access_token', data.access_token);
-      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
-      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
-    }
-  } catch(e) {}
-}
-
-async function refreshNetatmoToken(refreshToken) {
-  try {
-    const body = new URLSearchParams({
-      grant_type: 'refresh_token', client_id: NETATMO_CLIENT_ID,
-      client_secret: NETATMO_CLIENT_SECRET, refresh_token: refreshToken
-    });
-    const data = await (await fetch('https://api.netatmo.com/oauth2/token', {
-      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body
-    })).json();
-    if (data.access_token) {
-      localStorage.setItem('netatmo_access_token', data.access_token);
-      localStorage.setItem('netatmo_refresh_token', data.refresh_token);
-      localStorage.setItem('netatmo_expires_at', Date.now() + data.expires_in * 1000);
-      return data.access_token;
-    }
-  } catch(e) {}
-  localStorage.removeItem('netatmo_access_token');
-  localStorage.removeItem('netatmo_refresh_token');
-  localStorage.removeItem('netatmo_expires_at');
-  return null;
-}
-
-async function getNetatmoToken() {
-  if (NETATMO_ACCESS_TOKEN) return NETATMO_ACCESS_TOKEN;
-  const expiresAt = parseInt(localStorage.getItem('netatmo_expires_at') || '0');
-  const accessToken = localStorage.getItem('netatmo_access_token');
-  if (accessToken && Date.now() < expiresAt - 60000) return accessToken;
-  const refreshToken = localStorage.getItem('netatmo_refresh_token');
-  if (refreshToken && NETATMO_CLIENT_ID) return await refreshNetatmoToken(refreshToken);
-  return null;
-}
-
-function authorizeNetatmo() {
-  const params = new URLSearchParams({
-    client_id: NETATMO_CLIENT_ID,
-    redirect_uri: location.origin + location.pathname,
-    scope: 'read_station', state: 'netatmo'
-  });
-  window.location.href = `https://api.netatmo.com/oauth2/authorize?${params}`;
-}
-
-function disconnectNetatmo() {
-  localStorage.removeItem('netatmo_access_token');
-  localStorage.removeItem('netatmo_refresh_token');
-  localStorage.removeItem('netatmo_expires_at');
-  fetchNetatmo();
-}
 
 const NLABELS = {Temperature:'Teplota',Humidity:'Vlhkost',CO2:'CO₂',Noise:'Hluk',Pressure:'Tlak',AbsolutePressure:'Abs. tlak',Rain:'Déšť',sum_rain_1:'Déšť/h',sum_rain_24:'Déšť/24h',WindStrength:'Vítr',WindAngle:'Směr',GustStrength:'Nárazy',GustAngle:'Sm. nárazu'};
 
@@ -522,27 +478,6 @@ function fmtN(k,v) {
     WindStrength:`${r} km/h`, WindAngle:`${r}°`, GustStrength:`${r} km/h`, GustAngle:`${r}°`
   };
   return map[k] ?? String(v);
-}
-
-async function fetchNetatmoNoiseHistory(token, deviceId) {
-  const now = Math.floor(Date.now() / 1000);
-  const dayAgo = now - 86400;
-  const params = new URLSearchParams({
-    device_id: deviceId, type: 'noise', scale: '30min',
-    date_begin: dayAgo, date_end: now, optimize: 'true'
-  });
-  const data = await (await fetch(`https://api.netatmo.com/api/getmeasure?${params}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })).json();
-  if (!data?.body?.length) return [];
-  const series = data.body[0];
-  const points = [];
-  let t = series.beg_time;
-  for (const [val] of series.value) {
-    if (val !== null) points.push({ t, v: val });
-    t += series.step_time;
-  }
-  return points;
 }
 
 function renderNoiseGraph(points) {
@@ -580,68 +515,54 @@ function renderNoiseGraph(points) {
 
 async function fetchNetatmo() {
   const el = document.getElementById('netatmo-content');
-  const token = await getNetatmoToken();
-  if (!token) {
-    el.innerHTML = NETATMO_CLIENT_ID
-      ? `<div class="netatmo-notice">Netatmo není připojeno. <button onclick="authorizeNetatmo()" style="font-family:inherit;font-size:0.65rem;padding:2px 8px;border:1px solid var(--rule);background:none;cursor:pointer;margin-left:4px;">Připojit Netatmo →</button></div>`
-      : `<div class="netatmo-notice">Nastav NETATMO_CLIENT_ID a NETATMO_CLIENT_SECRET v kódu.</div>`;
-    return;
-  }
   try {
-    const data = await (await fetch('https://api.netatmo.com/api/getstationsdata', {
-      headers: { Authorization: `Bearer ${token}` }
-    })).json();
-    const devices = data?.body?.devices;
-    if (!devices?.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
+    const data = await fetchDataJson(NETATMO_JSON_URL);
+    if (data.error) { el.innerHTML=`<div class="netatmo-notice">${esc(data.error)}</div>`; return; }
 
-    let html='<div style="text-align:right;margin-bottom:6px"><button onclick="disconnectNetatmo()" style="font-family:var(--font-mono,\'JetBrains Mono\',monospace);font-size:0.58rem;padding:1px 6px;border:1px solid var(--rule);background:none;color:var(--ink-light);cursor:pointer">odpojit</button></div><div class="netatmo-grid">';
-    for (const station of devices) {
-      const mods = [
-        {name: station.module_name||'Vnitřní', dd: station.dashboard_data},
-        ...(station.modules||[]).map(m=>({name:m.module_name||m.type, dd:m.dashboard_data}))
-      ];
-      for (const mod of mods) {
-        if (!mod.dd) continue;
-        const skip = new Set(['time_utc','date_max_temp','date_min_temp','min_temp','max_temp','Temperature']);
-        html += `<div class="netatmo-module">
-          <div class="netatmo-module-name">${mod.name}</div>`;
-        if (mod.dd.Temperature !== undefined)
-          html += `<div class="netatmo-big">${Number(mod.dd.Temperature).toFixed(1)}°C</div>`;
-        html += '<div class="netatmo-rows">';
-        for (const [k,v] of Object.entries(mod.dd)) {
-          if (skip.has(k) || v===null || v===undefined) continue;
-          html += `<div class="netatmo-row"><span class="netatmo-key">${NLABELS[k]||k}</span><span class="netatmo-val">${fmtN(k,v)}</span></div>`;
-        }
-        html += '</div></div>';
+    const modules = data.modules || [];
+    if (!modules.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
+
+    const skip = new Set(['time_utc','date_max_temp','date_min_temp','min_temp','max_temp','Temperature']);
+    let html='<div class="netatmo-grid">';
+    for (const mod of modules) {
+      const dd = mod.data || {};
+      html += `<div class="netatmo-module">
+        <div class="netatmo-module-name">${esc(mod.name)}</div>`;
+      if (dd.Temperature !== undefined)
+        html += `<div class="netatmo-big">${Number(dd.Temperature).toFixed(1)}°C</div>`;
+      html += '<div class="netatmo-rows">';
+      for (const [k,v] of Object.entries(dd)) {
+        if (skip.has(k) || v===null || v===undefined) continue;
+        html += `<div class="netatmo-row"><span class="netatmo-key">${esc(NLABELS[k]||k)}</span><span class="netatmo-val">${esc(fmtN(k,v))}</span></div>`;
       }
+      html += '</div></div>';
     }
     html += '</div>';
 
-    // Graf hluku za posledních 24 h (pouze pro první stanici, která má Noise)
-    const firstStation = devices[0];
-    if (firstStation?.dashboard_data?.Noise !== undefined) {
-      try {
-        const noisePoints = await fetchNetatmoNoiseHistory(token, firstStation._id);
-        html += renderNoiseGraph(noisePoints);
-      } catch(e) { /* hluk: ignorovat chyby grafu */ }
-    }
+    // Graf hluku za posledních 24 h
+    if (data.noise?.length) html += renderNoiseGraph(data.noise);
+
+    const upd = data.updated
+      ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
+      : '–';
+    html += `<div class="netatmo-updated">data z ${upd}</div>`;
 
     el.innerHTML = html;
-  } catch(e) { el.innerHTML=`<div class="netatmo-notice">Chyba Netatmo: ${e.message}</div>`; }
+  } catch(e) {
+    el.innerHTML='<div class="netatmo-notice">data/netatmo.json nenalezen – nastav NETATMO_* secrets a spusť workflow.</div>';
+  }
 }
 
 // ════════════════════════════════════════════════════════
-//  TUYA BRÁNA  (čte data/tuya.json z GitHub Pages)
+//  TUYA BRÁNA  (čte tuya.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchTuya() {
   const el = document.getElementById('tuya-content');
   try {
-    const res = await fetch(`${TUYA_JSON_URL}?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchDataJson(TUYA_JSON_URL);
 
     if (data.error) {
-      el.innerHTML = `<div class="gate-notice">Chyba: ${data.error}</div>`;
+      el.innerHTML = `<div class="gate-notice">Chyba: ${esc(data.error)}</div>`;
       return;
     }
 
@@ -666,7 +587,7 @@ async function fetchTuya() {
           <div class="gate-indicator ${indClass}"></div>
           <div class="gate-status-text">${statusTxt}</div>
         </div>
-        <div class="gate-meta">${name}${online === false ? ' · offline' : ''}</div>`;
+        <div class="gate-meta">${esc(name)}${online === false ? ' · offline' : ''}</div>`;
     }).join('');
 
     el.innerHTML = rows + `<div class="gate-meta" style="margin-top:6px">data z ${upd}</div>`;
@@ -677,16 +598,14 @@ async function fetchTuya() {
 }
 
 // ════════════════════════════════════════════════════════
-//  GROWATT  (čte data/growatt.json z GitHub Pages)
+//  GROWATT  (čte growatt.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchGrowatt() {
   const el = document.getElementById('growatt-content');
   try {
-    const res = await fetch(`${GROWATT_JSON_URL}?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchDataJson(GROWATT_JSON_URL);
 
-    if (data.error) { el.innerHTML=`<div class="growatt-notice">Chyba: ${data.error}</div>`; return; }
+    if (data.error) { el.innerHTML=`<div class="growatt-notice">Chyba: ${esc(data.error)}</div>`; return; }
     if (!data.plants?.length) { el.innerHTML='<div class="growatt-notice">Žádná zařízení.</div>'; return; }
 
     const plant = data.plants[0];
@@ -718,7 +637,7 @@ async function fetchGrowatt() {
         <div class="growatt-cell">
           <div class="growatt-cell-label">Baterie</div>
           <div class="growatt-cell-val">${batt_pct.toFixed(0)} %</div>
-          <div class="battery-bar-wrap"><div class="battery-bar-fill" style="width:${Math.min(100,batt_pct)}%"></div></div>
+          <div class="battery-bar-wrap"><div class="battery-bar-fill" style="width:${Math.min(100,Math.max(0,batt_pct))}%"></div></div>
           <div class="growatt-cell-sub">${batt_w>0?'+':''}${Math.round(batt_w)} W</div>
         </div>
         <div class="growatt-cell">
@@ -756,11 +675,11 @@ async function fetchCalendar() {
       const d=new Date(e.date);
       const p=n=>String(n).padStart(2,'0');
       const t=e.all_day?`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`:`${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}. ${p(d.getHours())}:${p(d.getMinutes())}`;
-      return `<div class="event-item"><div class="event-dot"></div><div class="event-time">${t}</div><div class="event-title">${e.summary}</div></div>`;
+      return `<div class="event-item"><div class="event-dot"></div><div class="event-time">${t}</div><div class="event-title">${esc(e.summary)}</div></div>`;
     }).join('');
   }
   try {
-    const data=await (await fetch(CALENDAR_JSON_URL+'?t='+Date.now())).json();
+    const data=await fetchDataJson(CALENDAR_JSON_URL);
     if (data.error) { notice.textContent=`Chyba kalendáře: ${data.error}`; return; }
     const recurring=data.recurring||[];
     const single=data.single||[];
@@ -776,10 +695,12 @@ async function fetchCalendar() {
 //  ÚKOLY (localStorage)
 // ════════════════════════════════════════════════════════
 function renderTasks() {
-  const tasks=JSON.parse(localStorage.getItem('dashboard_tasks')||'[]');
+  let tasks;
+  try { tasks = JSON.parse(localStorage.getItem('dashboard_tasks')||'[]'); }
+  catch(e) { tasks = []; }
   const el=document.getElementById('task-list');
   if (!tasks.length) { el.innerHTML='<div class="empty-note">žádné úkoly</div>'; return; }
-  el.innerHTML=tasks.map(t=>`<div class="task-item ${t.done?'done':''}"><div class="task-check"></div><div class="task-text">${t.text}</div></div>`).join('');
+  el.innerHTML=tasks.map(t=>`<div class="task-item ${t.done?'done':''}"><div class="task-check"></div><div class="task-text">${esc(t.text)}</div></div>`).join('');
 }
 
 // ════════════════════════════════════════════════════════
@@ -841,7 +762,13 @@ async function handleMsTodoCallback() {
 }
 
 // --- Obnovení tokenu ---
+function clearMsTodoTokens() {
+  ['mstodo_access_token','mstodo_refresh_token','mstodo_expires_at','mstodo_code_verifier']
+    .forEach(k => localStorage.removeItem(k));
+}
+
 async function _refreshMsTodoToken(refreshToken) {
+  let data;
   try {
     const body = new URLSearchParams({
       client_id: MSTODO_CLIENT_ID,
@@ -849,19 +776,23 @@ async function _refreshMsTodoToken(refreshToken) {
       refresh_token: refreshToken,
       scope: 'Tasks.Read offline_access',
     });
-    const data = await (await fetch(
+    data = await (await fetch(
       `https://login.microsoftonline.com/${MSTODO_TENANT}/oauth2/v2.0/token`,
       { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body }
     )).json();
-    if (data.access_token) {
-      localStorage.setItem('mstodo_access_token', data.access_token);
-      if (data.refresh_token)
-        localStorage.setItem('mstodo_refresh_token', data.refresh_token);
-      localStorage.setItem('mstodo_expires_at', Date.now() + data.expires_in * 1000);
-      return data.access_token;
-    }
-  } catch(e) {}
-  ['mstodo_access_token','mstodo_refresh_token','mstodo_expires_at'].forEach(k=>localStorage.removeItem(k));
+  } catch(e) {
+    // Síťová chyba – tokeny ponecháme, obnova se zkusí při příštím refreshi
+    return null;
+  }
+  if (data.access_token) {
+    localStorage.setItem('mstodo_access_token', data.access_token);
+    if (data.refresh_token)
+      localStorage.setItem('mstodo_refresh_token', data.refresh_token);
+    localStorage.setItem('mstodo_expires_at', Date.now() + data.expires_in * 1000);
+    return data.access_token;
+  }
+  // Server refresh token odmítl → je neplatný, smažeme ho
+  clearMsTodoTokens();
   return null;
 }
 
@@ -894,8 +825,7 @@ async function authorizeMsTodo() {
 }
 
 function disconnectMsTodo() {
-  ['mstodo_access_token','mstodo_refresh_token','mstodo_expires_at','mstodo_code_verifier']
-    .forEach(k => localStorage.removeItem(k));
+  clearMsTodoTokens();
   fetchMsTodo();
 }
 
@@ -917,11 +847,9 @@ async function fetchMsTodo() {
 
   try {
     // Načti všechny seznamy úkolů
-    const listsRes = await fetch('https://graph.microsoft.com/v1.0/me/todo/lists', {
+    const { value: lists } = await fetchJson('https://graph.microsoft.com/v1.0/me/todo/lists', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (!listsRes.ok) throw new Error(`HTTP ${listsRes.status}`);
-    const { value: lists } = await listsRes.json();
 
     const vranovList = lists?.find(l => l.displayName === 'Vranov');
     if (!vranovList) {
@@ -933,9 +861,7 @@ async function fetchMsTodo() {
       + `?$filter=status ne 'completed'`
       + `&$orderby=importance desc,createdDateTime asc`
       + `&$top=50`;
-    const tasksRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-    if (!tasksRes.ok) throw new Error(`HTTP ${tasksRes.status}`);
-    const { value: rawTasks } = await tasksRes.json();
+    const { value: rawTasks } = await fetchJson(url, { headers: { Authorization: `Bearer ${token}` } });
 
     // Zobraz jen úkoly s deadlinem
     const today = new Date(); today.setHours(0,0,0,0);
@@ -955,7 +881,7 @@ async function fetchMsTodo() {
       const imp = task.importance === 'high' ? ' important' : '';
       return `<div class="mstodo-item${imp}">
         <div class="mstodo-check"></div>
-        <div class="mstodo-text">${task.title}</div>
+        <div class="mstodo-text">${esc(task.title)}</div>
         <span class="${dueClass}">${dueStr}</span>
       </div>`;
     }
@@ -968,20 +894,18 @@ async function fetchMsTodo() {
 
     el.innerHTML = html;
   } catch(e) {
-    el.innerHTML = `<div class="mstodo-notice">Chyba: ${e.message}</div>`;
+    el.innerHTML = `<div class="mstodo-notice">Chyba: ${esc(e.message)}</div>`;
   }
 }
 
 // ════════════════════════════════════════════════════════
-//  PLÁN AKCÍ ZŠ  (čte data/school_calendar.json)
+//  PLÁN AKCÍ ZŠ  (čte school_calendar.json z větve data)
 // ════════════════════════════════════════════════════════
 async function fetchZsCalendar() {
   const el = document.getElementById('zs-cal-content');
   const dayN = ['Ne','Po','Út','St','Čt','Pá','So'];
   try {
-    const res = await fetch(`${ZS_CALENDAR_JSON_URL}?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchDataJson(ZS_CALENDAR_JSON_URL);
 
     const events = data.events || [];
 
@@ -998,10 +922,10 @@ async function fetchZsCalendar() {
     const items = events.map(ev => {
       const d = new Date(ev.date + 'T12:00:00');
       const dayLabel = `${dayN[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`;
-      const timeStr = ev.time ? ` ${ev.time}` : '';
+      const timeStr = ev.time ? ` ${esc(ev.time)}` : '';
       const titleHtml = ev.url
-        ? `<a href="${ev.url}" target="_blank" rel="noopener">${ev.title}</a>`
-        : ev.title;
+        ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.title)}</a>`
+        : esc(ev.title);
       return `<div class="zs-cal-item">` +
         `<div class="zs-cal-date">${dayLabel}${timeStr}</div>` +
         `<div class="zs-cal-title">${titleHtml}</div>` +
@@ -1019,31 +943,30 @@ async function fetchZsCalendar() {
 }
 
 // ════════════════════════════════════════════════════════
-//  JÍDELNÍČEK MŠ  (čte data/school_menu.json)
+//  JÍDELNÍČEK MŠ  (čte school_menu.json z větve data)
 // ════════════════════════════════════════════════════════
-const SCHOOL_MENU_URL = './data/school_menu.json';
-
 // Sob(6), Ne(0), Po(1) → pondeli; Út(2) → utery; St(3) → streda; Čt(4) → ctvrtek; Pá(5) → patek
 const MENU_DAY_MAP = { 0:'pondeli', 1:'pondeli', 2:'utery', 3:'streda', 4:'ctvrtek', 5:'patek', 6:'pondeli' };
 const MENU_DAY_FULL = { pondeli:'Pondělí', utery:'Úterý', streda:'Středa', ctvrtek:'Čtvrtek', patek:'Pátek' };
 
+function renderMenuDay(dayKey, data) {
+  return `
+    <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
+    <div class="menu-week">${esc(data.week||'')}</div>
+    <div class="menu-meals">${data.days[dayKey].meals.map(m=>`<div class="menu-meal">${esc(m)}</div>`).join('')}</div>`;
+}
+
 async function fetchSchoolMenu() {
   const el = document.getElementById('menu-content');
   try {
-    const res = await fetch(`${SCHOOL_MENU_URL}?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchDataJson(SCHOOL_MENU_URL);
 
     if (data.error) { el.innerHTML=`<div class="menu-notice">Jídelníček se nepodařilo načíst – zkus znovu později.</div>`; return; }
 
     const dayKey  = MENU_DAY_MAP[new Date().getDay()];
-    const dayData = data.days?.[dayKey];
 
-    if (dayData?.meals?.length) {
-      el.innerHTML=`
-        <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
-        <div class="menu-week">${data.week||''}</div>
-        <div class="menu-meals">${dayData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
+    if (data.days?.[dayKey]?.meals?.length) {
+      el.innerHTML = renderMenuDay(dayKey, data);
       return;
     }
 
@@ -1051,17 +974,13 @@ async function fetchSchoolMenu() {
     const dayOrder = ['pondeli','utery','streda','ctvrtek','patek'];
     const todayIdx = dayOrder.indexOf(dayKey);
     const fallbackKey = dayOrder.slice(todayIdx + 1).find(k => data.days?.[k]?.meals?.length);
-    const fallbackData = fallbackKey ? data.days[fallbackKey] : null;
 
-    if (fallbackData) {
-      el.innerHTML=`
-        <div class="menu-day-label">${MENU_DAY_FULL[fallbackKey]}</div>
-        <div class="menu-week">${data.week||''}</div>
-        <div class="menu-meals">${fallbackData.meals.map(m=>`<div class="menu-meal">${m}</div>`).join('')}</div>`;
+    if (fallbackKey) {
+      el.innerHTML = renderMenuDay(fallbackKey, data);
       return;
     }
 
-    el.innerHTML=`<div class="menu-notice">Jídelníček pro tento týden zatím není k dispozici${data.week ? ' ('+data.week+')' : ''}.</div>`;
+    el.innerHTML=`<div class="menu-notice">Jídelníček pro tento týden zatím není k dispozici${data.week ? ' ('+esc(data.week)+')' : ''}.</div>`;
 
   } catch(e) {
     el.innerHTML='<div class="menu-notice">data/school_menu.json nenalezen – spusť workflow.</div>';
@@ -1071,19 +990,35 @@ async function fetchSchoolMenu() {
 // ════════════════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════════════════
+const REFRESH_MS = 15*60*1000;
+let _refreshing = false;
+let _lastRefreshTs = 0;
+
 async function initAll() {
-  document.getElementById('last-update').textContent='aktualizuji…';
-  await handleNetatmoCallback();
-  await handleMsTodoCallback();
-  await Promise.all([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchMsTodo(), fetchSchoolMenu(), fetchZsCalendar()]);
-  renderTasks();
-  const now=new Date();
-  document.getElementById('last-update').textContent=
-    `↺ ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  if (_refreshing) return;
+  _refreshing = true;
+  const lastUpdateEl = document.getElementById('last-update');
+  lastUpdateEl.textContent='aktualizuji…';
+  try {
+    await handleMsTodoCallback();
+    await Promise.allSettled([fetchWeather(), fetchNetatmo(), fetchTuya(), fetchGrowatt(), fetchCalendar(), fetchMsTodo(), fetchSchoolMenu(), fetchZsCalendar()]);
+    renderTasks();
+  } finally {
+    _refreshing = false;
+    _lastRefreshTs = Date.now();
+    const now=new Date();
+    lastUpdateEl.textContent=
+      `↺ ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  }
 }
 
+// Po návratu na záložku / probuzení displeje obnov zastaralá data
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && Date.now() - _lastRefreshTs > 5*60*1000) initAll();
+});
+
 initAll();
-setInterval(initAll, 15*60*1000);
+setInterval(initAll, REFRESH_MS);
 </script>
 </body>
 </html>

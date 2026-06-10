@@ -2,6 +2,9 @@ name: Fetch Growatt Data
 
 on:
   workflow_dispatch:           # možnost spustit ručně
+  schedule:
+    - cron: '*/15 4-19 * * *'      # přes den (cca 6–21 h místního času) každých 15 minut
+    - cron: '0 0-3,20-23 * * *'    # v noci jen jednou za hodinu
 
 jobs:
   fetch:
@@ -27,11 +30,5 @@ jobs:
           GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
         run: python scripts/fetch_growatt.py
 
-      - name: Commit & push data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/growatt.json
-          git diff --cached --quiet || git commit -m "chore: update growatt data [skip ci]"
-          git pull --rebase origin main
-          git push
+      - name: Publish data
+        run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json'

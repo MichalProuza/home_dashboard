@@ -59,7 +59,7 @@ def fetch():
     old_events = []
     if OUTPUT_PATH.exists():
         try:
-            old_data = json.loads(OUTPUT_PATH.read_text())
+            old_data = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
             if not old_data.get("error"):
                 old_events = old_data.get("events", [])
         except Exception:
@@ -88,7 +88,7 @@ def fetch():
             "error": str(last_exc),
             "events": old_events,
         }
-        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"✓ Uloženo do {OUTPUT_PATH}")
         return
 
@@ -174,7 +174,7 @@ def fetch():
             "events": old_events,
         }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"✓ Uloženo do {OUTPUT_PATH}")
 
 

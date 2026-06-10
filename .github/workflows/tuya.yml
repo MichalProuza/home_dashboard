@@ -33,11 +33,5 @@ jobs:
           TUYA_REGION:        ${{ secrets.TUYA_REGION }}
         run: python scripts/fetch_tuya.py
 
-      - name: Commit & push data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/tuya.json
-          git diff --cached --quiet || git commit -m "chore: update tuya gate status [skip ci]"
-          git pull --rebase origin main
-          git push
+      - name: Publish data
+        run: 'bash scripts/publish_data.sh "chore: update tuya gate status" tuya.json'
