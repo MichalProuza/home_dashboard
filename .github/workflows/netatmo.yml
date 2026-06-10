@@ -1,0 +1,45 @@
+name: Fetch Netatmo Data
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # každých 15 minut
+  workflow_dispatch:           # možnost spustit ručně
+
+# Refresh token rotuje – dva běhy najednou by si ho navzájem zneplatnily
+concurrency:
+  group: netatmo-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests cryptography
+
+      - name: Load stored refresh token
+        run: |
+          git fetch origin data 2>/dev/null || true
+          git show origin/data:netatmo_token.enc > data/netatmo_token.enc 2>/dev/null || true
+
+      - name: Fetch Netatmo data
+        env:
+          NETATMO_CLIENT_ID:     ${{ secrets.NETATMO_CLIENT_ID }}
+          NETATMO_CLIENT_SECRET: ${{ secrets.NETATMO_CLIENT_SECRET }}
+          NETATMO_REFRESH_TOKEN: ${{ secrets.NETATMO_REFRESH_TOKEN }}
+          NETATMO_TOKEN_KEY:     ${{ secrets.NETATMO_TOKEN_KEY }}
+        run: python scripts/fetch_netatmo.py
+
+      - name: Publish data
+        run: bash scripts/publish_data.sh "chore: update netatmo data" netatmo.json netatmo_token.enc

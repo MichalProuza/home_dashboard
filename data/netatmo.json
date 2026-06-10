@@ -1,0 +1,6 @@
+{
+  "updated": null,
+  "error": "Netatmo zatím nenačteno – nastav NETATMO_* secrets a spusť workflow netatmo.",
+  "modules": [],
+  "noise": []
+}
