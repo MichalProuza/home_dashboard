@@ -19,7 +19,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          # growattServer >= 2.x používá syntaxi "type X = ..." (PEP 695) → nutný Python 3.12+
+          python-version: '3.12'
 
       - name: Install dependencies
         run: pip install growattServer
