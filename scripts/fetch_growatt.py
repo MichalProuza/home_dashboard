@@ -39,7 +39,8 @@ def fetch():
         api = growattServer.GrowattApi(add_random_user_id=True)
     except TypeError:
         api = growattServer.GrowattApi()
-    api.server_url = "https://server.growatt.com/"
+    # server_url nepřepisovat – starý server.growatt.com vrací 403,
+    # výchozí openapi.growatt.com (growattServer >= 2.x) funguje
 
     try:
         login_res = api.login(USERNAME, PASSWORD)
