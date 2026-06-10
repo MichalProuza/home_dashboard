@@ -55,6 +55,9 @@ BASE_URL = f"https://{HOST}"
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "tuya.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+# Sdílená session – drží spojení mezi voláními (méně TLS handshaků)
+SESSION = requests.Session()
+
 
 # ── Tuya HMAC-SHA256 podepisování ─────────────────────────────────────────────
 
@@ -96,7 +99,7 @@ def get_token() -> str:
         "nonce":       nonce,
         "sign_method": "HMAC-SHA256",
     }
-    resp = requests.get(BASE_URL + path, headers=headers, timeout=10)
+    resp = SESSION.get(BASE_URL + path, headers=headers, timeout=10)
     resp.raise_for_status()
     data = resp.json()
     if not data.get("success"):
@@ -107,7 +110,7 @@ def get_token() -> str:
 def get_device_status(access_token: str, device_id: str) -> list:
     """Vrátí seznam data pointů zařízení."""
     path = f"/v1.0/iot-03/devices/{device_id}/status"
-    resp = requests.get(
+    resp = SESSION.get(
         BASE_URL + path,
         headers=_headers(access_token, "GET", path),
         timeout=10,
@@ -122,7 +125,7 @@ def get_device_status(access_token: str, device_id: str) -> list:
 def get_device_info(access_token: str, device_id: str) -> dict:
     """Vrátí základní informace o zařízení (jméno, online stav…)."""
     path = f"/v1.0/iot-03/devices/{device_id}"
-    resp = requests.get(
+    resp = SESSION.get(
         BASE_URL + path,
         headers=_headers(access_token, "GET", path),
         timeout=10,
@@ -227,7 +230,7 @@ def fetch():
             "devices": [],
         }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"✓ Uloženo do {OUTPUT_PATH}")
 
 

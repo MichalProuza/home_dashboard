@@ -67,7 +67,7 @@ def fetch():
             "week":    "",
             "days":    {},
         }
-        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"✓ Uloženo do {OUTPUT_PATH}")
         return
 
@@ -139,7 +139,7 @@ def fetch():
             "days":    {},
         }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"✓ Uloženo do {OUTPUT_PATH}")
 
 
