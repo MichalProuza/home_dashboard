@@ -1,0 +1,36 @@
+name: Fetch Weather Data
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # každých 30 minut
+  workflow_dispatch:           # možnost spustit ručně
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        # PyPI občas vrátí přechodné "versions: none" → opakovat s odstupem
+        run: |
+          for i in 1 2 3 4; do
+            pip install requests && break
+            echo "pip install selhal (pokus $i), čekám…"; sleep $((i*15))
+          done
+          python -c "import requests"
+
+      - name: Fetch weather data
+        run: python scripts/fetch_weather.py
+
+      - name: Publish data
+        run: 'bash scripts/publish_data.sh "chore: update weather data" weather.json'
