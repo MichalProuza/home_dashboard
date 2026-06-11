@@ -12,6 +12,7 @@ GitHub Actions.
 home_dashboard/
 ├── index.html                      # Entire frontend: HTML + CSS + JS in one file
 ├── tasks.html                      # Task manager page (localStorage `dashboard_tasks`)
+├── kiosk.html                      # Simplified kiosk view for old browsers (Safari 12 / iPad Air 1): ES2017-safe JS, data-branch JSON only, no MS To Do/Tasks, built-in night dimming
 ├── scripts/
 │   ├── fetch_growatt.py            # Solar system data from Growatt API
 │   ├── fetch_tuya.py               # Tuya sensor status (gate, garage) from Tuya IoT Cloud
