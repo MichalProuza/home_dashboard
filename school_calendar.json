@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-10T08:47:30.990881+00:00",
+  "updated": "2026-06-11T09:11:14.434535+00:00",
   "error": null,
   "events": [
-    {
-      "title": "Lanové centrum, žáci 2. a 3. tř.",
-      "date": "2026-06-10",
-      "time": "08:30",
-      "location": "Brno, Lanové centrum Proud, Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/lanove-centrum-zaci-2-a-3-tr-425_259cs.html"
-    },
     {
       "title": "ZŠ - Maják - branně vědomostní závod - 4.třída",
       "date": "2026-06-11",
@@ -36,6 +29,13 @@
       "time": "10:45",
       "location": "stanový tábor Budkovan - Jedovnice",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-1-a-2-roc-248_140cs.html"
+    },
+    {
+      "title": "Multikino Špalíček 3., 4. a 5. třída",
+      "date": "2026-06-23",
+      "time": "09:30",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/multikino-spalicek-3-4-a-5-trida-439_266cs.html"
     }
   ]
 }
