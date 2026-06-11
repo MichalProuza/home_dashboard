@@ -16,6 +16,7 @@ home_dashboard/
 │   ├── fetch_growatt.py            # Solar system data from Growatt API
 │   ├── fetch_tuya.py               # Tuya sensor status (gate, garage) from Tuya IoT Cloud
 │   ├── fetch_netatmo.py            # Netatmo station data + noise history (rotating token)
+│   ├── fetch_weather.py            # Open-Meteo forecast (server-side fallback for the browser)
 │   ├── fetch_school_menu.py        # School lunch menu scraper
 │   ├── fetch_school_calendar.py    # School (ZŠ) event plan scraper
 │   ├── fetch_calendar.py           # Google Calendar events via iCal
@@ -24,6 +25,7 @@ home_dashboard/
 │   ├── growatt.json
 │   ├── tuya.json
 │   ├── netatmo.json
+│   ├── weather.json
 │   ├── school_menu.json
 │   ├── school_calendar.json
 │   └── calendar.json
@@ -33,6 +35,7 @@ home_dashboard/
     ├── growatt.yml                 # fetch_growatt.py (15 min daytime, hourly at night)
     ├── tuya.yml                    # fetch_tuya.py (every 30 min + manual)
     ├── netatmo.yml                 # fetch_netatmo.py (every 15 min + manual)
+    ├── weather.yml                 # fetch_weather.py (every 30 min + manual)
     ├── school_menu.yml             # fetch_school_menu.py (weekdays 05:00 UTC)
     ├── school_calendar.yml         # fetch_school_calendar.py (daily 05:00 UTC)
     └── calendar.yml                # fetch_calendar.py (every hour + manual)
@@ -78,7 +81,7 @@ function called inside `initAll()`:
 | Section | JS function | Data source |
 |---------|-------------|-------------|
 | Clock / date | `updateClock()` | `Date` API, runs every second |
-| Weather (Počasí) | `fetchWeather()` | Open-Meteo public API |
+| Weather (Počasí) | `fetchWeather()` | Open-Meteo API directly, fallback `weather.json` (data branch) — Open-Meteo blocks some ISP IP ranges |
 | Netatmo weather station | `fetchNetatmo()` | `netatmo.json` (data branch) |
 | Tuya sensors (gate, garage) | `fetchTuya()` | `tuya.json` (data branch) |
 | Solar system (Growatt) | `fetchGrowatt()` | `growatt.json` (data branch) |
@@ -113,6 +116,7 @@ const CALENDAR_JSON_URL    = 'calendar.json';
 const SCHOOL_MENU_URL      = 'school_menu.json';
 const ZS_CALENDAR_JSON_URL = 'school_calendar.json';
 const NETATMO_JSON_URL     = 'netatmo.json';
+const WEATHER_JSON_URL     = 'weather.json';
 
 // Microsoft To Do (OAuth2 Authorization Code + PKCE — no client_secret needed)
 // Register app at https://portal.azure.com → App registrations
@@ -133,8 +137,9 @@ are injected only during GitHub Actions runs.
 
 | Secret | Used by |
 |--------|---------|
-| `GROWATT_USER` | `fetch_growatt.py` |
-| `GROWATT_PASS` | `fetch_growatt.py` |
+| `GROWATT_API_TOKEN` | `fetch_growatt.py` (official V1 API; generate in the ShinePhone app: Me → account name → API Token) |
+| `GROWATT_USER` | `fetch_growatt.py` (legacy fallback) |
+| `GROWATT_PASS` | `fetch_growatt.py` (legacy fallback) |
 | `TUYA_ACCESS_ID` | `fetch_tuya.py` |
 | `TUYA_ACCESS_SECRET` | `fetch_tuya.py` |
 | `TUYA_DEVICE_ID` | `fetch_tuya.py` |
@@ -182,6 +187,7 @@ the pre-built JSON files or is fetched client-side.
 | `growatt.yml` | `*/15 4-19 * * *` + hourly at night + manual | `ubuntu-latest` | `GROWATT_USER`, `GROWATT_PASS` |
 | `tuya.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | `TUYA_*` |
 | `netatmo.yml` | `*/15 * * * *` (every 15 min) + manual | `ubuntu-latest` | `NETATMO_*` |
+| `weather.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | — |
 | `calendar.yml` | `0 * * * *` (every hour) + manual | `ubuntu-latest` | `CALENDAR_ICS_URL` |
 
 All workflows follow the same pattern:
@@ -369,6 +375,20 @@ from the `data` branch before each run so the script can append to it
 ```
 On scrape failure the script keeps the previously stored `events` and sets
 `error`; the frontend then shows them with a stale-data warning.
+
+### `data/weather.json`
+```json
+{
+  "updated": "2025-02-21T10:00:00+00:00",
+  "error": null,
+  "current": {"temperature_2m": 18.4, "weather_code": 2, "wind_speed_10m": 11.2,
+               "relative_humidity_2m": 55, "precipitation": 0},
+  "daily": {"time": ["2025-02-21"], "weather_code": [2],
+             "temperature_2m_max": [21.2], "temperature_2m_min": [9.8]}
+}
+```
+`current`/`daily` mirror the Open-Meteo response. The browser queries
+Open-Meteo directly first and uses this file only as a fallback.
 
 ### `data/netatmo.json`
 ```json

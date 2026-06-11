@@ -368,6 +368,7 @@ const CALENDAR_JSON_URL    = 'calendar.json';
 const SCHOOL_MENU_URL      = 'school_menu.json';
 const ZS_CALENDAR_JSON_URL = 'school_calendar.json';
 const NETATMO_JSON_URL     = 'netatmo.json';
+const WEATHER_JSON_URL     = 'weather.json';
 
 // --- Microsoft To Do ---
 // 1. Jdi na https://portal.azure.com → "Registrace aplikací" → "Nová registrace"
@@ -447,7 +448,16 @@ async function fetchWeather() {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}`
       +`&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation`
       +`&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
-    const {current:c, daily:d} = await fetchJson(url);
+    let c, d;
+    try {
+      // Přímý dotaz — nejčerstvější data
+      ({current: c, daily: d} = await fetchJson(url));
+    } catch (e) {
+      // Open-Meteo blokuje některé IP rozsahy → záloha z workflow (větev data)
+      const w = await fetchDataJson(WEATHER_JSON_URL);
+      if (!w.current || !w.daily) throw new Error(w.error || 'weather.json bez dat');
+      c = w.current; d = w.daily;
+    }
     document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
     document.getElementById('w-desc').textContent = WMO[c.weather_code]||'–';
     document.getElementById('w-wind').textContent = `💨 ${Math.round(c.wind_speed_10m)} km/h`;
