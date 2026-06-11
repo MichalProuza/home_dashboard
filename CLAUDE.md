@@ -286,9 +286,16 @@ letter-spacing 0.18 em, `--ink-light` colour).
         }
       ]
     }
+  ],
+  "soc": [
+    {"t": 1740130200, "v": 52.0}
   ]
 }
 ```
+`soc` is a 24 h battery state-of-charge history (unix time, %) for the graph
+in the Growatt section. The workflow restores the previous `growatt.json`
+from the `data` branch before each run so the script can append to it
+(same pattern as the Netatmo token).
 
 ### `data/tuya.json`
 ```json

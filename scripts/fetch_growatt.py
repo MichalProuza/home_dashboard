@@ -69,6 +69,32 @@ def sort_devices(result_devices):
     """Frontend čte plants[0].devices[0] — střídač s daty musí být první."""
     result_devices.sort(key=lambda d: "solar_w" not in d)
 
+def build_soc_history(plants, now_ts):
+    """24h historie nabití baterie pro graf — navazuje na předchozí growatt.json.
+
+    Předchozí soubor obnovuje workflow z větve data (krok "Load previous data").
+    """
+    try:
+        prev = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        prev = {}
+    history = [p for p in (prev.get("soc") or [])
+               if isinstance(p, dict) and isinstance(p.get("t"), (int, float))]
+
+    batt = None
+    for plant in plants or []:
+        for dev in plant.get("devices", []):
+            if "battery_pct" in dev:
+                batt = dev["battery_pct"]
+                break
+        if batt is not None:
+            break
+    if batt is not None:
+        history.append({"t": now_ts, "v": round(float(batt), 1)})
+
+    cutoff = now_ts - 24 * 3600
+    return [p for p in history if p["t"] >= cutoff][-300:]
+
 # ── Oficiální V1 API (token) ──────────────────────────────────────────────────
 
 V1_TYPE_NAMES = {1: "inv", 2: "storage", 3: "other", 4: "max", 5: "mix",
@@ -275,12 +301,14 @@ def fetch():
             print(f"ERROR: Přihlášení selhalo: {e}")
             sys.exit(1)
 
-    now_utc = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(timezone.utc)
+    now_utc = now.isoformat()
+    soc_history = build_soc_history(plants, int(now.timestamp()))
     if not plants:
         print("WARN: Žádné plantáže nenalezeny.")
-        output = {"updated": now_utc, "error": "no_plants", "plants": []}
+        output = {"updated": now_utc, "error": "no_plants", "plants": [], "soc": soc_history}
     else:
-        output = {"updated": now_utc, "error": None, "plants": plants}
+        output = {"updated": now_utc, "error": None, "plants": plants, "soc": soc_history}
 
     OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"✓ Uloženo do {OUTPUT_PATH}  ({now_utc})")
