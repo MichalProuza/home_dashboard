@@ -35,7 +35,8 @@ jobs:
         env:
           GROWATT_USER: ${{ secrets.GROWATT_USER }}
           GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
-        run: python scripts/fetch_growatt.py
+          GROWATT_API_TOKEN: ${{ secrets.GROWATT_API_TOKEN }}
+        run: python scripts/diag_growatt_v1.py  # DOČASNĚ: diagnostika V1 API
 
       - name: Publish data
         run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json'
