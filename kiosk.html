@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Celoobrazovkový režim po "Přidat na plochu" -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#f5f2ec" />
+  <title>Dashboard — kiosk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    /* Kiosk verze pro staré prohlížeče (iPad Air 1 / Safari 12):
+       žádný optional chaining, žádný flex gap, vše ES2017. */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0a;
+      --ink-mid: #3a3a3a;
+      --ink-light: #888;
+      --ink-faint: #ccc;
+      --paper: #f5f2ec;
+      --paper-dark: #e8e4db;
+      --rule: #d0ccc3;
+    }
+
+    html { font-size: 18px; }
+    body {
+      font-family: 'Spectral', serif;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 24px 20px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.night { filter: brightness(0.35); background: #000; }
+
+    .clock-wrap { text-align: center; margin-bottom: 30px; }
+    #clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4.2rem; font-weight: 300; letter-spacing: 0.04em; line-height: 1;
+    }
+    #datum { font-style: italic; color: var(--ink-mid); margin-top: 6px; font-size: 1.05rem; }
+
+    .grid { display: grid; grid-template-columns: 1fr; grid-gap: 30px; max-width: 520px; margin: 0 auto; }
+    @media (min-width: 900px) {
+      .grid { max-width: 1060px; grid-template-columns: 1fr 1fr; }
+    }
+
+    section { border-top: 1px solid var(--rule); padding-top: 14px; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--ink-light); margin-bottom: 12px;
+    }
+    .notice { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
+    .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-faint); margin-top: 10px; }
+
+    /* Počasí */
+    .w-now { display: table; width: 100%; margin-bottom: 12px; }
+    .w-temp { display: table-cell; font-family: 'JetBrains Mono', monospace; font-size: 3rem; font-weight: 300; line-height: 1; }
+    .w-meta { display: table-cell; vertical-align: bottom; text-align: right; font-size: 0.92rem; color: var(--ink-mid); }
+    .w-desc { font-style: italic; }
+    .forecast { display: table; width: 100%; table-layout: fixed; margin-top: 4px; }
+    .forecast-day { display: table-cell; text-align: center; padding: 4px 0; }
+    .forecast-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); }
+    .forecast-icon { font-size: 1.3rem; margin: 4px 0; }
+    .forecast-temps { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+
+    /* Netatmo */
+    .nm-module { margin-bottom: 12px; background: var(--paper-dark); padding: 10px 12px; }
+    .nm-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); }
+    .nm-temp { font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 300; margin: 2px 0; }
+    .nm-row { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink-mid); display: table; width: 100%; }
+    .nm-key { display: table-cell; color: var(--ink-light); }
+    .nm-val { display: table-cell; text-align: right; }
+
+    /* Tuya */
+    .gate-row { margin-bottom: 10px; }
+    .gate-ind { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+    .gate-ind.open { background: #b3261e; }
+    .gate-ind.closed { background: #3a7d44; }
+    .gate-ind.unknown { background: var(--ink-faint); }
+    .gate-text { font-family: 'JetBrains Mono', monospace; font-size: 1rem; vertical-align: middle; }
+    .gate-name { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); margin-left: 22px; }
+
+    /* Growatt */
+    .gw-main { margin-bottom: 12px; }
+    .gw-power { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 300; line-height: 1; display: inline-block; }
+    .gw-power-label { font-style: italic; color: var(--ink-mid); font-size: 0.9rem; margin-left: 10px; }
+    .gw-grid { display: table; width: 100%; border-spacing: 6px; margin: 0 -6px; }
+    .gw-grid-row { display: table-row; }
+    .gw-cell { display: table-cell; width: 50%; background: var(--paper-dark); padding: 9px 11px; vertical-align: top; }
+    .gw-cell-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 3px; }
+    .gw-cell-val { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; }
+    .gw-cell-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; color: var(--ink-light); margin-top: 2px; }
+    .batt-wrap { height: 5px; background: var(--paper); margin: 6px 0 4px; }
+    .batt-fill { height: 100%; background: var(--ink-mid); }
+
+    /* Graf (SOC / hluk) */
+    .graph-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--ink-light); margin: 12px 0 4px;
+    }
+    .graph-range { color: var(--ink); float: right; }
+    .graph-svg { width: 100%; overflow: visible; display: block; }
+
+    /* Kalendář / akce / jídelníček */
+    .ev-row { display: table; width: 100%; margin-bottom: 7px; }
+    .ev-date { display: table-cell; width: 86px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--ink-light); white-space: nowrap; vertical-align: top; padding-top: 2px; }
+    .ev-title { display: table-cell; font-size: 0.95rem; }
+    .ev-loc { font-size: 0.78rem; color: var(--ink-light); font-style: italic; }
+    .menu-day-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 5px; }
+    .menu-meal { font-size: 0.92rem; margin-bottom: 3px; }
+  </style>
+</head>
+<body>
+
+  <div class="clock-wrap">
+    <div id="clock">--:--</div>
+    <div id="datum">&nbsp;</div>
+  </div>
+
+  <main class="grid">
+    <section>
+      <div class="section-label">Počasí — Vranov u Brna</div>
+      <div id="weather-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Doma — Netatmo</div>
+      <div id="netatmo-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Fotovoltaika</div>
+      <div id="growatt-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Brána a garáž</div>
+      <div id="tuya-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Kalendář</div>
+      <div id="cal-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Jídelníček MŠ</div>
+      <div id="menu-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Plán akcí ZŠ</div>
+      <div id="zs-content"><div class="notice">načítám…</div></div>
+    </section>
+  </main>
+
+<script>
+// Kiosk pro Safari 12 (iPad Air 1): bez ?. a ??, bez Promise.allSettled,
+// bez flex gap. Data výhradně z větve data (Open-Meteo blokuje některé ISP).
+var DATA_BRANCH_BASE = 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/';
+
+function esc(s) {
+  return String(s === undefined || s === null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function fetchJson(url) {
+  return fetch(url, { cache: 'no-store' }).then(function (res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  });
+}
+
+function fetchDataJson(name) {
+  return fetchJson(DATA_BRANCH_BASE + name + '?t=' + Date.now())
+    .catch(function () { return fetchJson('./data/' + name + '?t=' + Date.now()); });
+}
+
+// Safari 12 neumí ISO datum s mikrosekundami → ořež na milisekundy
+function safeDate(iso) {
+  if (!iso) return null;
+  var d = new Date(String(iso).replace(/\.(\d{3})\d+/, '.$1'));
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function fmtTime(iso) {
+  var d = safeDate(iso);
+  return d ? d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) : '–';
+}
+
+// Lokální půlnoc z "YYYY-MM-DD" (Date.parse by vrátil UTC)
+function localDate(ymd) {
+  var p = String(ymd || '').split('-');
+  if (p.length !== 3) return null;
+  return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+}
+
+// ── Hodiny ───────────────────────────────────────────────
+var CZ_DAYS = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
+var CZ_MONTHS = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'];
+var DAY_ABBR = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
+
+function updateClock() {
+  var now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('datum').textContent =
+    CZ_DAYS[now.getDay()] + ' ' + now.getDate() + '. ' + CZ_MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+  // Noční ztmavení 22–6 h (iOS 12 nemá časové automatizace Zkratek)
+  var h = now.getHours();
+  document.body.className = (h >= 22 || h < 6) ? 'night' : '';
+}
+
+// ── Počasí (weather.json z větve data) ───────────────────
+var WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',56:'mrznoucí mrholení',57:'silné mrznoucí mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',66:'mrznoucí déšť',67:'silný mrznoucí déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',77:'sněhová zrna',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',86:'silné sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím',99:'silná bouřka s krupobitím'};
+var WMO_ICON = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',56:'🌧',57:'🌧',61:'🌧',63:'🌧',65:'🌧',66:'🌧',67:'🌧',71:'🌨',73:'❄️',75:'❄️',77:'🌨',80:'🌦',81:'🌧',82:'🌧',85:'🌨',86:'❄️',95:'⛈',96:'⛈',99:'⛈'};
+
+function fetchWeather() {
+  var el = document.getElementById('weather-content');
+  return fetchDataJson('weather.json').then(function (w) {
+    var c = w.current, d = w.daily;
+    if (!c || !d) throw new Error(w.error || 'bez dat');
+    var html = '<div class="w-now">'
+      + '<div class="w-temp">' + Math.round(c.temperature_2m) + '°C</div>'
+      + '<div class="w-meta"><div class="w-desc">' + esc(WMO[c.weather_code] || '–') + '</div>'
+      + '💨 ' + Math.round(c.wind_speed_10m) + ' km/h · 💧 ' + esc(c.relative_humidity_2m) + ' %</div>'
+      + '</div><div class="forecast">';
+    var times = d.time || [];
+    for (var i = 0; i < Math.min(5, times.length); i++) {
+      var dn = localDate(times[i]);
+      var name = i === 0 ? 'Dnes' : i === 1 ? 'Zítra' : (dn ? DAY_ABBR[dn.getDay()] : '–');
+      html += '<div class="forecast-day"><div class="forecast-name">' + esc(name) + '</div>'
+        + '<div class="forecast-icon">' + (WMO_ICON[d.weather_code[i]] || '–') + '</div>'
+        + '<div class="forecast-temps">' + Math.round(d.temperature_2m_max[i]) + '° / ' + Math.round(d.temperature_2m_min[i]) + '°</div></div>';
+    }
+    html += '</div><div class="updated">data z ' + fmtTime(w.updated) + '</div>';
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání počasí</div>';
+  });
+}
+
+// ── Netatmo ──────────────────────────────────────────────
+var NLABELS = {Humidity:'Vlhkost', CO2:'CO₂', Noise:'Hluk', Pressure:'Tlak'};
+var NUNITS  = {Humidity:' %', CO2:' ppm', Noise:' dB', Pressure:' hPa'};
+
+function fetchNetatmo() {
+  var el = document.getElementById('netatmo-content');
+  return fetchDataJson('netatmo.json').then(function (data) {
+    var modules = data.modules || [];
+    if (data.error || !modules.length) throw new Error(data.error || 'bez dat');
+    var html = '';
+    modules.forEach(function (mod) {
+      var dd = mod.data || {};
+      html += '<div class="nm-module"><div class="nm-name">' + esc(mod.name) + '</div>';
+      if (dd.Temperature !== undefined) {
+        html += '<div class="nm-temp">' + Number(dd.Temperature).toFixed(1) + '°C</div>';
+      }
+      ['Humidity', 'CO2', 'Noise', 'Pressure'].forEach(function (k) {
+        if (dd[k] === undefined || dd[k] === null) return;
+        html += '<div class="nm-row"><span class="nm-key">' + NLABELS[k] + '</span>'
+          + '<span class="nm-val">' + Math.round(Number(dd[k])) + NUNITS[k] + '</span></div>';
+      });
+      html += '</div>';
+    });
+    if (data.noise && data.noise.length > 1) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
+    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání Netatmo</div>';
+  });
+}
+
+// ── Sdílený 24h graf ─────────────────────────────────────
+function renderHistoryGraph(points, label, unit) {
+  if (points.length < 2) return '';
+  var W = 400, H = 48;
+  var minV = Infinity, maxV = -Infinity;
+  points.forEach(function (p) { if (p.v < minV) minV = p.v; if (p.v > maxV) maxV = p.v; });
+  var range = (maxV - minV) || 1;
+  var tMin = points[0].t, tMax = points[points.length - 1].t;
+  var tRange = (tMax - tMin) || 1;
+  function px(t) { return ((t - tMin) / tRange) * W; }
+  function py(v) { return H - 2 - ((v - minV) / range) * (H - 6); }
+  var linePath = points.map(function (p, i) {
+    return (i === 0 ? 'M ' : 'L ') + px(p.t).toFixed(1) + ' ' + py(p.v).toFixed(1);
+  }).join(' ');
+  var areaPath = linePath + ' L ' + px(tMax).toFixed(1) + ' ' + H + ' L ' + px(tMin).toFixed(1) + ' ' + H + ' Z';
+  var labels = '';
+  var step6h = 6 * 3600;
+  for (var t = Math.ceil(tMin / step6h) * step6h; t <= tMax; t += step6h) {
+    var hh = ('0' + new Date(t * 1000).getHours()).slice(-2);
+    labels += '<text x="' + px(t).toFixed(1) + '" y="' + (H + 12) + '" font-size="8" fill="var(--ink-faint)" text-anchor="middle" font-family="JetBrains Mono, monospace">' + hh + ':00</text>';
+  }
+  return '<div><div class="graph-label">' + esc(label)
+    + '<span class="graph-range">' + Math.round(minV) + '–' + Math.round(maxV) + ' ' + esc(unit) + '</span></div>'
+    + '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="graph-svg">'
+    + '<path d="' + areaPath + '" fill="var(--paper-dark)" stroke="none"/>'
+    + '<path d="' + linePath + '" fill="none" stroke="var(--ink-mid)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>'
+    + labels + '</svg></div>';
+}
+
+// ── Growatt ──────────────────────────────────────────────
+function fetchGrowatt() {
+  var el = document.getElementById('growatt-content');
+  return fetchDataJson('growatt.json').then(function (data) {
+    var plants = data.plants || [];
+    if (data.error || !plants.length) throw new Error(data.error || 'bez dat');
+    var dev = (plants[0].devices || [])[0] || {};
+    function num(v) { return typeof v === 'number' ? v : 0; }
+    function fmtW(w) {
+      w = Math.abs(w);
+      return w >= 1000 ? (w / 1000).toFixed(2) + ' kW' : Math.round(w) + ' W';
+    }
+    var battPct = num(dev.battery_pct), battW = num(dev.battery_w);
+    var html = '<div class="gw-main"><span class="gw-power">' + fmtW(num(dev.solar_w)) + '</span>'
+      + '<span class="gw-power-label">aktuální výkon</span></div>'
+      + '<div class="gw-grid"><div class="gw-grid-row">'
+      + '<div class="gw-cell"><div class="gw-cell-label">Baterie</div>'
+      + '<div class="gw-cell-val">' + battPct.toFixed(0) + ' %</div>'
+      + '<div class="batt-wrap"><div class="batt-fill" style="width:' + Math.min(100, Math.max(0, battPct)) + '%"></div></div>'
+      + '<div class="gw-cell-sub">' + (battW > 0 ? '+' : '') + Math.round(battW) + ' W</div></div>'
+      + '<div class="gw-cell"><div class="gw-cell-label">Síť · ' + (dev.grid_direction === 'export' ? '↑ export' : '↓ import') + '</div>'
+      + '<div class="gw-cell-val">' + fmtW(num(dev.grid_w)) + '</div>'
+      + '<div class="gw-cell-sub">↑ ' + num(dev.today_export_kwh).toFixed(1) + ' / ↓ ' + num(dev.today_import_kwh).toFixed(1) + ' kWh dnes</div></div>'
+      + '</div><div class="gw-grid-row">'
+      + '<div class="gw-cell"><div class="gw-cell-label">Spotřeba</div>'
+      + '<div class="gw-cell-val">' + fmtW(num(dev.load_w)) + '</div></div>'
+      + '<div class="gw-cell"><div class="gw-cell-label">Výroba dnes</div>'
+      + '<div class="gw-cell-val">' + num(dev.today_kwh).toFixed(2) + ' kWh</div>'
+      + '<div class="gw-cell-sub">celkem ' + num(dev.total_kwh).toFixed(0) + ' kWh</div></div>'
+      + '</div></div>';
+    if (data.soc && data.soc.length > 1) html += renderHistoryGraph(data.soc, 'Baterie / 24h', '%');
+    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání Growatt</div>';
+  });
+}
+
+// ── Tuya (brána, garáž) ──────────────────────────────────
+function fetchTuya() {
+  var el = document.getElementById('tuya-content');
+  return fetchDataJson('tuya.json').then(function (data) {
+    var devices = data.devices || [];
+    if (data.error || !devices.length) throw new Error(data.error || 'bez dat');
+    var html = '';
+    devices.forEach(function (dev) {
+      var cls = dev.gate_open === true ? 'open' : dev.gate_open === false ? 'closed' : 'unknown';
+      var txt = dev.gate_open === true ? 'OTEVŘENO' : dev.gate_open === false ? 'ZAVŘENO' : 'neznámo';
+      html += '<div class="gate-row"><span class="gate-ind ' + cls + '"></span>'
+        + '<span class="gate-text">' + txt + '</span>'
+        + '<div class="gate-name">' + esc(dev.device_name || '–') + (dev.online === false ? ' · offline' : '') + '</div></div>';
+    });
+    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání senzorů</div>';
+  });
+}
+
+// ── Kalendář ─────────────────────────────────────────────
+function fetchCalendar() {
+  var el = document.getElementById('cal-content');
+  return fetchDataJson('calendar.json').then(function (data) {
+    var events = (data.recurring || []).concat(data.single || []);
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    events = events.filter(function (ev) {
+      var d = localDate(ev.date);
+      return d && d.getTime() >= today.getTime();
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 8);
+    if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
+    var html = '';
+    events.forEach(function (ev) {
+      var d = localDate(ev.date);
+      html += '<div class="ev-row"><div class="ev-date">' + DAY_ABBR[d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.</div>'
+        + '<div class="ev-title">' + esc(ev.summary)
+        + (ev.location ? ' <span class="ev-loc">' + esc(ev.location) + '</span>' : '') + '</div></div>';
+    });
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání kalendáře</div>';
+  });
+}
+
+// ── Jídelníček MŠ (dnešní den) ───────────────────────────
+function fetchSchoolMenu() {
+  var el = document.getElementById('menu-content');
+  return fetchDataJson('school_menu.json').then(function (data) {
+    var keys = ['nedele', 'pondeli', 'utery', 'streda', 'ctvrtek', 'patek', 'sobota'];
+    var day = (data.days || {})[keys[new Date().getDay()]];
+    if (!day || !(day.meals || []).length) {
+      el.innerHTML = '<div class="notice">dnes se nevaří</div>';
+      return;
+    }
+    var html = '<div class="menu-day-name">' + esc(day.name) + (data.week ? ' · ' + esc(data.week) : '') + '</div>';
+    day.meals.forEach(function (m) { html += '<div class="menu-meal">' + esc(m) + '</div>'; });
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání jídelníčku</div>';
+  });
+}
+
+// ── Plán akcí ZŠ ─────────────────────────────────────────
+function fetchZsCalendar() {
+  var el = document.getElementById('zs-content');
+  return fetchDataJson('school_calendar.json').then(function (data) {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var events = (data.events || []).filter(function (ev) {
+      var d = localDate(ev.date);
+      return d && d.getTime() >= today.getTime();
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 5);
+    if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející akce</div>'; return; }
+    var html = '';
+    events.forEach(function (ev) {
+      var d = localDate(ev.date);
+      html += '<div class="ev-row"><div class="ev-date">' + DAY_ABBR[d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.'
+        + (ev.time ? '<br>' + esc(ev.time) : '') + '</div>'
+        + '<div class="ev-title">' + esc(ev.title)
+        + (ev.location ? ' <span class="ev-loc">' + esc(ev.location) + '</span>' : '') + '</div></div>';
+    });
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání akcí ZŠ</div>';
+  });
+}
+
+// ── Spuštění ─────────────────────────────────────────────
+function initAll() {
+  var jobs = [fetchWeather, fetchNetatmo, fetchGrowatt, fetchTuya, fetchCalendar, fetchSchoolMenu, fetchZsCalendar];
+  return Promise.all(jobs.map(function (fn) {
+    return fn().catch(function () {});
+  }));
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+initAll();
+setInterval(initAll, 15 * 60 * 1000);
+// Jednou za 12 h celé znovu načíst — starý Safari, ať se pročistí paměť
+setTimeout(function () { location.reload(); }, 12 * 3600 * 1000);
+</script>
+</body>
+</html>
