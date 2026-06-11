@@ -13,7 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     /* Kiosk verze pro staré prohlížeče (iPad Air 1 / Safari 12):
-       žádný optional chaining, žádný flex gap, vše ES2017. */
+       žádný optional chaining, žádný flex gap, vše ES2017.
+       Layout je zamčený na výšku obrazovky — vše nad foldem, bez scrollování:
+       písmo se škáluje přes vmin, obsah teče do sloupců (3 na šířku, 2 na výšku). */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -26,116 +28,129 @@
       --rule: #d0ccc3;
     }
 
-    html { font-size: 18px; }
+    html { font-size: 1.85vmin; height: 100%; }
     body {
       font-family: 'Spectral', serif;
       background: var(--paper);
       color: var(--ink);
-      padding: 24px 20px 48px;
+      height: 100%;
+      overflow: hidden;
+      padding: 1.4vmin 1.8vmin;
       -webkit-font-smoothing: antialiased;
     }
     body.night { filter: brightness(0.35); background: #000; }
 
-    .clock-wrap { text-align: center; margin-bottom: 30px; }
+    /* Horní lišta: hodiny + datum na jednom řádku */
+    .topbar { display: table; width: 100%; border-bottom: 1px solid var(--rule); padding-bottom: 0.8vmin; }
     #clock {
+      display: table-cell;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 4.2rem; font-weight: 300; letter-spacing: 0.04em; line-height: 1;
+      font-size: 2.6rem; font-weight: 300; letter-spacing: 0.04em; line-height: 1;
+      white-space: nowrap; width: 1%;
     }
-    #datum { font-style: italic; color: var(--ink-mid); margin-top: 6px; font-size: 1.05rem; }
-
-    .grid { display: grid; grid-template-columns: 1fr; grid-gap: 30px; max-width: 520px; margin: 0 auto; }
-    @media (min-width: 900px) {
-      .grid { max-width: 1060px; grid-template-columns: 1fr 1fr; }
+    #datum {
+      display: table-cell; vertical-align: bottom; text-align: right;
+      font-style: italic; color: var(--ink-mid); font-size: 1.05rem;
     }
 
-    section { border-top: 1px solid var(--rule); padding-top: 14px; }
+    /* Obsah ve sloupcích, zamčený na zbytek výšky obrazovky */
+    main {
+      margin-top: 1.4vmin;
+      height: calc(100% - 7.5vmin);
+      column-count: 3;
+      column-gap: 3vmin;
+      column-rule: 1px solid var(--rule);
+    }
+    @media (orientation: portrait) {
+      html { font-size: 1.75vmin; }
+      main { column-count: 2; }
+    }
+
+    section {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      padding-bottom: 2vmin;
+    }
     .section-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.18em;
-      color: var(--ink-light); margin-bottom: 12px;
+      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--ink-light); margin-bottom: 0.9vmin;
+      border-top: 1px solid var(--rule); padding-top: 1vmin;
     }
     .notice { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
-    .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-faint); margin-top: 10px; }
+    .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 0.6vmin; }
 
     /* Počasí */
-    .w-now { display: table; width: 100%; margin-bottom: 12px; }
-    .w-temp { display: table-cell; font-family: 'JetBrains Mono', monospace; font-size: 3rem; font-weight: 300; line-height: 1; }
-    .w-meta { display: table-cell; vertical-align: bottom; text-align: right; font-size: 0.92rem; color: var(--ink-mid); }
+    .w-now { display: table; width: 100%; margin-bottom: 0.8vmin; }
+    .w-temp { display: table-cell; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 300; line-height: 1; }
+    .w-meta { display: table-cell; vertical-align: bottom; text-align: right; font-size: 0.88rem; color: var(--ink-mid); }
     .w-desc { font-style: italic; }
-    .forecast { display: table; width: 100%; table-layout: fixed; margin-top: 4px; }
-    .forecast-day { display: table-cell; text-align: center; padding: 4px 0; }
-    .forecast-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); }
-    .forecast-icon { font-size: 1.3rem; margin: 4px 0; }
-    .forecast-temps { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+    .forecast { display: table; width: 100%; table-layout: fixed; }
+    .forecast-day { display: table-cell; text-align: center; padding: 0.3vmin 0; }
+    .forecast-name { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); }
+    .forecast-icon { font-size: 1.15rem; margin: 0.3vmin 0; }
+    .forecast-temps { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; }
 
-    /* Netatmo */
-    .nm-module { margin-bottom: 12px; background: var(--paper-dark); padding: 10px 12px; }
-    .nm-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); }
-    .nm-temp { font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 300; margin: 2px 0; }
-    .nm-row { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink-mid); display: table; width: 100%; }
+    /* Netatmo — moduly vedle sebe */
+    .nm-wrap { display: table; width: 100%; border-spacing: 0.8vmin 0; margin: 0 -0.8vmin; }
+    .nm-module { display: table-cell; width: 50%; background: var(--paper-dark); padding: 0.9vmin 1.1vmin; vertical-align: top; }
+    .nm-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); }
+    .nm-temp { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 300; margin: 0.2vmin 0; }
+    .nm-row { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-mid); display: table; width: 100%; }
     .nm-key { display: table-cell; color: var(--ink-light); }
     .nm-val { display: table-cell; text-align: right; }
 
     /* Tuya */
-    .gate-row { margin-bottom: 10px; }
-    .gate-ind { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+    .gate-row { margin-bottom: 0.7vmin; }
+    .gate-ind { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 50%; margin-right: 0.6rem; vertical-align: baseline; }
     .gate-ind.open { background: #b3261e; }
     .gate-ind.closed { background: #3a7d44; }
     .gate-ind.unknown { background: var(--ink-faint); }
-    .gate-text { font-family: 'JetBrains Mono', monospace; font-size: 1rem; vertical-align: middle; }
-    .gate-name { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); margin-left: 22px; }
+    .gate-text { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+    .gate-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: var(--ink-light); display: inline; margin-left: 0.6rem; }
 
     /* Growatt */
-    .gw-main { margin-bottom: 12px; }
-    .gw-power { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 300; line-height: 1; display: inline-block; }
-    .gw-power-label { font-style: italic; color: var(--ink-mid); font-size: 0.9rem; margin-left: 10px; }
-    .gw-grid { display: table; width: 100%; border-spacing: 6px; margin: 0 -6px; }
+    .gw-main { margin-bottom: 0.8vmin; }
+    .gw-power { font-family: 'JetBrains Mono', monospace; font-size: 2.1rem; font-weight: 300; line-height: 1; display: inline-block; }
+    .gw-power-label { font-style: italic; color: var(--ink-mid); font-size: 0.84rem; margin-left: 0.6rem; }
+    .gw-grid { display: table; width: 100%; border-spacing: 0.8vmin; margin: 0 -0.8vmin; }
     .gw-grid-row { display: table-row; }
-    .gw-cell { display: table-cell; width: 50%; background: var(--paper-dark); padding: 9px 11px; vertical-align: top; }
-    .gw-cell-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 3px; }
-    .gw-cell-val { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; }
-    .gw-cell-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; color: var(--ink-light); margin-top: 2px; }
-    .batt-wrap { height: 5px; background: var(--paper); margin: 6px 0 4px; }
+    .gw-cell { display: table-cell; width: 50%; background: var(--paper-dark); padding: 0.8vmin 1vmin; vertical-align: top; }
+    .gw-cell-label { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 0.2vmin; }
+    .gw-cell-val { font-family: 'JetBrains Mono', monospace; font-size: 0.98rem; }
+    .gw-cell-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-light); margin-top: 0.2vmin; }
+    .batt-wrap { height: 0.3rem; background: var(--paper); margin: 0.4vmin 0 0.3vmin; }
     .batt-fill { height: 100%; background: var(--ink-mid); }
 
     /* Graf (SOC / hluk) */
     .graph-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase;
-      letter-spacing: 0.14em; color: var(--ink-light); margin: 12px 0 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--ink-light); margin: 0.8vmin 0 0.3vmin;
     }
     .graph-range { color: var(--ink); float: right; }
     .graph-svg { width: 100%; overflow: visible; display: block; }
 
     /* Kalendář / akce / jídelníček */
-    .ev-row { display: table; width: 100%; margin-bottom: 7px; }
-    .ev-date { display: table-cell; width: 86px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--ink-light); white-space: nowrap; vertical-align: top; padding-top: 2px; }
-    .ev-title { display: table-cell; font-size: 0.95rem; }
-    .ev-loc { font-size: 0.78rem; color: var(--ink-light); font-style: italic; }
-    .menu-day-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 5px; }
-    .menu-meal { font-size: 0.92rem; margin-bottom: 3px; }
+    .ev-row { display: table; width: 100%; margin-bottom: 0.5vmin; }
+    .ev-date { display: table-cell; width: 4.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); white-space: nowrap; vertical-align: top; padding-top: 0.15rem; }
+    .ev-title { display: table-cell; font-size: 0.88rem; }
+    .ev-loc { font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
+    .menu-day-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 0.4vmin; }
+    .menu-meal { font-size: 0.86rem; margin-bottom: 0.25vmin; }
   </style>
 </head>
 <body>
 
-  <div class="clock-wrap">
-    <div id="clock">--:--</div>
-    <div id="datum">&nbsp;</div>
-  </div>
+  <header class="topbar">
+    <span id="clock">--:--</span>
+    <span id="datum">&nbsp;</span>
+  </header>
 
-  <main class="grid">
+  <main>
     <section>
-      <div class="section-label">Počasí — Vranov u Brna</div>
+      <div class="section-label" style="border-top:none;padding-top:0">Počasí — Vranov u Brna</div>
       <div id="weather-content"><div class="notice">načítám…</div></div>
-    </section>
-
-    <section>
-      <div class="section-label">Doma — Netatmo</div>
-      <div id="netatmo-content"><div class="notice">načítám…</div></div>
-    </section>
-
-    <section>
-      <div class="section-label">Fotovoltaika</div>
-      <div id="growatt-content"><div class="notice">načítám…</div></div>
     </section>
 
     <section>
@@ -144,13 +159,23 @@
     </section>
 
     <section>
+      <div class="section-label">Jídelníček MŠ</div>
+      <div id="menu-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
+      <div class="section-label">Doma — Netatmo</div>
+      <div id="netatmo-content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <section>
       <div class="section-label">Kalendář</div>
       <div id="cal-content"><div class="notice">načítám…</div></div>
     </section>
 
     <section>
-      <div class="section-label">Jídelníček MŠ</div>
-      <div id="menu-content"><div class="notice">načítám…</div></div>
+      <div class="section-label">Fotovoltaika</div>
+      <div id="growatt-content"><div class="notice">načítám…</div></div>
     </section>
 
     <section>
@@ -255,7 +280,7 @@ function fetchNetatmo() {
   return fetchDataJson('netatmo.json').then(function (data) {
     var modules = data.modules || [];
     if (data.error || !modules.length) throw new Error(data.error || 'bez dat');
-    var html = '';
+    var html = '<div class="nm-wrap">';
     modules.forEach(function (mod) {
       var dd = mod.data || {};
       html += '<div class="nm-module"><div class="nm-name">' + esc(mod.name) + '</div>';
@@ -269,6 +294,7 @@ function fetchNetatmo() {
       });
       html += '</div>';
     });
+    html += '</div>';
     if (data.noise && data.noise.length > 1) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
     html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
     el.innerHTML = html;
@@ -280,7 +306,7 @@ function fetchNetatmo() {
 // ── Sdílený 24h graf ─────────────────────────────────────
 function renderHistoryGraph(points, label, unit) {
   if (points.length < 2) return '';
-  var W = 400, H = 48;
+  var W = 400, H = 42;
   var minV = Infinity, maxV = -Infinity;
   points.forEach(function (p) { if (p.v < minV) minV = p.v; if (p.v > maxV) maxV = p.v; });
   var range = (maxV - minV) || 1;
@@ -296,11 +322,11 @@ function renderHistoryGraph(points, label, unit) {
   var step6h = 6 * 3600;
   for (var t = Math.ceil(tMin / step6h) * step6h; t <= tMax; t += step6h) {
     var hh = ('0' + new Date(t * 1000).getHours()).slice(-2);
-    labels += '<text x="' + px(t).toFixed(1) + '" y="' + (H + 12) + '" font-size="8" fill="var(--ink-faint)" text-anchor="middle" font-family="JetBrains Mono, monospace">' + hh + ':00</text>';
+    labels += '<text x="' + px(t).toFixed(1) + '" y="' + (H + 11) + '" font-size="8" fill="var(--ink-faint)" text-anchor="middle" font-family="JetBrains Mono, monospace">' + hh + ':00</text>';
   }
   return '<div><div class="graph-label">' + esc(label)
     + '<span class="graph-range">' + Math.round(minV) + '–' + Math.round(maxV) + ' ' + esc(unit) + '</span></div>'
-    + '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="graph-svg">'
+    + '<svg viewBox="0 0 ' + W + ' ' + (H + 14) + '" class="graph-svg">'
     + '<path d="' + areaPath + '" fill="var(--paper-dark)" stroke="none"/>'
     + '<path d="' + linePath + '" fill="none" stroke="var(--ink-mid)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>'
     + labels + '</svg></div>';
@@ -356,7 +382,7 @@ function fetchTuya() {
       var txt = dev.gate_open === true ? 'OTEVŘENO' : dev.gate_open === false ? 'ZAVŘENO' : 'neznámo';
       html += '<div class="gate-row"><span class="gate-ind ' + cls + '"></span>'
         + '<span class="gate-text">' + txt + '</span>'
-        + '<div class="gate-name">' + esc(dev.device_name || '–') + (dev.online === false ? ' · offline' : '') + '</div></div>';
+        + '<span class="gate-name">' + esc(dev.device_name || '–') + (dev.online === false ? ' · offline' : '') + '</span></div>';
     });
     html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
     el.innerHTML = html;
@@ -374,7 +400,7 @@ function fetchCalendar() {
     events = events.filter(function (ev) {
       var d = localDate(ev.date);
       return d && d.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 8);
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 6);
     if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
     var html = '';
     events.forEach(function (ev) {
@@ -415,7 +441,7 @@ function fetchZsCalendar() {
     var events = (data.events || []).filter(function (ev) {
       var d = localDate(ev.date);
       return d && d.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 5);
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 4);
     if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející akce</div>'; return; }
     var html = '';
     events.forEach(function (ev) {
