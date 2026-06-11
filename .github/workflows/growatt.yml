@@ -43,5 +43,8 @@ jobs:
           GROWATT_API_TOKEN: ${{ secrets.GROWATT_API_TOKEN }}
         run: python scripts/fetch_growatt.py
 
+      - name: Fetch weather data (DOČASNĚ — ověření z runneru)
+        run: python scripts/fetch_weather.py
+
       - name: Publish data
-        run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json'
+        run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json weather.json'
