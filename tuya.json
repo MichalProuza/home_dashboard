@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-11T17:06:07.972291+00:00",
+  "updated": "2026-06-11T19:57:58.491521+00:00",
   "error": null,
   "devices": [
     {
@@ -30,7 +30,7 @@
         },
         {
           "code": "battery_percentage",
-          "value": 5
+          "value": 100
         }
       ]
     },
