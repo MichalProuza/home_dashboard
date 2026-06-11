@@ -29,7 +29,7 @@ jobs:
         env:
           GROWATT_USER: ${{ secrets.GROWATT_USER }}
           GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
-        run: python scripts/diag_growatt.py  # DOČASNĚ: diagnostika 403
+        run: python scripts/fetch_growatt.py
 
       - name: Publish data
         run: 'bash scripts/publish_data.sh "chore: update growatt data" growatt.json'

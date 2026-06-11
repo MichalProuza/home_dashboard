@@ -2,10 +2,13 @@
 """
 Stahuje data ze shine.growatt.com a ukládá je do data/growatt.json
 Spouští se přes GitHub Actions každých 15 minut.
+
+Vyžaduje growattServer >= 2.x (jiné návratové tvary než 1.x).
 """
 
 import os
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +18,10 @@ try:
 except ImportError:
     print("ERROR: growattServer není nainstalován. Spusť: pip install growattServer")
     sys.exit(1)
+
+# Growatt WAF blokuje výchozí User-Agent knihovny ("Dalvik/... PyPi_GrowattServer")
+# s 403 Forbidden — UA oficiální mobilní aplikace projde.
+AGENT_IDENTIFIER = "ShinePhone/8.1.8 (iPhone; iOS 16.6; Scale/3.00)"
 
 # ── Přihlašovací údaje z GitHub Secrets ──────────────────────────────────────
 USERNAME = os.environ.get("GROWATT_USER", "")
@@ -29,16 +36,31 @@ OUTPUT_PATH = Path(__file__).parent.parent / "data" / "growatt.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 def safe_float(val, default=0.0):
-    try:
+    """Převede hodnotu na float; zvládne i řetězce s jednotkou ('142 W', '0.7 kWh')."""
+    if isinstance(val, (int, float)):
         return float(val)
-    except (TypeError, ValueError):
-        return default
+    if isinstance(val, str):
+        m = re.match(r"\s*(-?\d+(?:[.,]\d+)?)", val)
+        if m:
+            return float(m.group(1).replace(",", "."))
+    return default
+
+def parse_with_unit(val, factors):
+    """Převede '1.2 kW' → 1200 (W) resp. '0.7 kWh' → 0.7 podle mapy jednotek."""
+    num = safe_float(val)
+    if isinstance(val, str):
+        m = re.search(r"([a-zA-Z]+)\s*$", val.strip())
+        if m:
+            factor = factors.get(m.group(1).lower())
+            if factor is not None:
+                return num * factor
+    return num
+
+POWER_W   = {"w": 1, "kw": 1000, "mw": 1000000}
+ENERGY_KWH = {"wh": 0.001, "kwh": 1, "mwh": 1000}
 
 def fetch():
-    try:
-        api = growattServer.GrowattApi(add_random_user_id=True)
-    except TypeError:
-        api = growattServer.GrowattApi()
+    api = growattServer.GrowattApi(agent_identifier=AGENT_IDENTIFIER)
     api.server_url = "https://server.growatt.com/"
 
     try:
@@ -48,28 +70,23 @@ def fetch():
         sys.exit(1)
 
     # Pozor: nevypisovat obsah login_res – Actions logy jsou veřejné
-    print(f"DEBUG login_res keys: {list(login_res.keys()) if isinstance(login_res, dict) else type(login_res)}")
-
-    result_val = login_res.get("result") if isinstance(login_res, dict) else None
-    if not login_res or str(result_val) not in ("1", "True", "true"):
-        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba (result={result_val!r})")
+    if not isinstance(login_res, dict) or not login_res.get("success"):
+        msg = login_res.get("msg") if isinstance(login_res, dict) else None
+        print(f"ERROR: Špatné přihlašovací údaje nebo API chyba (msg={msg!r})")
         sys.exit(1)
 
-    try:
-        user_info = login_res.get("user") or login_res
-        user_id = user_info.get("id") or user_info.get("userId") or user_info.get("user_id")
-        if not user_id:
-            raise KeyError("id/userId/user_id nenalezeno")
-    except (KeyError, TypeError) as e:
-        print(f"ERROR: Nelze získat user_id: {e}")
+    user_id = login_res.get("userId") or (login_res.get("user") or {}).get("id")
+    if not user_id:
+        print("ERROR: Nelze získat user_id z odpovědi loginu.")
         sys.exit(1)
+
     now_utc = datetime.now(timezone.utc).isoformat()
-    today = datetime.now().strftime("%Y-%m-%d")
 
-    # Získej seznam plantáží (nevypisovat obsah – může obsahovat polohu domu)
-    plants = api.plant_list(user_id)
-    print(f"DEBUG plant_list keys: {list(plants.keys()) if isinstance(plants, dict) else type(plants)}")
-    if not plants or not plants.get("data"):
+    # Seznam plantáží (nevypisovat obsah – může obsahovat polohu domu)
+    plants_res = api.plant_list(user_id)
+    plant_rows = plants_res.get("data") if isinstance(plants_res, dict) else plants_res
+    print(f"DEBUG: nalezeno plantáží: {len(plant_rows or [])}")
+    if not plant_rows:
         print("WARN: Žádné plantáže nenalezeny.")
         output = {"updated": now_utc, "error": "no_plants", "plants": []}
         OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -77,63 +94,65 @@ def fetch():
 
     result_plants = []
 
-    for plant in plants["data"]:
+    for plant in plant_rows:
         plant_id = plant["plantId"]
         plant_name = plant.get("plantName", plant_id)
 
-        # Přehled plantáže (celková výroba, příkon ze sítě…)
-        try:
-            plant_detail = api.plant_detail(plant_id, 1, today)
-        except Exception:
-            plant_detail = {}
-
-        # Seznam zařízení
+        # Seznam zařízení (growattServer 2.x vrací rovnou list)
         try:
             devices = api.device_list(plant_id)
         except Exception:
-            devices = {"data": []}
+            devices = []
+        if isinstance(devices, dict):
+            devices = devices.get("data") or devices.get("deviceList") or []
 
         result_devices = []
 
-        for device in (devices.get("data") or []):
+        for device in devices:
             sn = device.get("deviceSn") or device.get("sn", "")
-            dev_type = device.get("deviceType", "").lower()
+            dev_type = str(device.get("deviceType", "")).lower()
 
             device_data = {
                 "sn": sn,
-                "name": device.get("deviceAlias", sn),
+                # "deviceAilas" je překlep přímo v Growatt API
+                "name": device.get("deviceAlias") or device.get("deviceAilas") or sn,
                 "type": dev_type,
                 "status": device.get("status", -1),
             }
 
-            # Mix / hybridní střídač
+            # Mix / hybridní střídač — okamžité hodnoty jsou v kW, převádíme na W
             if dev_type in ("mix", "hybrid", "sph", "spa"):
                 try:
                     mix = api.mix_system_status(sn, plant_id)
                     mix_total = api.mix_totals(sn, plant_id)
 
-                    pcharge1    = safe_float(mix.get("pcharge1", 0))
-                    pdischarge1 = safe_float(mix.get("pdischarge1", 0))
+                    charge_kw    = safe_float(mix.get("chargePower"))
+                    discharge_kw = safe_float(mix.get("pdisCharge1"))
+                    to_grid_kw   = safe_float(mix.get("pactogrid"))
+                    from_grid_kw = safe_float(mix.get("pactouser"))
                     device_data.update({
-                        "solar_w":        safe_float(mix.get("ppv")),
+                        "solar_w":        safe_float(mix.get("ppv")) * 1000,
                         "battery_pct":    safe_float(mix.get("SOC")),
-                        "battery_w":      pcharge1 - pdischarge1,
-                        "battery_status": mix.get("batteryType", ""),
-                        "grid_w":         safe_float(mix.get("pactogrid", mix.get("pactouser", 0))),
-                        "grid_direction": "export" if safe_float(mix.get("pactogrid", 0)) > 0 else "import",
-                        "load_w":         safe_float(mix.get("pLocalLoad", mix.get("pLoad", 0))),
-                        "today_kwh":      safe_float(mix_total.get("epvToday", mix_total.get("eChargeToday", 0))),
-                        "total_kwh":      safe_float(mix_total.get("epvTotal", mix_total.get("eChargeTotal", 0))),
-                        "today_import_kwh":  safe_float(mix_total.get("etoUserToday", 0)),
-                        "today_export_kwh":  safe_float(mix_total.get("etoGridToday", 0)),
+                        "battery_w":      (charge_kw - discharge_kw) * 1000,
+                        "grid_w":         (to_grid_kw if to_grid_kw > 0 else from_grid_kw) * 1000,
+                        "grid_direction": "export" if to_grid_kw > 0 else "import",
+                        "load_w":         safe_float(mix.get("pLocalLoad")) * 1000,
+                        "today_kwh":      safe_float(mix_total.get("epvToday")),
+                        "total_kwh":      safe_float(mix_total.get("epvTotal")),
+                        "today_export_kwh": safe_float(mix_total.get("etoGridToday")),
                     })
+                    # Dnešní import ze sítě je jen v mix_detail ('etouser')
+                    try:
+                        detail = api.mix_detail(sn, plant_id)
+                        device_data["today_import_kwh"] = safe_float(detail.get("etouser"))
+                    except Exception:
+                        device_data["today_import_kwh"] = 0.0
                 except Exception as e:
                     device_data["error"] = str(e)
 
-            # Standardní střídač (tlak)
+            # Standardní střídač
             elif dev_type in ("tlx", "inv", "inverter", ""):
                 try:
-                    inv = api.inverter_data(sn, today)
                     inv_detail = api.inverter_detail(sn)
 
                     device_data.update({
@@ -152,9 +171,10 @@ def fetch():
         result_plants.append({
             "id":      plant_id,
             "name":    plant_name,
-            "today_kwh": safe_float(plant.get("todayEnergy", 0)),
-            "total_kwh": safe_float(plant.get("totalEnergy", 0)),
-            "current_w": safe_float(plant.get("currentPower", 0)),
+            # PlantListAPI vrací hodnoty jako řetězce s jednotkou (např. '142 W', '0.7 kWh')
+            "today_kwh": parse_with_unit(plant.get("todayEnergy", 0), ENERGY_KWH),
+            "total_kwh": parse_with_unit(plant.get("totalEnergy", 0), ENERGY_KWH),
+            "current_w": parse_with_unit(plant.get("currentPower", 0), POWER_W),
             "devices": result_devices,
         })
 
