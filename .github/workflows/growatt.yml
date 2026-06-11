@@ -23,12 +23,19 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install growattServer
+        # PyPI občas vrátí přechodné "versions: none" → opakovat s odstupem
+        run: |
+          for i in 1 2 3 4; do
+            pip install growattServer && break
+            echo "pip install selhal (pokus $i), čekám…"; sleep $((i*15))
+          done
+          python -c "import growattServer"
 
       - name: Fetch Growatt data
         env:
           GROWATT_USER: ${{ secrets.GROWATT_USER }}
           GROWATT_PASS: ${{ secrets.GROWATT_PASS }}
+          GROWATT_API_TOKEN: ${{ secrets.GROWATT_API_TOKEN }}
         run: python scripts/fetch_growatt.py
 
       - name: Publish data
