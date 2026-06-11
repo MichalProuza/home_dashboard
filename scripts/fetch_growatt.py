@@ -168,6 +168,10 @@ def fetch():
 
             result_devices.append(device_data)
 
+        # Frontend čte plants[0].devices[0] — střídač s daty musí být první
+        # (device_list vrací i pomocná zařízení, např. "boost" nebo elektroměr)
+        result_devices.sort(key=lambda d: "solar_w" not in d)
+
         result_plants.append({
             "id":      plant_id,
             "name":    plant_name,
