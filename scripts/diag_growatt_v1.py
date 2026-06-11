@@ -13,7 +13,7 @@ import sys
 
 import growattServer
 
-TOKEN = os.environ.get("GROWATT_API_TOKEN", "")
+TOKEN = os.environ.get("GROWATT_API_TOKEN", "").strip()
 if not TOKEN:
     print("ERROR: Chybí GROWATT_API_TOKEN.")
     sys.exit(1)
