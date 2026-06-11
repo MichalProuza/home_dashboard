@@ -445,18 +445,18 @@ const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'�
 async function fetchWeather() {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}`
-      +`&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m,precipitation`
-      +`&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
+      +`&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation`
+      +`&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
     const {current:c, daily:d} = await fetchJson(url);
     document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
-    document.getElementById('w-desc').textContent = WMO[c.weathercode]||'–';
-    document.getElementById('w-wind').textContent = `💨 ${Math.round(c.windspeed_10m)} km/h`;
-    document.getElementById('w-humid').textContent = `💧 ${c.relativehumidity_2m}%`;
+    document.getElementById('w-desc').textContent = WMO[c.weather_code]||'–';
+    document.getElementById('w-wind').textContent = `💨 ${Math.round(c.wind_speed_10m)} km/h`;
+    document.getElementById('w-humid').textContent = `💧 ${c.relative_humidity_2m}%`;
     document.getElementById('w-rain').textContent = `🌧 ${c.precipitation} mm`;
     const dayN=['Ne','Po','Út','St','Čt','Pá','So'];
     document.getElementById('w-forecast').innerHTML = d.time.slice(0,5).map((t,i)=>{
       const dn=new Date(t), name=i===0?'Dnes':i===1?'Zítra':dayN[dn.getDay()];
-      return `<div class="forecast-day"><div class="forecast-name">${name}</div><div class="forecast-icon">${WMO_ICON[d.weathercode[i]]||'–'}</div><div class="forecast-temps"><span class="forecast-high">${Math.round(d.temperature_2m_max[i])}°</span><span style="color:var(--ink-light)"> / ${Math.round(d.temperature_2m_min[i])}°</span></div></div>`;
+      return `<div class="forecast-day"><div class="forecast-name">${name}</div><div class="forecast-icon">${WMO_ICON[d.weather_code[i]]||'–'}</div><div class="forecast-temps"><span class="forecast-high">${Math.round(d.temperature_2m_max[i])}°</span><span style="color:var(--ink-light)"> / ${Math.round(d.temperature_2m_min[i])}°</span></div></div>`;
     }).join('');
   } catch(e) { document.getElementById('w-desc').textContent='chyba načítání'; }
 }
@@ -480,7 +480,8 @@ function fmtN(k,v) {
   return map[k] ?? String(v);
 }
 
-function renderNoiseGraph(points) {
+// Sdílený 24h graf (hluk Netatmo, SOC baterie Growatt) — body [{t: unix, v: hodnota}]
+function renderHistoryGraph(points, label, unit) {
   if (points.length < 2) return '';
   const W = 400, H = 48;
   const vals = points.map(p => p.v);
@@ -504,7 +505,7 @@ function renderNoiseGraph(points) {
     labels.push(`<text x="${lx.toFixed(1)}" y="${H + 12}" font-size="8" fill="var(--ink-faint)" text-anchor="middle" font-family="JetBrains Mono, monospace">${hh}:00</text>`);
   }
   return `<div>
-    <div class="noise-graph-label">Hluk / 24h<span class="noise-graph-range">${minV}–${maxV} dB</span></div>
+    <div class="noise-graph-label">${label}<span class="noise-graph-range">${Math.round(minV)}–${Math.round(maxV)} ${unit}</span></div>
     <svg viewBox="0 0 ${W} ${H + 16}" class="noise-graph-svg">
       <path d="${areaPath}" fill="var(--paper-dark)" stroke="none"/>
       <path d="${linePath}" fill="none" stroke="var(--ink-mid)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
@@ -540,7 +541,7 @@ async function fetchNetatmo() {
     html += '</div>';
 
     // Graf hluku za posledních 24 h
-    if (data.noise?.length) html += renderNoiseGraph(data.noise);
+    if (data.noise?.length) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
 
     const upd = data.updated
       ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
@@ -655,6 +656,7 @@ async function fetchGrowatt() {
           <div class="growatt-cell-sub">celkem ${total_kwh.toFixed(0)} kWh</div>
         </div>
       </div>
+      ${data.soc?.length ? renderHistoryGraph(data.soc, 'Baterie / 24h', '%') : ''}
       <div class="growatt-updated">data z ${upd}</div>`;
 
   } catch(e) {

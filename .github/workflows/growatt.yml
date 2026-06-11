@@ -31,6 +31,11 @@ jobs:
           done
           python -c "import growattServer"
 
+      - name: Load previous data (historie SOC)
+        run: |
+          git fetch origin data 2>/dev/null || true
+          git show origin/data:growatt.json > data/growatt.json 2>/dev/null || true
+
       - name: Fetch Growatt data
         env:
           GROWATT_USER: ${{ secrets.GROWATT_USER }}
