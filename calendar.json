@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-11T05:16:28.687090+00:00",
+  "updated": "2026-06-11T09:57:14.983102+00:00",
   "error": null,
   "recurring": [
     {
@@ -22,12 +22,6 @@
     }
   ],
   "single": [
-    {
-      "summary": "Servis kotle",
-      "date": "2026-06-11T06:30:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Dentální hygiena",
       "date": "2026-06-29T09:30:00+00:00",
