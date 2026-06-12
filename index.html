@@ -124,6 +124,11 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem; color: var(--ink-mid); flex-wrap: wrap;
     }
+    .weather-hours {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; color: var(--ink-mid); margin-top: 8px;
+    }
+    .weather-hours b { font-weight: 400; color: var(--ink); }
     .weather-forecast { display: flex; margin-top: 12px; }
     .forecast-day {
       flex: 1; text-align: center; padding: 7px 4px;
@@ -302,6 +307,7 @@
       <span id="w-humid">💧 –</span>
       <span id="w-rain">🌧 –</span>
     </div>
+    <div class="weather-hours" id="w-hours"></div>
     <div class="weather-forecast" id="w-forecast"></div>
   </section>
 
@@ -447,21 +453,41 @@ updateClock();
 const WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',56:'mrznoucí mrholení',57:'silné mrznoucí mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',66:'mrznoucí déšť',67:'silný mrznoucí déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',77:'sněhová zrna',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',86:'silné sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím',99:'silná bouřka s krupobitím'};
 const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',56:'🌧',57:'🌧',61:'🌧',63:'🌧',65:'🌧',66:'🌧',67:'🌧',71:'🌨',73:'❄️',75:'❄️',77:'🌨',80:'🌦',81:'🌧',82:'🌧',85:'🌨',86:'❄️',95:'⛈',96:'⛈',99:'⛈'};
 
+// Předpověď na 10:00 a 14:00 — do 14:00 pro dnešek, po 14:01 pro zítřek
+function renderHoursForecast(hourly) {
+  if (!hourly?.time || !hourly?.temperature_2m) return '';
+  const now = new Date();
+  const tomorrow = now.getHours() * 60 + now.getMinutes() >= 14 * 60 + 1;
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (tomorrow ? 1 : 0));
+  const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const tempAt = hh => {
+    const idx = hourly.time.indexOf(`${ymd}T${hh}:00`);
+    return idx === -1 ? null : hourly.temperature_2m[idx];
+  };
+  const t10 = tempAt('10'), t14 = tempAt('14');
+  if (t10 === null && t14 === null) return '';
+  return (tomorrow ? 'Zítra' : 'Dnes')
+    + (t10 !== null ? ` · 10:00 <b>${Math.round(t10)}°</b>` : '')
+    + (t14 !== null ? ` · 14:00 <b>${Math.round(t14)}°</b>` : '');
+}
+
 async function fetchWeather() {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}`
       +`&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation`
-      +`&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=5`;
-    let c, d;
+      +`&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m`
+      +`&timezone=Europe%2FPrague&forecast_days=5`;
+    let c, d, h;
     try {
       // Přímý dotaz — nejčerstvější data
-      ({current: c, daily: d} = await fetchJson(url));
+      ({current: c, daily: d, hourly: h} = await fetchJson(url));
     } catch (e) {
       // Open-Meteo blokuje některé IP rozsahy → záloha z workflow (větev data)
       const w = await fetchDataJson(WEATHER_JSON_URL);
       if (!w.current || !w.daily) throw new Error(w.error || 'weather.json bez dat');
-      c = w.current; d = w.daily;
+      c = w.current; d = w.daily; h = w.hourly;
     }
+    document.getElementById('w-hours').innerHTML = renderHoursForecast(h);
     document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
     document.getElementById('w-desc').textContent = WMO[c.weather_code]||'–';
     document.getElementById('w-wind').textContent = `💨 ${Math.round(c.wind_speed_10m)} km/h`;

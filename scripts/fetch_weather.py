@@ -27,6 +27,7 @@ URL = (
     f"?latitude={LAT}&longitude={LON}"
     "&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation"
     "&daily=weather_code,temperature_2m_max,temperature_2m_min"
+    "&hourly=temperature_2m"
     "&timezone=Europe%2FPrague&forecast_days=5"
 )
 
@@ -46,6 +47,7 @@ def fetch():
             "error": None,
             "current": body["current"],
             "daily": body["daily"],
+            "hourly": body.get("hourly"),
         }
     except Exception as e:
         print(f"ERROR: Stažení počasí selhalo: {e}")
