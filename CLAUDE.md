@@ -350,7 +350,7 @@ from the `data` branch before each run so the script can append to it
   "updated": "2025-02-21T10:00:00+00:00",
   "error": null,
   "recurring": [
-    {"summary": "Event name", "date": "2025-02-24", "all_day": false, "location": ""}
+    {"summary": "Event name", "date": "2025-02-24T15:15:00+00:00", "all_day": false, "location": ""}
   ],
   "single": [
     {"summary": "Event name", "date": "2025-02-25", "all_day": true, "location": "Place"}

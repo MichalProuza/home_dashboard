@@ -431,15 +431,23 @@ function fetchCalendar() {
   return fetchDataJson('calendar.json').then(function (data) {
     var events = (data.recurring || []).concat(data.single || []);
     var today = new Date(); today.setHours(0, 0, 0, 0);
-    events = events.filter(function (ev) {
-      var d = localDate(ev.date);
-      return d && d.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 6);
-    if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
+    // Datum je "YYYY-MM-DD" (celodenní), nebo plné ISO s časem a offsetem
+    var items = events.map(function (ev) {
+      var s = String(ev.date || '');
+      var dt = s.indexOf('T') !== -1 ? safeDate(s) : localDate(s);
+      return { ev: ev, dt: dt, timed: !ev.all_day && s.indexOf('T') !== -1 };
+    }).filter(function (x) {
+      return x.dt && x.dt.getTime() >= today.getTime();
+    }).sort(function (a, b) { return a.dt - b.dt; }).slice(0, 6);
+    if (!items.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
     var html = '';
-    events.forEach(function (ev) {
-      var d = localDate(ev.date);
-      html += '<div class="ev-row"><div class="ev-date">' + DAY_ABBR[d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.</div>'
+    items.forEach(function (x) {
+      var d = x.dt, ev = x.ev;
+      var when = DAY_ABBR[d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.';
+      if (x.timed) {
+        when += '<br>' + d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+      }
+      html += '<div class="ev-row"><div class="ev-date">' + when + '</div>'
         + '<div class="ev-title">' + esc(ev.summary)
         + (ev.location ? ' <span class="ev-loc">' + esc(ev.location) + '</span>' : '') + '</div></div>';
     });
