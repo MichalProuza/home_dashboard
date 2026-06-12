@@ -97,6 +97,8 @@
     .w-temp { display: table-cell; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 300; line-height: 1; }
     .w-meta { display: table-cell; vertical-align: bottom; text-align: right; font-size: 0.88rem; color: var(--ink-mid); }
     .w-desc { font-style: italic; }
+    .w-hours { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--ink-mid); margin-bottom: 0.7vmin; }
+    .w-hours b { font-weight: 400; color: var(--ink); }
     .forecast { display: table; width: 100%; table-layout: fixed; }
     .forecast-day { display: table-cell; text-align: center; padding: 0.3vmin 0; }
     .forecast-name { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); }
@@ -257,6 +259,25 @@ function updateClock() {
 var WMO = {0:'jasno',1:'skoro jasno',2:'polojasno',3:'zataženo',45:'mlha',48:'jinovatka',51:'slabé mrholení',53:'mrholení',55:'silné mrholení',56:'mrznoucí mrholení',57:'silné mrznoucí mrholení',61:'slabý déšť',63:'déšť',65:'silný déšť',66:'mrznoucí déšť',67:'silný mrznoucí déšť',71:'slabý sníh',73:'sníh',75:'silný sníh',77:'sněhová zrna',80:'přeháňky',81:'silné přeháňky',82:'přívalový déšť',85:'sněhové přeháňky',86:'silné sněhové přeháňky',95:'bouřka',96:'bouřka s krupobitím',99:'silná bouřka s krupobitím'};
 var WMO_ICON = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',56:'🌧',57:'🌧',61:'🌧',63:'🌧',65:'🌧',66:'🌧',67:'🌧',71:'🌨',73:'❄️',75:'❄️',77:'🌨',80:'🌦',81:'🌧',82:'🌧',85:'🌨',86:'❄️',95:'⛈',96:'⛈',99:'⛈'};
 
+// Předpověď na 10:00 a 14:00 — do 14:00 pro dnešek, po 14:01 pro zítřek
+function renderHoursForecast(hourly) {
+  if (!hourly || !hourly.time || !hourly.temperature_2m) return '';
+  var now = new Date();
+  var tomorrow = (now.getHours() * 60 + now.getMinutes()) >= 14 * 60 + 1;
+  var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (tomorrow ? 1 : 0));
+  var ymd = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  function tempAt(hh) {
+    var idx = hourly.time.indexOf(ymd + 'T' + hh + ':00');
+    return idx === -1 ? null : hourly.temperature_2m[idx];
+  }
+  var t10 = tempAt('10'), t14 = tempAt('14');
+  if (t10 === null && t14 === null) return '';
+  return '<div class="w-hours">' + (tomorrow ? 'Zítra' : 'Dnes')
+    + (t10 !== null ? ' · 10:00 <b>' + Math.round(t10) + '°</b>' : '')
+    + (t14 !== null ? ' · 14:00 <b>' + Math.round(t14) + '°</b>' : '')
+    + '</div>';
+}
+
 function fetchWeather() {
   var el = document.getElementById('weather-content');
   return fetchDataJson('weather.json').then(function (w) {
@@ -266,7 +287,9 @@ function fetchWeather() {
       + '<div class="w-temp">' + Math.round(c.temperature_2m) + '°C</div>'
       + '<div class="w-meta"><div class="w-desc">' + esc(WMO[c.weather_code] || '–') + '</div>'
       + '💨 ' + Math.round(c.wind_speed_10m) + ' km/h · 💧 ' + esc(c.relative_humidity_2m) + ' %</div>'
-      + '</div><div class="forecast">';
+      + '</div>'
+      + renderHoursForecast(w.hourly)
+      + '<div class="forecast">';
     var times = d.time || [];
     for (var i = 0; i < Math.min(5, times.length); i++) {
       var dn = localDate(times[i]);

@@ -385,11 +385,13 @@ On scrape failure the script keeps the previously stored `events` and sets
   "current": {"temperature_2m": 18.4, "weather_code": 2, "wind_speed_10m": 11.2,
                "relative_humidity_2m": 55, "precipitation": 0},
   "daily": {"time": ["2025-02-21"], "weather_code": [2],
-             "temperature_2m_max": [21.2], "temperature_2m_min": [9.8]}
+             "temperature_2m_max": [21.2], "temperature_2m_min": [9.8]},
+  "hourly": {"time": ["2025-02-21T10:00"], "temperature_2m": [16.8]}
 }
 ```
-`current`/`daily` mirror the Open-Meteo response. The browser queries
-Open-Meteo directly first and uses this file only as a fallback.
+`current`/`daily`/`hourly` mirror the Open-Meteo response (local-time hourly
+steps feed the 10:00/14:00 forecast row). The browser queries Open-Meteo
+directly first and uses this file only as a fallback.
 
 ### `data/netatmo.json`
 ```json
