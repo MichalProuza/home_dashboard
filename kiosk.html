@@ -28,7 +28,7 @@
       --rule: #d0ccc3;
     }
 
-    html { font-size: 1.85vmin; height: 100%; }
+    html { font-size: 2vmin; height: 100%; }
     body {
       font-family: 'Spectral', serif;
       background: var(--paper);
@@ -64,33 +64,51 @@
       font-style: italic; color: var(--ink-mid); font-size: 1.05rem;
     }
 
-    /* Obsah ve sloupcích, zamčený na zbytek výšky obrazovky */
+    /* Pevná mřížka přes celou obrazovku — každá sekce má své místo
+       a vyplní celou buňku (Safari 12 umí grid-template-areas i grid-gap) */
     main {
-      margin-top: 1.4vmin;
+      margin-top: 1.2vmin;
       height: calc(100% - 7.5vmin);
-      column-count: 3;
-      column-gap: 3vmin;
-      column-rule: 1px solid var(--rule);
+      display: grid;
+      grid-gap: 2.4vmin;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas:
+        "weather netatmo growatt"
+        "cal     mid     zs";
     }
     @media (orientation: portrait) {
-      html { font-size: 1.75vmin; }
-      main { column-count: 2; }
+      main {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas:
+          "weather netatmo"
+          "growatt cal"
+          "mid     zs";
+      }
     }
+    .area-weather { grid-area: weather; }
+    .area-netatmo { grid-area: netatmo; }
+    .area-growatt { grid-area: growatt; }
+    .area-cal     { grid-area: cal; }
+    .area-zs      { grid-area: zs; }
+    .cell-stack   { grid-area: mid; display: flex; flex-direction: column; overflow: hidden; }
+    .cell-stack section:first-child { flex: 1 1 auto; margin-bottom: 1.6vmin; }
 
     section {
-      break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-      page-break-inside: avoid;
-      padding-bottom: 2vmin;
+      display: flex; flex-direction: column;
+      overflow: hidden; min-height: 0;
+      border-top: 1px solid var(--rule); padding-top: 1vmin;
     }
+    .content { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
     .section-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.18em;
       color: var(--ink-light); margin-bottom: 0.9vmin;
-      border-top: 1px solid var(--rule); padding-top: 1vmin;
     }
     .notice { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
-    .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 0.6vmin; }
+    /* "data z HH:MM" se drží u spodního okraje buňky */
+    .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: auto; padding-top: 0.6vmin; }
 
     /* Počasí */
     .w-now { display: table; width: 100%; margin-bottom: 0.8vmin; }
@@ -161,39 +179,40 @@
   </header>
 
   <main>
-    <section>
-      <div class="section-label" style="border-top:none;padding-top:0">Počasí — Vranov u Brna</div>
-      <div id="weather-content"><div class="notice">načítám…</div></div>
+    <section class="area-weather">
+      <div class="section-label">Počasí — Vranov u Brna</div>
+      <div id="weather-content" class="content"><div class="notice">načítám…</div></div>
     </section>
 
-    <section>
-      <div class="section-label">Brána a garáž</div>
-      <div id="tuya-content"><div class="notice">načítám…</div></div>
-    </section>
-
-    <section>
-      <div class="section-label">Jídelníček MŠ</div>
-      <div id="menu-content"><div class="notice">načítám…</div></div>
-    </section>
-
-    <section>
+    <section class="area-netatmo">
       <div class="section-label">Doma — Netatmo</div>
-      <div id="netatmo-content"><div class="notice">načítám…</div></div>
+      <div id="netatmo-content" class="content"><div class="notice">načítám…</div></div>
     </section>
 
-    <section>
-      <div class="section-label">Kalendář</div>
-      <div id="cal-content"><div class="notice">načítám…</div></div>
-    </section>
-
-    <section>
+    <section class="area-growatt">
       <div class="section-label">Fotovoltaika</div>
-      <div id="growatt-content"><div class="notice">načítám…</div></div>
+      <div id="growatt-content" class="content"><div class="notice">načítám…</div></div>
     </section>
 
-    <section>
+    <section class="area-cal">
+      <div class="section-label">Kalendář</div>
+      <div id="cal-content" class="content"><div class="notice">načítám…</div></div>
+    </section>
+
+    <div class="cell-stack">
+      <section>
+        <div class="section-label">Jídelníček MŠ</div>
+        <div id="menu-content" class="content"><div class="notice">načítám…</div></div>
+      </section>
+      <section>
+        <div class="section-label">Brána a garáž</div>
+        <div id="tuya-content" class="content"><div class="notice">načítám…</div></div>
+      </section>
+    </div>
+
+    <section class="area-zs">
       <div class="section-label">Plán akcí ZŠ</div>
-      <div id="zs-content"><div class="notice">načítám…</div></div>
+      <div id="zs-content" class="content"><div class="notice">načítám…</div></div>
     </section>
   </main>
 
@@ -438,7 +457,7 @@ function fetchCalendar() {
       return { ev: ev, dt: dt, timed: !ev.all_day && s.indexOf('T') !== -1 };
     }).filter(function (x) {
       return x.dt && x.dt.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.dt - b.dt; }).slice(0, 6);
+    }).sort(function (a, b) { return a.dt - b.dt; }).slice(0, 8);
     if (!items.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
     var html = '';
     items.forEach(function (x) {
@@ -483,7 +502,7 @@ function fetchZsCalendar() {
     var events = (data.events || []).filter(function (ev) {
       var d = localDate(ev.date);
       return d && d.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 4);
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 6);
     if (!events.length) { el.innerHTML = '<div class="notice">žádné nadcházející akce</div>'; return; }
     var html = '';
     events.forEach(function (ev) {
