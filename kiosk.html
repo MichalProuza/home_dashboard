@@ -38,7 +38,18 @@
       padding: 1.4vmin 1.8vmin;
       -webkit-font-smoothing: antialiased;
     }
-    body.night { filter: brightness(0.35); background: #000; }
+    /* Noční režim 22–6 h: tmavý papír + světlé písmo (čitelné, málo svítí).
+       Pouhé ztmavení filtrem bylo nečitelné. */
+    body.night {
+      --ink: #c9c5bc;
+      --ink-mid: #a39f96;
+      --ink-light: #716e67;
+      --ink-faint: #4b4944;
+      --paper: #0e0d0c;
+      --paper-dark: #1d1c19;
+      --rule: #2f2d29;
+      background: #0e0d0c;
+    }
 
     /* Horní lišta: hodiny + datum na jednom řádku */
     .topbar { display: table; width: 100%; border-bottom: 1px solid var(--rule); padding-bottom: 0.8vmin; }
