@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-11T09:11:14.434535+00:00",
+  "updated": "2026-06-12T08:56:04.154778+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Maják - branně vědomostní závod - 4.třída",
-      "date": "2026-06-11",
-      "time": "07:45",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-majak-branne-vedomostni-zavod-4trida-421_255cs.html"
-    },
     {
       "title": "ZŠ - zahradní slavnost",
       "date": "2026-06-12",
@@ -36,6 +29,13 @@
       "time": "09:30",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/multikino-spalicek-3-4-a-5-trida-439_266cs.html"
+    },
+    {
+      "title": "ZŠ - Archeologie na Dietrichu - 5. třída",
+      "date": "2026-06-24",
+      "time": "09:30",
+      "location": "Moravské zemské muzeum, Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-archeologie-na-dietrichu-5-trida-418_254cs.html"
     }
   ]
 }
