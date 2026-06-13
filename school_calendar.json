@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-12T08:56:04.154778+00:00",
+  "updated": "2026-06-13T08:19:31.667067+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - zahradní slavnost",
-      "date": "2026-06-12",
-      "time": "16:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-zahradni-slavnost-289_178cs.html"
-    },
     {
       "title": "ZŠ - škola v přírodě Jedovnice 3.-5. roč.",
       "date": "2026-06-14",
@@ -36,6 +29,13 @@
       "time": "09:30",
       "location": "Moravské zemské muzeum, Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-archeologie-na-dietrichu-5-trida-418_254cs.html"
+    },
+    {
+      "title": "ZŠ - rozdání vysvědčení",
+      "date": "2026-06-26",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-rozdani-vysvedceni-290_179cs.html"
     }
   ]
 }
