@@ -505,7 +505,10 @@ function fetchSchoolMenu() {
   var el = document.getElementById('menu-content');
   return fetchDataJson('school_menu.json').then(function (data) {
     var keys = ['nedele', 'pondeli', 'utery', 'streda', 'ctvrtek', 'patek', 'sobota'];
-    var day = (data.days || {})[keys[new Date().getDay()]];
+    // Po 16:00 už ukaž zítřejší den (dnešní oběd je odbytý)
+    var now = new Date();
+    var idx = now.getDay() + (now.getHours() >= 16 ? 1 : 0);
+    var day = (data.days || {})[keys[idx]];
     if (!day || !(day.meals || []).length) {
       el.innerHTML = '<div class="notice">dnes se nevaří</div>';
       return;
