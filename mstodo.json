@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T14:48:43.909341+00:00",
+  "updated": "2026-06-15T19:06:13.134762+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -25,12 +25,12 @@
     },
     {
       "title": "Zapsat stavy elektriny a plynu",
-      "due": "2026-03-29",
+      "due": "2026-06-29",
       "important": false
     },
     {
       "title": "Zaplatit pojištění domu - ČSOB",
-      "due": "2026-03-30",
+      "due": "2027-03-30",
       "important": false
     },
     {
@@ -50,12 +50,12 @@
     },
     {
       "title": "Zaplatit daň z nemovitosti",
-      "due": "2026-05-20",
+      "due": "2027-05-20",
       "important": false
     },
     {
       "title": "Zaplatit poplatky obci - stočné",
-      "due": "2026-04-29",
+      "due": "2027-04-29",
       "important": false
     },
     {
@@ -100,7 +100,7 @@
     },
     {
       "title": "Poslat 4k na i",
-      "due": "2026-02-02",
+      "due": "2026-06-02",
       "important": false
     },
     {
@@ -120,7 +120,7 @@
     },
     {
       "title": "Popelnice",
-      "due": "2026-06-09",
+      "due": "2026-06-23",
       "important": false
     },
     {
@@ -180,7 +180,7 @@
     },
     {
       "title": "Proudový chránič",
-      "due": "2026-06-02",
+      "due": "2026-07-02",
       "important": false
     },
     {
