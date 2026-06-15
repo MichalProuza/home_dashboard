@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-14T08:39:29.045637+00:00",
+  "updated": "2026-06-15T10:53:49.079735+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - škola v přírodě Jedovnice 3.-5. roč.",
-      "date": "2026-06-14",
-      "time": "13:00",
-      "location": "stanový tábor Budkovan - Jedovnice",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-3-5-roc-247_139cs.html"
-    },
     {
       "title": "ZŠ  - škola v přírodě Jedovnice - 1. a 2. roč.",
       "date": "2026-06-21",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-rozdani-vysvedceni-290_179cs.html"
+    },
+    {
+      "title": "ZŠ - školní fotografování 2026",
+      "date": "2026-11-02",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-fotografovani-2026-368_233cs.html"
     }
   ]
 }
