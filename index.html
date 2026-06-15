@@ -122,9 +122,10 @@
     }
     .weather-temp {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 2.6rem;
-      font-weight: 300;
+      font-size: 3.8rem;
+      font-weight: 500;
       line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
     .weather-desc { font-size: 1rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
     .weather-details {
@@ -136,7 +137,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.92rem; color: var(--ink-mid); margin-top: 10px;
     }
-    .weather-hours b { font-weight: 400; color: var(--ink); font-size: 1.25rem; }
+    .weather-hours b { font-weight: 500; color: var(--ink); font-size: 1.7rem; font-variant-numeric: tabular-nums; }
     .weather-forecast { display: flex; margin-top: 12px; }
     .forecast-day {
       flex: 1; text-align: center; padding: 7px 4px;
@@ -168,7 +169,8 @@
     }
     .netatmo-big {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.5rem; font-weight: 300; line-height: 1; margin-bottom: 3px;
+      font-size: 2.1rem; font-weight: 500; line-height: 1; margin-bottom: 3px;
+      font-variant-numeric: tabular-nums;
     }
     .netatmo-rows { display: flex; flex-direction: column; gap: 2px; }
     .netatmo-row { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
@@ -188,7 +190,7 @@
 
     /* ── GROWATT ── */
     .growatt-main { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 12px; }
-    .growatt-power { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 300; line-height: 1; }
+    .growatt-power { font-family: 'JetBrains Mono', monospace; font-size: 3.2rem; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
     .growatt-power-label { font-size: 0.82rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
     .growatt-grid {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -245,7 +247,7 @@
     .gate-indicator.unknown { background: var(--paper-dark); }
     .gate-status-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.5rem; font-weight: 300; line-height: 1;
+      font-size: 2.1rem; font-weight: 500; line-height: 1;
     }
     .gate-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); margin-top: 8px; }
     .gate-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
@@ -330,6 +332,13 @@
         padding-bottom: 10px;
       }
 
+      /* Megavýrazné přehledové hodnoty (čtení přes pokoj) */
+      .weather-temp   { font-size: 5.6rem; }
+      .weather-hours b { font-size: 2.4rem; }
+      .growatt-power  { font-size: 4.6rem; }
+      .netatmo-big    { font-size: 2.6rem; }
+      .gate-status-text { font-size: 2.6rem; }
+
       .footer {
         font-size: 0.7rem;
         padding-top: 22px;
@@ -342,6 +351,8 @@
     @media (min-width: 1180px) {
       .sections { column-count: 3; }
       .time { font-size: 8rem; }
+      .weather-temp  { font-size: 6.4rem; }
+      .growatt-power { font-size: 5.2rem; }
     }
   </style>
 </head>
