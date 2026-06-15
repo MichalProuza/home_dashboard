@@ -371,7 +371,12 @@
 // --- Data generovaná GitHub Actions ---
 // Workflows publikují JSON do větve "data", aby botí commity nezaplavovaly
 // historii main. Při nedostupnosti se použije lokální ./data/ (seed v main).
-const DATA_BRANCH_BASE = 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/';
+// Na GitHub Pages (*.github.io) se data čtou z veřejné větve "data" (raw).
+// Na Cloudflare (vlastní doména) ze same-origin Pages Function /api/data/ —
+// data jsou pak privátní za Cloudflare Access. Viz CLOUDFLARE.md.
+const DATA_BRANCH_BASE = location.hostname.endsWith('github.io')
+  ? 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/'
+  : '/api/data/';
 const GROWATT_JSON_URL     = 'growatt.json';
 const TUYA_JSON_URL        = 'tuya.json';
 const CALENDAR_JSON_URL    = 'calendar.json';
