@@ -240,7 +240,11 @@
 <script>
 // Kiosk pro Safari 12 (iPad Air 1): bez ?. a ??, bez Promise.allSettled,
 // bez flex gap. Data výhradně z větve data (Open-Meteo blokuje některé ISP).
-var DATA_BRANCH_BASE = 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/';
+// GitHub Pages (*.github.io) → veřejné raw; Cloudflare (vlastní doména) →
+// same-origin Pages Function /api/data/ (privátní data za Access). Viz CLOUDFLARE.md.
+var DATA_BRANCH_BASE = location.hostname.indexOf('github.io') !== -1
+  ? 'https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/'
+  : '/api/data/';
 
 function esc(s) {
   return String(s === undefined || s === null ? '' : s)
