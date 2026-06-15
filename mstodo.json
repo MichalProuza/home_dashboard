@@ -1,6 +1,242 @@
 {
-  "updated": "2026-06-15T14:46:51.874219+00:00",
-  "error": "Obnova tokenu selhala (síť): Expecting value: line 1 column 1 (char 0) – vygeneruj nový MSTODO_REFRESH_TOKEN (Azure / scope Tasks.Read offline_access).",
-  "list": "",
-  "tasks": []
+  "updated": "2026-06-15T14:48:43.909341+00:00",
+  "error": null,
+  "list": "Vranov",
+  "tasks": [
+    {
+      "title": "Rám okna v 2NP od montážní pěny",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Voda venku",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Držák na iPad na zeď",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Lednice dole",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Zapsat stavy elektriny a plynu",
+      "due": "2026-03-29",
+      "important": false
+    },
+    {
+      "title": "Zaplatit pojištění domu - ČSOB",
+      "due": "2026-03-30",
+      "important": false
+    },
+    {
+      "title": "Upevnit krovinak prý lépe",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Zaplatit pojištění domácnosti - ČSOB",
+      "due": "2026-10-14",
+      "important": false
+    },
+    {
+      "title": "Nainstalovat dimmer",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Zaplatit daň z nemovitosti",
+      "due": "2026-05-20",
+      "important": false
+    },
+    {
+      "title": "Zaplatit poplatky obci - stočné",
+      "due": "2026-04-29",
+      "important": false
+    },
+    {
+      "title": "žebřík",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Vrzajici vrata",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "C3 - povinné ručení",
+      "due": "2026-08-31",
+      "important": false
+    },
+    {
+      "title": "Měření plísní pod podlahou",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "STK Citroen",
+      "due": "2028-01-25",
+      "important": false
+    },
+    {
+      "title": "Crypto.com",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Wallbox na nabíjení",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Conseq",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Poslat 4k na i",
+      "due": "2026-02-02",
+      "important": false
+    },
+    {
+      "title": "FVe skupina Procházka",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Ventilátory",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Pokosova pila",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Popelnice",
+      "due": "2026-06-09",
+      "important": false
+    },
+    {
+      "title": "TV ovladač",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Vaky",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Fáze",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Groboost Notifikace",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Umytí auta",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Zaplatit poplatky obci",
+      "due": "2027-05-26",
+      "important": false
+    },
+    {
+      "title": "Spáry",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Reponio",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Vážení",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Trezor",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Dveře lednice",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Proudový chránič",
+      "due": "2026-06-02",
+      "important": false
+    },
+    {
+      "title": "nosice kol",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Doleski +420 777 483 017",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Pumpa",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Servis kotle",
+      "due": "2027-05-09",
+      "important": false
+    },
+    {
+      "title": "Hasičský zařízení - kontrola",
+      "due": "2030-06-02",
+      "important": false
+    },
+    {
+      "title": "Rencova Leky",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Gymnathlon - 26/27",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Změna PnP",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Stojan na 6 nožů",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Rododendron",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Držák kol",
+      "due": null,
+      "important": false
+    }
+  ]
 }
