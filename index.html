@@ -10,7 +10,7 @@
   <title>Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,700;1,300&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -47,29 +47,24 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding-bottom: 20px;
-      margin-bottom: 18px;
-      border-bottom: 3px solid var(--ink);
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid var(--ink);
     }
 
     .time {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 4.4rem;
-      font-weight: 500;
-      letter-spacing: -2px;
-      line-height: 0.92;
-      font-variant-numeric: tabular-nums;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 1;
     }
 
     .date-line {
-      font-family: 'Spectral', Georgia, serif;
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 0.82rem;
       color: var(--ink-mid);
-      margin-top: 8px;
+      font-style: italic;
+      margin-top: 4px;
     }
-    /* Velké první písmeno (čeština: jen první slovo s velkým, měsíce malé) */
-    .date-line::first-letter { text-transform: uppercase; }
 
     .header-right {
       text-align: right;
@@ -96,21 +91,18 @@
 
     /* ── SECTIONS ── */
     section {
-      margin-bottom: 26px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
     }
-    section:last-of-type { margin-bottom: 0; }
+    section:last-of-type { border-bottom: none; }
 
-    /* Nadpis sekce = plný inkoustový pruh s papírovým textem (silný předěl) */
     .section-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--paper);
-      background: var(--ink);
-      padding: 9px 14px;
-      margin-bottom: 16px;
+      color: var(--ink-light);
+      margin-bottom: 12px;
     }
 
     /* ── WEATHER ── */
@@ -122,10 +114,9 @@
     }
     .weather-temp {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 3.8rem;
-      font-weight: 500;
+      font-size: 2.6rem;
+      font-weight: 300;
       line-height: 1;
-      font-variant-numeric: tabular-nums;
     }
     .weather-desc { font-size: 1rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
     .weather-details {
@@ -137,7 +128,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.92rem; color: var(--ink-mid); margin-top: 10px;
     }
-    .weather-hours b { font-weight: 500; color: var(--ink); font-size: 1.7rem; font-variant-numeric: tabular-nums; }
+    .weather-hours b { font-weight: 400; color: var(--ink); font-size: 1.25rem; }
     .weather-forecast { display: flex; margin-top: 12px; }
     .forecast-day {
       flex: 1; text-align: center; padding: 7px 4px;
@@ -169,8 +160,7 @@
     }
     .netatmo-big {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 2.1rem; font-weight: 500; line-height: 1; margin-bottom: 3px;
-      font-variant-numeric: tabular-nums;
+      font-size: 1.5rem; font-weight: 300; line-height: 1; margin-bottom: 3px;
     }
     .netatmo-rows { display: flex; flex-direction: column; gap: 2px; }
     .netatmo-row { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
@@ -190,7 +180,7 @@
 
     /* ── GROWATT ── */
     .growatt-main { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 12px; }
-    .growatt-power { font-family: 'JetBrains Mono', monospace; font-size: 3.2rem; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
+    .growatt-power { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 300; line-height: 1; }
     .growatt-power-label { font-size: 0.82rem; font-style: italic; color: var(--ink-mid); padding-bottom: 4px; }
     .growatt-grid {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -247,7 +237,7 @@
     .gate-indicator.unknown { background: var(--paper-dark); }
     .gate-status-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 2.1rem; font-weight: 500; line-height: 1;
+      font-size: 1.5rem; font-weight: 300; line-height: 1;
     }
     .gate-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink-light); margin-top: 8px; }
     .gate-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
@@ -291,67 +281,6 @@
 
     /* ── FOOTER ── */
     .footer { padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); display: flex; justify-content: space-between; }
-
-    /* ══════════════════════════════════════════════════════
-       LANDSCAPE / ŠIROKÁ OBRAZOVKA — primárně iPad na šířku
-       ══════════════════════════════════════════════════════ */
-    @media (min-width: 900px) {
-      body {
-        max-width: 1400px;
-        padding: 40px 48px 48px;
-      }
-
-      /* Dominantní hlavička s velkými hodinami a datem */
-      .header {
-        padding-bottom: 28px;
-        margin-bottom: 24px;
-        border-bottom-width: 4px;
-      }
-      .time { font-size: 7rem; letter-spacing: -3px; }
-      .date-line { font-size: 1.7rem; margin-top: 12px; }
-      .header-right { font-size: 0.8rem; }
-      .refresh-btn { font-size: 0.72rem; padding: 5px 12px; margin-top: 10px; }
-
-      /* Sekce v novinových sloupcích s jasnými předěly */
-      .sections {
-        column-count: 2;
-        column-gap: 48px;
-        column-rule: 1px solid var(--rule);
-      }
-      section {
-        break-inside: avoid;
-        -webkit-column-break-inside: avoid;
-        margin-bottom: 36px;
-      }
-      .section-label {
-        font-size: 1.05rem;
-        letter-spacing: 0.16em;
-        padding: 12px 16px;
-        margin-bottom: 20px;
-      }
-
-      /* Megavýrazné přehledové hodnoty (čtení přes pokoj) */
-      .weather-temp   { font-size: 5.6rem; }
-      .weather-hours b { font-size: 2.4rem; }
-      .growatt-power  { font-size: 4.6rem; }
-      .netatmo-big    { font-size: 2.6rem; }
-      .gate-status-text { font-size: 2.6rem; }
-
-      .footer {
-        font-size: 0.7rem;
-        padding-top: 22px;
-        margin-top: 8px;
-        border-top: 1px solid var(--rule);
-      }
-    }
-
-    /* Tři sloupce na moderních iPadech na šířku (1180 / 1366) */
-    @media (min-width: 1180px) {
-      .sections { column-count: 3; }
-      .time { font-size: 8rem; }
-      .weather-temp  { font-size: 6.4rem; }
-      .growatt-power { font-size: 5.2rem; }
-    }
   </style>
 </head>
 <body>
@@ -366,8 +295,6 @@
       <button class="refresh-btn" onclick="initAll()">↺ obnovit</button>
     </div>
   </header>
-
-  <main class="sections">
 
   <section>
     <div class="section-label">Počasí · Vranov u Brna</div>
@@ -425,8 +352,6 @@
     <div class="task-list" id="task-list"><div class="empty-note">žádné úkoly</div></div>
     <a href="tasks.html" class="task-manage-link">→ spravovat úkoly</a>
   </section>
-
-  </main>
 
   <footer class="footer">
     <span>Vranov u Brna</span>
