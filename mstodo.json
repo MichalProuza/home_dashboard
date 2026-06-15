@@ -1,0 +1,6 @@
+{
+  "updated": "2026-06-15T14:46:51.874219+00:00",
+  "error": "Obnova tokenu selhala (síť): Expecting value: line 1 column 1 (char 0) – vygeneruj nový MSTODO_REFRESH_TOKEN (Azure / scope Tasks.Read offline_access).",
+  "list": "",
+  "tasks": []
+}
