@@ -10,7 +10,7 @@
   <title>Dashboard — kiosk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
     /* Kiosk verze pro staré prohlížeče (iPad Air 1 / Safari 12):
        žádný optional chaining, žádný flex gap, vše ES2017.
@@ -51,24 +51,25 @@
       background: #0e0d0c;
     }
 
-    /* Horní lišta: hodiny + datum na jednom řádku */
-    .topbar { display: table; width: 100%; border-bottom: 1px solid var(--rule); padding-bottom: 0.8vmin; }
+    /* Horní lišta: výrazné hodiny + datum na jednom řádku */
+    .topbar { display: table; width: 100%; border-bottom: 3px solid var(--ink); padding-bottom: 1vmin; }
     #clock {
       display: table-cell;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 2.6rem; font-weight: 300; letter-spacing: 0.04em; line-height: 1;
+      font-size: 3.4rem; font-weight: 500; letter-spacing: 0.02em; line-height: 1;
       white-space: nowrap; width: 1%;
+      font-variant-numeric: tabular-nums;
     }
     #datum {
       display: table-cell; vertical-align: bottom; text-align: right;
-      font-style: italic; color: var(--ink-mid); font-size: 1.05rem;
+      font-style: italic; color: var(--ink-mid); font-size: 1.3rem;
     }
 
     /* Pevná mřížka přes celou obrazovku — každá sekce má své místo
        a vyplní celou buňku (Safari 12 umí grid-template-areas i grid-gap) */
     main {
-      margin-top: 1.2vmin;
-      height: calc(100% - 7.5vmin);
+      margin-top: 1.4vmin;
+      height: calc(100% - 10vmin);
       display: grid;
       grid-gap: 2.4vmin;
       grid-template-columns: 1fr 1fr 1fr;
@@ -98,13 +99,14 @@
     section {
       display: flex; flex-direction: column;
       overflow: hidden; min-height: 0;
-      border-top: 1px solid var(--rule); padding-top: 1vmin;
     }
     .content { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+    /* Nadpis sekce = plný inkoustový pruh (v nočním režimu se přes proměnné sám invertuje) */
     .section-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.18em;
-      color: var(--ink-light); margin-bottom: 0.9vmin;
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--paper); background: var(--ink);
+      padding: 0.55vmin 0.9vmin; margin-bottom: 1vmin;
     }
     .notice { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
     /* "data z HH:MM" se drží u spodního okraje buňky */
@@ -119,8 +121,8 @@
       font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em;
       color: var(--ink-light); margin-bottom: 0.4vmin;
     }
-    .w-cell-temp { font-family: 'JetBrains Mono', monospace; font-size: 2.3rem; font-weight: 300; line-height: 1; }
-    .w-cell-temp.now { font-size: 2.8rem; }
+    .w-cell-temp { font-family: 'JetBrains Mono', monospace; font-size: 2.4rem; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
+    .w-cell-temp.now { font-size: 3rem; }
     .w-cond { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--ink-mid); margin-bottom: 0.9vmin; }
     .forecast { display: table; width: 100%; table-layout: fixed; }
     .forecast-day { display: table-cell; text-align: center; padding: 0.3vmin 0; }
@@ -132,7 +134,7 @@
     .nm-wrap { display: table; width: 100%; border-spacing: 0.8vmin 0; margin: 0 -0.8vmin; }
     .nm-module { display: table-cell; width: 50%; background: var(--paper-dark); padding: 0.9vmin 1.1vmin; vertical-align: top; }
     .nm-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); }
-    .nm-temp { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 300; margin: 0.2vmin 0; }
+    .nm-temp { font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 500; margin: 0.2vmin 0; font-variant-numeric: tabular-nums; }
     .nm-row { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-mid); display: table; width: 100%; }
     .nm-key { display: table-cell; color: var(--ink-light); }
     .nm-val { display: table-cell; text-align: right; }
@@ -143,12 +145,12 @@
     .gate-ind.open { background: #b3261e; }
     .gate-ind.closed { background: #3a7d44; }
     .gate-ind.unknown { background: var(--ink-faint); }
-    .gate-text { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+    .gate-text { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 500; }
     .gate-name { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: var(--ink-light); display: inline; margin-left: 0.6rem; }
 
     /* Growatt */
     .gw-main { margin-bottom: 0.8vmin; }
-    .gw-power { font-family: 'JetBrains Mono', monospace; font-size: 2.1rem; font-weight: 300; line-height: 1; display: inline-block; }
+    .gw-power { font-family: 'JetBrains Mono', monospace; font-size: 2.4rem; font-weight: 500; line-height: 1; display: inline-block; font-variant-numeric: tabular-nums; }
     .gw-power-label { font-style: italic; color: var(--ink-mid); font-size: 0.84rem; margin-left: 0.6rem; }
     .gw-grid { display: table; width: 100%; border-spacing: 0.8vmin; margin: 0 -0.8vmin; }
     .gw-grid-row { display: table-row; }
