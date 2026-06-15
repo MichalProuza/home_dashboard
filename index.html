@@ -48,7 +48,7 @@
       justify-content: space-between;
       align-items: flex-start;
       padding-bottom: 20px;
-      margin-bottom: 8px;
+      margin-bottom: 18px;
       border-bottom: 3px solid var(--ink);
     }
 
@@ -96,21 +96,21 @@
 
     /* ── SECTIONS ── */
     section {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--rule);
+      margin-bottom: 26px;
     }
-    section:last-of-type { border-bottom: none; }
+    section:last-of-type { margin-bottom: 0; }
 
+    /* Nadpis sekce = plný inkoustový pruh s papírovým textem (silný předěl) */
     .section-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--paper);
+      background: var(--ink);
+      padding: 9px 14px;
       margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--ink);
     }
 
     /* ── WEATHER ── */
@@ -321,15 +321,13 @@
       section {
         break-inside: avoid;
         -webkit-column-break-inside: avoid;
-        padding: 4px 0 28px;
-        margin-bottom: 28px;
-        border-bottom: 1px solid var(--rule);
+        margin-bottom: 36px;
       }
       .section-label {
         font-size: 1.05rem;
-        letter-spacing: 0.12em;
-        margin-bottom: 18px;
-        padding-bottom: 10px;
+        letter-spacing: 0.16em;
+        padding: 12px 16px;
+        margin-bottom: 20px;
       }
 
       /* Megavýrazné přehledové hodnoty (čtení přes pokoj) */
