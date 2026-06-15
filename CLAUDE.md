@@ -12,7 +12,7 @@ GitHub Actions.
 home_dashboard/
 ├── index.html                      # Entire frontend: HTML + CSS + JS in one file
 ├── tasks.html                      # Task manager page (localStorage `dashboard_tasks`)
-├── kiosk.html                      # Simplified kiosk view for old browsers (Safari 12 / iPad Air 1): ES2017-safe JS, data-branch JSON only, no MS To Do/Tasks, built-in night dimming
+├── kiosk.html                      # Simplified kiosk view for old browsers (Safari 12 / iPad Air 1): ES2017-safe JS, data-branch JSON only (incl. Microsoft To Do via server-side fetch), no localStorage Tasks, built-in night dimming
 ├── scripts/
 │   ├── fetch_growatt.py            # Solar system data from Growatt API
 │   ├── fetch_tuya.py               # Tuya sensor status (gate, garage) from Tuya IoT Cloud
@@ -21,6 +21,7 @@ home_dashboard/
 │   ├── fetch_school_menu.py        # School lunch menu scraper
 │   ├── fetch_school_calendar.py    # School (ZŠ) event plan scraper
 │   ├── fetch_calendar.py           # Google Calendar events via iCal
+│   ├── fetch_mstodo.py             # Microsoft To Do tasks (rotating token) — server-side so the kiosk can show them
 │   └── publish_data.sh             # Publishes data/*.json to the "data" branch
 ├── data/                           # Seed/fallback only — live data is on the "data" branch
 │   ├── growatt.json
@@ -29,7 +30,8 @@ home_dashboard/
 │   ├── weather.json
 │   ├── school_menu.json
 │   ├── school_calendar.json
-│   └── calendar.json
+│   ├── calendar.json
+│   └── mstodo.json
 ├── garmin-watchface/               # Garmin watch face (Connect IQ, separate project)
 ├── Odkazy.md                        # Useful links (Tuya, etc.)
 └── .github/workflows/
@@ -39,7 +41,8 @@ home_dashboard/
     ├── weather.yml                 # fetch_weather.py (every 30 min + manual)
     ├── school_menu.yml             # fetch_school_menu.py (weekdays 05:00 UTC)
     ├── school_calendar.yml         # fetch_school_calendar.py (daily 05:00 UTC)
-    └── calendar.yml                # fetch_calendar.py (every hour + manual)
+    ├── calendar.yml                # fetch_calendar.py (every hour + manual)
+    └── mstodo.yml                  # fetch_mstodo.py (every 30 min + manual)
 ```
 
 ### The `data` branch
@@ -152,10 +155,27 @@ are injected only during GitHub Actions runs.
 | `NETATMO_CLIENT_SECRET` | `fetch_netatmo.py` |
 | `NETATMO_REFRESH_TOKEN` | `fetch_netatmo.py` (seed; generate at dev.netatmo.com → Token generator, scope `read_station`) |
 | `NETATMO_TOKEN_KEY` | `fetch_netatmo.py` (any long random string; encrypts the stored rotating refresh token) |
+| `MSTODO_CLIENT_ID` | `fetch_mstodo.py` (Azure app / public client ID; may be the same one as the frontend) |
+| `MSTODO_REFRESH_TOKEN` | `fetch_mstodo.py` (seed; refresh token with scope `Tasks.Read offline_access`) |
+| `MSTODO_TOKEN_KEY` | `fetch_mstodo.py` (any long random string; encrypts the stored rotating refresh token) |
+| `MSTODO_TENANT` | `fetch_mstodo.py` (optional; defaults to `consumers`) |
+| `MSTODO_LIST` | `fetch_mstodo.py` (optional; To Do list name, defaults to `Vranov`) |
 
 Netatmo rotates its refresh token on every use, so `fetch_netatmo.py` keeps
 the current one Fernet-encrypted in `netatmo_token.enc` on the `data` branch.
 The `NETATMO_REFRESH_TOKEN` secret is only a bootstrap/recovery seed.
+
+`fetch_mstodo.py` works the same way: the Microsoft refresh token rotates on
+use and is kept Fernet-encrypted in `mstodo_token.enc` on the `data` branch
+(`MSTODO_REFRESH_TOKEN` is only the bootstrap seed). This server-side fetch
+exists so the **kiosk** (which can't do the browser OAuth/PKCE flow) can show
+To Do as plain data-branch JSON. The browser dashboard (`index.html`) still
+talks to Microsoft Graph directly and does **not** use this file. Note the
+`data` branch is public, so the published task titles are public too; the
+`Tasks.Read`-only token cannot modify anything. Azure caveat: refresh tokens
+issued to "Single-page application (SPA)" redirect URIs live only 24 h — for a
+long-lived (~90 day) seed, register the app also as "Mobile and desktop
+applications" and generate `MSTODO_REFRESH_TOKEN` against that.
 
 ---
 
@@ -190,6 +210,7 @@ the pre-built JSON files or is fetched client-side.
 | `netatmo.yml` | `*/15 * * * *` (every 15 min) + manual | `ubuntu-latest` | `NETATMO_*` |
 | `weather.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | — |
 | `calendar.yml` | `0 * * * *` (every hour) + manual | `ubuntu-latest` | `CALENDAR_ICS_URL` |
+| `mstodo.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | `MSTODO_*` |
 
 All workflows follow the same pattern:
 1. Checkout repo
@@ -198,9 +219,9 @@ All workflows follow the same pattern:
 4. Run script (injects secrets via `env:`)
 5. `bash scripts/publish_data.sh "<commit message>" <file>.json` → `data` branch
 
-`netatmo.yml` additionally loads the stored encrypted refresh token from the
-`data` branch before running the script, and uses a `concurrency` group so
-two runs can't invalidate each other's rotating token.
+`netatmo.yml` and `mstodo.yml` additionally load the stored encrypted refresh
+token from the `data` branch before running the script, and use a
+`concurrency` group so two runs can't invalidate each other's rotating token.
 
 ---
 
@@ -411,6 +432,24 @@ directly first and uses this file only as a fallback.
 `NLABELS`/`fmtN` in index.html); `noise` is a 24 h history (unix time, dB)
 for the noise graph. The encrypted rotating refresh token lives next to it
 as `netatmo_token.enc` (on the `data` branch only).
+
+### `data/mstodo.json`
+```json
+{
+  "updated": "2026-06-15T10:00:00+00:00",
+  "error": null,
+  "list": "Vranov",
+  "tasks": [
+    {"title": "Koupit krmení", "due": "2026-06-16", "important": false}
+  ]
+}
+```
+Incomplete tasks from the Microsoft To Do list named by `MSTODO_LIST`
+(default `Vranov`). `due` is a `YYYY-MM-DD` string or `null`; `important` is
+`true` for high-importance tasks. Read only by `kiosk.html` (`fetchMsTodo`,
+which sorts dated tasks first and flags overdue ones). The encrypted rotating
+refresh token lives next to it as `mstodo_token.enc` (on the `data` branch
+only). Only `index.html` shows To Do via the live browser OAuth flow instead.
 
 All JSON files share the envelope: `updated` (ISO 8601 UTC string) and `error`
 (null or error description string).

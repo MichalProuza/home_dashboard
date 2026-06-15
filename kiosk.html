@@ -93,8 +93,9 @@
     .area-growatt { grid-area: growatt; }
     .area-cal     { grid-area: cal; }
     .area-zs      { grid-area: zs; }
-    .cell-stack   { grid-area: mid; display: flex; flex-direction: column; overflow: hidden; }
+    .cell-stack   { display: flex; flex-direction: column; overflow: hidden; }
     .cell-stack section:first-child { flex: 1 1 auto; margin-bottom: 1.6vmin; }
+    .area-mid     { grid-area: mid; }
 
     section {
       display: flex; flex-direction: column;
@@ -176,6 +177,13 @@
     .ev-loc { font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
     .menu-day-name { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-light); margin-bottom: 0.4vmin; }
     .menu-meal { font-size: 0.86rem; margin-bottom: 0.25vmin; }
+
+    /* Microsoft To Do */
+    .todo-row { display: table; width: 100%; margin-bottom: 0.5vmin; }
+    .todo-due { display: table-cell; width: 3.4rem; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); white-space: nowrap; vertical-align: top; padding-top: 0.15rem; }
+    .todo-due.overdue { color: #b3261e; }
+    .todo-title { display: table-cell; font-size: 0.88rem; vertical-align: top; }
+    .todo-row.important .todo-title { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -201,12 +209,18 @@
       <div id="growatt-content" class="content"><div class="notice">načítám…</div></div>
     </section>
 
-    <section class="area-cal">
-      <div class="section-label">Kalendář</div>
-      <div id="cal-content" class="content"><div class="notice">načítám…</div></div>
-    </section>
+    <div class="cell-stack area-cal">
+      <section>
+        <div class="section-label">Kalendář</div>
+        <div id="cal-content" class="content"><div class="notice">načítám…</div></div>
+      </section>
+      <section>
+        <div class="section-label">Microsoft To Do</div>
+        <div id="mstodo-content" class="content"><div class="notice">načítám…</div></div>
+      </section>
+    </div>
 
-    <div class="cell-stack">
+    <div class="cell-stack area-mid">
       <section>
         <div class="section-label">Jídelníček MŠ</div>
         <div id="menu-content" class="content"><div class="notice">načítám…</div></div>
@@ -467,7 +481,7 @@ function fetchCalendar() {
       return { ev: ev, dt: dt, timed: !ev.all_day && s.indexOf('T') !== -1 };
     }).filter(function (x) {
       return x.dt && x.dt.getTime() >= today.getTime();
-    }).sort(function (a, b) { return a.dt - b.dt; }).slice(0, 8);
+    }).sort(function (a, b) { return a.dt - b.dt; }).slice(0, 5);
     if (!items.length) { el.innerHTML = '<div class="notice">žádné nadcházející události</div>'; return; }
     var html = '';
     items.forEach(function (x) {
@@ -528,9 +542,51 @@ function fetchZsCalendar() {
   });
 }
 
+// ── Microsoft To Do (mstodo.json z větve data) ───────────
+function fetchMsTodo() {
+  var el = document.getElementById('mstodo-content');
+  return fetchDataJson('mstodo.json').then(function (data) {
+    var tasks = data.tasks || [];
+    if (data.error && !tasks.length) {
+      el.innerHTML = '<div class="notice">úkoly se nepodařilo načíst</div>';
+      return;
+    }
+    if (!tasks.length) {
+      el.innerHTML = '<div class="notice">žádné úkoly</div>';
+      return;
+    }
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    // S termínem (podle data) první, bez termínu na konec
+    tasks = tasks.slice().sort(function (a, b) {
+      if (a.due && b.due) return a.due < b.due ? -1 : (a.due > b.due ? 1 : 0);
+      if (a.due) return -1;
+      if (b.due) return 1;
+      return 0;
+    }).slice(0, 5);
+    var html = '';
+    tasks.forEach(function (t) {
+      var dueHtml = '', dueClass = 'todo-due';
+      if (t.due) {
+        var d = localDate(t.due);
+        if (d) {
+          if (d.getTime() < today.getTime()) dueClass += ' overdue';
+          dueHtml = DAY_ABBR[d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.';
+        }
+      }
+      html += '<div class="todo-row' + (t.important ? ' important' : '') + '">'
+        + '<div class="' + dueClass + '">' + dueHtml + '</div>'
+        + '<div class="todo-title">' + esc(t.title) + '</div></div>';
+    });
+    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    el.innerHTML = html;
+  }).catch(function () {
+    el.innerHTML = '<div class="notice">chyba načítání úkolů</div>';
+  });
+}
+
 // ── Spuštění ─────────────────────────────────────────────
 function initAll() {
-  var jobs = [fetchWeather, fetchNetatmo, fetchGrowatt, fetchTuya, fetchCalendar, fetchSchoolMenu, fetchZsCalendar];
+  var jobs = [fetchWeather, fetchNetatmo, fetchGrowatt, fetchTuya, fetchCalendar, fetchSchoolMenu, fetchZsCalendar, fetchMsTodo];
   return Promise.all(jobs.map(function (fn) {
     return fn().catch(function () {});
   }));
