@@ -51,8 +51,10 @@ except ImportError:
 CLIENT_ID    = os.environ.get("MSTODO_CLIENT_ID", "")
 SEED_REFRESH = os.environ.get("MSTODO_REFRESH_TOKEN", "")
 TOKEN_KEY    = os.environ.get("MSTODO_TOKEN_KEY", "")
-TENANT       = os.environ.get("MSTODO_TENANT", "consumers")
-LIST_NAME    = os.environ.get("MSTODO_LIST", "Vranov")
+# Pozn.: workflow předává tyto env vždy (i prázdné, když secret chybí), proto
+# `or` místo defaultu v get() – jinak by prázdný řetězec přebil výchozí hodnotu.
+TENANT       = os.environ.get("MSTODO_TENANT") or "consumers"
+LIST_NAME    = os.environ.get("MSTODO_LIST") or "Vranov"
 
 if not CLIENT_ID or not TOKEN_KEY:
     print("ERROR: Chybí MSTODO_CLIENT_ID nebo MSTODO_TOKEN_KEY.")
