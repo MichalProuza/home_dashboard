@@ -1,13 +1,7 @@
 {
-  "updated": "2026-06-16T13:19:47.894764+00:00",
+  "updated": "2026-06-16T18:23:09.224153+00:00",
   "error": null,
   "recurring": [
-    {
-      "summary": "Fotbal",
-      "date": "2026-06-16T15:15:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Elis - plavání",
       "date": "2026-06-18T14:30:00+00:00",
@@ -17,6 +11,12 @@
     {
       "summary": "Fotbal",
       "date": "2026-06-23T15:15:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Elis - plavání",
+      "date": "2026-06-25T14:30:00+00:00",
       "all_day": false,
       "location": ""
     }
