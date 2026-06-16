@@ -1,69 +1,88 @@
-# Privátní hosting na Cloudflare (plán B)
+# Privátní hosting na Cloudflare (plán B) — NASAZENO
 
-Cíl: dashboard (web **i data**) za **Cloudflare Access**, aby ho viděl jen
-přihlášený uživatel — ale **kiosk na zdi z domácí IP funguje bez přihlašování**
-(Access „Bypass"). Data se přestanou číst z veřejného
-`raw.githubusercontent.com` a místo toho je servíruje **Pages Function**
-`/api/data/:name` z větve `data` přes GitHub token (token zůstává jen na serveru).
+Dashboard běží na **`https://dashboard.prouza.co.uk`** za **Cloudflare Access**:
+přístup jen po přihlášení (e-mailový kód), ale **kiosk na zdi z domácí IP jede
+bez přihlašování** (Access „Bypass"). Data se servírují ze same-origin **Pages
+Function** `/api/data/:name`, která je čte z větve `data` přes GitHub token
+(token zůstává jen na serveru Cloudflare).
 
-GitHub Actions a Python skripty zůstávají **beze změny** — pořád publikují na
+- Browser dashboard: `https://dashboard.prouza.co.uk/`
+- Kiosk: `https://dashboard.prouza.co.uk/kiosk.html`
+
+GitHub Actions a Python skripty zůstaly **beze změny** — pořád publikují na
 větev `data`.
 
-## Co už je připravené v repu
+## Důležité rozhodnutí: repo zůstává VEŘEJNÉ
+
+Původně se počítalo s přepnutím repa na private (aby byla privátní i `data`
+větev). **Neuděláno** — na privátním repu jsou **GitHub Actions minuty měřené**
+(Pro ~3000 min/měsíc), ale fetch workflowy běží ~330×/den ≈ **10 000 min/měsíc**,
+což kvótu mnohonásobně překračuje (data by se přestala aktualizovat, nebo by se
+platilo). Na veřejném repu jsou Actions **zdarma a neomezené**.
+
+Důsledek: **vykreslený dashboard je privátní** (za Access), ale **větev `data`
+zůstává veřejně čitelná** přes `raw.githubusercontent.com`. Bráno jako přijatelné
+riziko (neinzerovaná URL). Plné soukromí dat by vyžadovalo private repo +
+přesun sběru dat mimo Actions (domácí cron / VPS).
+
+## Jak je to poskládané
 
 - `functions/api/data/[name].js` — Pages Function, čte `data` větev přes
-  `GH_DATA_TOKEN` a vrací JSON. Povoluje jen názvy `*.json` (žádný path traversal).
+  `GH_DATA_TOKEN`, vrací JSON. Povoluje jen názvy `*.json` (žádný path traversal).
 - `index.html` i `kiosk.html` — `DATA_BRANCH_BASE` se přepíná podle domény:
-  - na `*.github.io` → veřejné `raw` (současný stav, nic se nerozbije),
+  - na `*.github.io` → veřejné `raw`,
   - jinde (Cloudflare doména, i `localhost`) → same-origin `/api/data/`.
 
-Díky tomu jde tohle sloučit do `main` hned a po migraci to „jen funguje".
+## Postup nasazení (reference)
 
-## Postup nasazení
+### 1. Cloudflare Pages — POZOR: jako Pages, ne Worker
+- Workers & Pages → **Create** → záložka **Pages** → **Connect to Git** → repo
+  `home_dashboard`, větev `main`. Build: **None**, output directory `/`.
+- ⚠️ Když se to založí přes „Workers" cestu, build padá na
+  `npx wrangler versions upload` / „Missing entry-point". Náš kód (statika +
+  složka `functions/`) patří do **Pages** projektu — ten žádný build/deploy
+  příkaz nepotřebuje a `functions/` si najde sám.
 
-### 0. Prerekvizity
-- Účet Cloudflare.
-- **Vlastní doména vedená přes Cloudflare** (Access nejde spolehlivě na holém
-  `*.pages.dev`). Když žádnou nemáš, registruj levnou (~250 Kč/rok) a přepni jí
-  nameservery na Cloudflare.
-- **Fine-grained GitHub token**: GitHub → Settings → Developer settings →
-  Fine-grained tokens → jen repo `home_dashboard`, oprávnění **Contents: Read-only**.
+### 2. Vlastní doména
+- Pages projekt → **Custom domains** → `dashboard.prouza.co.uk`.
+- CNAME se přidává **v Cloudflare DNS** zóny `prouza.co.uk` (Name `dashboard`,
+  Target `<projekt>.pages.dev`, **Proxied**). U domény na stejném účtu to
+  Cloudflare většinou založí sám.
 
-### 1. Cloudflare Pages
-1. Cloudflare → Workers & Pages → **Create** → **Pages** → **Connect to Git** →
-   vyber repo `home_dashboard`, větev `main`.
-2. Build settings: **žádný build** (framework preset = None), output directory =
-   `/` (kořen). Funkce ve složce `functions/` se nasadí automaticky.
-3. Po prvním nasazení přidej **vlastní doménu** (Custom domains) dashboardu.
-
-### 2. Secret pro Function
+### 3. Token pro data
+- GitHub → Settings → Developer settings → **Fine-grained token**: jen repo
+  `home_dashboard`, oprávnění **Contents: Read-only**.
 - Pages projekt → Settings → **Variables and Secrets** → přidej
-  **`GH_DATA_TOKEN`** = ten fine-grained token (typ Secret). Ulož a re-deploy.
-- Ověř: `https://<doména>/api/data/weather.json` vrátí JSON.
+  **`GH_DATA_TOKEN`** (typ Secret, Production). **Pak redeploy** (env se načte
+  až novým nasazením: Deployments → Retry deployment).
+- Ověř: `https://dashboard.prouza.co.uk/api/data/weather.json` vrátí JSON.
 
-### 3. Cloudflare Access (Zero Trust)
-1. Zero Trust → Access → **Applications** → **Add an application** → Self-hosted.
-2. Application domain = doména dashboardu.
-3. Politiky:
-   - **Allow** — Include: Emails = tvůj e-mail (přihlášení přes jednorázový kód / Google).
-   - **Bypass** — Include: **IP ranges = tvoje domácí IP** (kiosk se pak nepřihlašuje).
-4. Zjisti domácí IP např. na `https://ifconfig.me` (z domácí sítě).
+### 4. Microsoft To Do v prohlížeči (jen index.html)
+- Browser To Do dělá OAuth redirect na aktuální URL. Po přesunu na novou doménu
+  je nutné v **Azure → App registrations → [app] → Authentication** přidat pod
+  platformu **Single-page application (SPA)** redirect URI:
+  `https://dashboard.prouza.co.uk/`.
+- Kiosk To Do je server-side (čte `mstodo.json`), s tímhle nemá nic společného.
 
-### 4. Přepnutí
-1. **Repo → Private** (GitHub → Settings → General → Change visibility).
-   Teď už to nic nerozbije — data tečou přes Function s tokenem.
-2. **Vypni GitHub Pages** (Settings → Pages → zruš zdroj), ať veřejná verze zmizí.
-3. Na iPadu přidej na plochu **novou Cloudflare URL** kiosku.
+### 5. Cloudflare Access (Zero Trust)
+- Zero Trust (plán Free) → Access → Applications → **Add → Self-hosted** →
+  hostname `dashboard.prouza.co.uk` (prázdná path → chrání celý web i `/api/data/`).
+- Politiky:
+  - **Bypass** (první) — Include: **IP ranges** = domácí veřejná IP. Přidej
+    **IPv4 `X.X.X.X/32`**; když kiosk jede po IPv6, přidej i **IPv6 `…/64` prefix**
+    (poslední část IPv6 se střídá, jedna /128 nestačí).
+  - **Allow** — Include: Emails = tvůj e-mail (přihlášení přes One-time PIN).
+- Domácí IP zjisti **z domácí sítě** (ideálně z kiosku) na `https://ifconfig.me`,
+  s **vypnutým iCloud Private Relay / VPN** — jinak dostaneš cizí (relay) IP.
 
-## Po migraci
-- Privátní jsou i To Do, brána a kalendář (větev `data` už není veřejná).
-- Cloudflare Pages se re-deployne při pushi do `main` (statika). Data se
-  nemění buildem — Function je čte z `data` větve za běhu.
+### 6. Úklid
+- Na iPad přidej na plochu `https://dashboard.prouza.co.uk/kiosk.html`.
+- **Vypni GitHub Pages** (Settings → Pages) — Cloudflare na něm nezávisí.
 
-## Rizika / poznámky
-- **Dynamická domácí IP**: když se změní, IP bypass přestane platit → kiosk by
-  chtěl login. Většina připojení má IP dost stálou; jinak je nutné IP v Access
-  politice občas aktualizovat.
-- **GitHub API limity**: token autentizovaný = 5000 req/h; kiosk + dashboard
-  dělají řádově desítky req/h. V pohodě.
-- **WARP/device politiky** na iPad Air 1 (iOS 12) nejspíš nepoběží — proto IP bypass.
+## Údržba / na co nezapomenout
+- **Změna domácí IP** → kiosk by chtěl login → aktualizuj IP v Bypass politice.
+- **`GH_DATA_TOKEN`** má expiraci (rok) → po vypršení vygeneruj nový a v Cloudflare
+  ho přepiš **+ redeploy**.
+- **Nový obsah**: push/merge do `main` → Cloudflare Pages se **sám** redeployne.
+  Jen po změně env proměnných je nutný ruční redeploy.
+- **WARP/device politiky** na iPad Air 1 (iOS 12) nepoběží — proto IP bypass.
