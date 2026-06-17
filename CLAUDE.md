@@ -13,7 +13,7 @@ home_dashboard/
 ├── index.html                      # Entire frontend: HTML + CSS + JS in one file
 ├── tasks.html                      # Task manager page (localStorage `dashboard_tasks`)
 ├── kiosk.html                      # Simplified kiosk view for old browsers (Safari 12 / iPad Air 1): ES2017-safe JS, data-branch JSON only (incl. Microsoft To Do via server-side fetch), no localStorage Tasks, built-in night dimming
-├── kiosk-ios27.html                # Kiosk view styled after modern iOS (iOS 26/27 "Liquid Glass"): same data sources/logic as kiosk.html, but glass widgets, SF Pro system font, backdrop-filter — targets modern Safari (iOS 16+), not old browsers
+├── kiosk-ios27.html                # Kiosk view styled after modern iOS (iOS 26/27 "Liquid Glass") but kept Safari 12 / iPad Air 1 compatible: same data sources/logic + ES2017-safe JS as kiosk.html, glass look via translucent cards + light -webkit-backdrop-filter, NO flex gap / clamp() / inset shorthand (margins + grid-gap instead), SF Pro system font
 ├── scripts/
 │   ├── fetch_growatt.py            # Solar system data from Growatt API
 │   ├── fetch_tuya.py               # Tuya sensor status (gate, garage) from Tuya IoT Cloud

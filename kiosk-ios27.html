@@ -2,21 +2,23 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Celoobrazovkový režim po "Přidat na plochu" -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#0b1024" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#d6e4f5" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#d6e4f5" />
   <title>Dashboard — kiosk (iOS)</title>
   <style>
     /* ───────────────────────────────────────────────────────────────────────
-       Kiosk verze inspirovaná designem iOS 26/27 ("Liquid Glass").
-       Cíl: moderní Safari (iOS 16+) — používá backdrop-filter, flex gap,
-       systémové písmo SF Pro (-apple-system). Na rozdíl od kiosk.html
-       NEcílí na staré prohlížeče.
-       Layout je zamčený na výšku obrazovky (kiosk = bez scrollování):
-       skleněné widgety v mřížce, písmo se škáluje přes vmin.
+       Kiosk verze inspirovaná designem iOS 26/27 ("Liquid Glass"),
+       ale kompatibilní se starým iPadem Air 1 / Safari 12 (iOS 12).
+       Proto: ŽÁDNÝ flex gap (Safari < 14.1), ŽÁDNÝ clamp() (Safari < 13.4),
+       ŽÁDNÝ "inset" shorthand (Safari < 14.1) — mezery se dělají přes
+       margin/grid-gap, písmo se škáluje přes vmin a barvy v SVG jsou napevno.
+       Sklo je -webkit-backdrop-filter (Safari 9+ ho umí), ale i bez něj
+       (kdyby ho A7 GPU nezvládla) zůstávají karty čitelné díky průsvitné
+       výplni. Logika načítání dat je shodná s kiosk.html (vše z větve data).
+       Layout je zamčený na výšku obrazovky (kiosk = bez scrollování).
        ─────────────────────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,7 +27,7 @@
       --label:        #1c1c1e;
       --label-2:      rgba(60,60,67,0.62);
       --label-3:      rgba(60,60,67,0.36);
-      --card:         rgba(255,255,255,0.60);
+      --card:         rgba(255,255,255,0.72);
       --card-border:  rgba(255,255,255,0.65);
       --card-shadow:  0 0.9vmin 3vmin rgba(31,41,71,0.13);
       --fill:         rgba(120,120,128,0.14);
@@ -42,7 +44,7 @@
       --label:        #f5f5f7;
       --label-2:      rgba(235,235,245,0.62);
       --label-3:      rgba(235,235,245,0.32);
-      --card:         rgba(44,44,52,0.52);
+      --card:         rgba(44,44,52,0.66);
       --card-border:  rgba(255,255,255,0.12);
       --card-shadow:  0 0.9vmin 3vmin rgba(0,0,0,0.40);
       --fill:         rgba(120,120,128,0.22);
@@ -55,16 +57,14 @@
       --bg: radial-gradient(120% 120% at 12% 0%, #131a35 0%, #1b1b3a 42%, #241634 70%, #2a1330 100%);
     }
 
-    html { font-size: clamp(10px, 1.92vmin, 24px); height: 100%; }
+    html { font-size: 1.92vmin; height: 100%; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
       color: var(--label);
       height: 100%;
       overflow: hidden;
       background: var(--bg);
-      background-attachment: fixed;
-      padding: calc(1.6vmin + env(safe-area-inset-top)) calc(1.8vmin + env(safe-area-inset-right))
-               calc(1.6vmin + env(safe-area-inset-bottom)) calc(1.8vmin + env(safe-area-inset-left));
+      padding: 1.6vmin 1.8vmin;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.01em;
@@ -74,7 +74,7 @@
     /* ── Horní lišta: velké hodiny (lock-screen styl) + datum ────────────── */
     .topbar {
       display: flex; align-items: flex-end; justify-content: space-between;
-      gap: 2vmin; padding: 0 0.6vmin 1.4vmin; min-height: 0;
+      padding: 0 0.6vmin 1.4vmin; min-height: 0;
     }
     #clock {
       font-size: 4.4rem; font-weight: 600; line-height: 0.92; letter-spacing: -0.02em;
@@ -91,7 +91,7 @@
     main {
       height: calc(100% - 8.4vmin);
       display: grid;
-      gap: 1.8vmin;
+      grid-gap: 1.8vmin;
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       grid-template-areas:
@@ -115,9 +115,10 @@
     .area-mid     { grid-area: mid; }
     .area-zs      { grid-area: zs; }
 
-    /* Buňky se dvěma widgety nad sebou */
-    .cell-stack { display: flex; flex-direction: column; gap: 1.8vmin; min-height: 0; }
-    .cell-stack > .widget { flex: 1 1 0; min-height: 0; }
+    /* Buňky se dvěma widgety nad sebou (bez flex gap kvůli Safari 12) */
+    .cell-stack { display: flex; flex-direction: column; min-height: 0; }
+    .cell-stack > .widget { min-height: 0; }
+    .cell-stack > .widget:first-child { flex: 1 1 auto; margin-bottom: 1.8vmin; }
 
     /* ── Skleněný widget ─────────────────────────────────────────────────── */
     .widget {
@@ -129,35 +130,40 @@
       border-radius: 2.4vmin;
       box-shadow: var(--card-shadow);
       padding: 1.5vmin 1.7vmin;
-      -webkit-backdrop-filter: blur(26px) saturate(180%);
-      backdrop-filter: blur(26px) saturate(180%);
+      /* Sklo: mírný blur (Safari 9+ má -webkit-). Drženo nízko kvůli A7 GPU
+         iPadu Air 1 — kdyby i tak sekal, stačí oba řádky smazat, karty
+         zůstanou čitelné díky průsvitné výplni. */
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      backdrop-filter: blur(12px) saturate(150%);
       transition: background .6s ease, border-color .6s ease;
     }
     /* Jemný horní lesk skla */
     .widget::before {
-      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+      border-radius: inherit; pointer-events: none;
       background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 38%);
     }
     body.night .widget::before {
       background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 40%);
     }
     .w-head {
-      display: flex; align-items: center; gap: 0.6rem;
+      display: flex; align-items: center;
       font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
       text-transform: uppercase; color: var(--label-2);
       margin-bottom: 1.1vmin;
     }
-    .w-head .ico { font-size: 0.95rem; line-height: 1; }
+    .w-head .ico { font-size: 0.95rem; line-height: 1; margin-right: 0.6rem; }
     .content { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; position: relative; z-index: 1; }
     .notice { font-size: 0.86rem; color: var(--label-2); }
     .updated { font-size: 0.62rem; color: var(--label-3); margin-top: auto; padding-top: 0.8vmin; font-variant-numeric: tabular-nums; }
 
     /* ── Počasí ──────────────────────────────────────────────────────────── */
-    .w-now { display: flex; align-items: center; gap: 1.2vmin; margin-bottom: 0.4vmin; }
+    .w-now { display: flex; align-items: center; margin-bottom: 0.4vmin; }
     .w-now-temp { font-size: 3.4rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
-    .w-now-ico { font-size: 2.4rem; line-height: 1; }
+    .w-now-ico { font-size: 2.4rem; line-height: 1; margin-left: 1.2vmin; }
     .w-cond { font-size: 0.86rem; color: var(--label-2); margin-bottom: 1vmin; }
-    .w-trio { display: flex; gap: 1vmin; margin-bottom: 1.2vmin; }
+    .w-trio { display: flex; margin-bottom: 1.2vmin; }
+    .w-trio-cell + .w-trio-cell { margin-left: 1vmin; }
     .w-trio-cell {
       flex: 1; text-align: center; background: var(--fill-2);
       border-radius: 1.4vmin; padding: 0.7vmin 0.3vmin;
@@ -172,8 +178,9 @@
     .forecast-temps .lo { color: var(--label-2); }
 
     /* ── Netatmo ─────────────────────────────────────────────────────────── */
-    .nm-wrap { display: flex; gap: 1vmin; }
+    .nm-wrap { display: flex; }
     .nm-module { flex: 1; background: var(--fill); border-radius: 1.6vmin; padding: 1vmin 1.2vmin; min-width: 0; }
+    .nm-module + .nm-module { margin-left: 1vmin; }
     .nm-name { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--label-2); }
     .nm-temp { font-size: 1.85rem; font-weight: 600; margin: 0.2vmin 0 0.4vmin; font-variant-numeric: tabular-nums; }
     .nm-row { display: flex; justify-content: space-between; font-size: 0.72rem; line-height: 1.5; }
@@ -181,10 +188,10 @@
     .nm-val { font-weight: 500; font-variant-numeric: tabular-nums; }
 
     /* ── Growatt ─────────────────────────────────────────────────────────── */
-    .gw-main { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 1vmin; }
+    .gw-main { display: flex; align-items: baseline; margin-bottom: 1vmin; }
     .gw-power { font-size: 2.6rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
-    .gw-power-label { font-size: 0.78rem; color: var(--label-2); }
-    .gw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1vmin; }
+    .gw-power-label { font-size: 0.78rem; color: var(--label-2); margin-left: 0.7rem; }
+    .gw-grid { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 1vmin; }
     .gw-cell { background: var(--fill); border-radius: 1.6vmin; padding: 0.9vmin 1.1vmin; min-width: 0; }
     .gw-cell-label { font-size: 0.56rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--label-2); margin-bottom: 0.2vmin; }
     .gw-cell-val { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -198,10 +205,10 @@
     .graph-svg { width: 100%; overflow: visible; display: block; }
 
     /* ── Seznamy (kalendář / akce / úkoly / jídelníček) ──────────────────── */
-    .ev-row { display: flex; gap: 0.9rem; padding: 0.55vmin 0; }
+    .ev-row { display: flex; padding: 0.55vmin 0; }
     .ev-row + .ev-row { border-top: 0.5px solid var(--separator); }
     .ev-date {
-      flex: 0 0 auto; width: 4.4rem; font-size: 0.68rem; font-weight: 600;
+      flex: 0 0 auto; width: 4.4rem; margin-right: 0.9rem; font-size: 0.68rem; font-weight: 600;
       color: var(--accent); white-space: nowrap; line-height: 1.25; padding-top: 0.1rem;
     }
     .ev-date .t { display: block; color: var(--label-2); font-weight: 500; }
@@ -212,19 +219,19 @@
     .menu-meal + .menu-meal { border-top: 0.5px solid var(--separator); }
 
     /* ── Microsoft To Do ─────────────────────────────────────────────────── */
-    .todo-row { display: flex; align-items: center; gap: 0.8rem; padding: 0.5vmin 0; }
+    .todo-row { display: flex; align-items: center; padding: 0.5vmin 0; }
     .todo-row + .todo-row { border-top: 0.5px solid var(--separator); }
-    .todo-dot { flex: 0 0 auto; width: 0.95rem; height: 0.95rem; border-radius: 50%; border: 0.14rem solid var(--label-3); }
+    .todo-dot { flex: 0 0 auto; width: 0.95rem; height: 0.95rem; margin-right: 0.8rem; border-radius: 50%; border: 0.14rem solid var(--label-3); }
     .todo-row.important .todo-dot { border-color: var(--orange); }
     .todo-title { flex: 1 1 auto; font-size: 0.88rem; font-weight: 500; min-width: 0; }
     .todo-row.important .todo-title { font-weight: 600; }
-    .todo-due { flex: 0 0 auto; font-size: 0.68rem; font-weight: 600; color: var(--label-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .todo-due { flex: 0 0 auto; margin-left: 0.8rem; font-size: 0.68rem; font-weight: 600; color: var(--label-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .todo-due.overdue { color: var(--red); }
 
     /* ── Tuya (brána / garáž) ────────────────────────────────────────────── */
-    .gate-row { display: flex; align-items: center; gap: 0.8rem; padding: 0.7vmin 0; }
+    .gate-row { display: flex; align-items: center; padding: 0.7vmin 0; }
     .gate-row + .gate-row { border-top: 0.5px solid var(--separator); }
-    .gate-ind { flex: 0 0 auto; width: 0.85rem; height: 0.85rem; border-radius: 50%; box-shadow: 0 0 0 0.28rem var(--fill-2); }
+    .gate-ind { flex: 0 0 auto; width: 0.85rem; height: 0.85rem; margin-right: 0.8rem; border-radius: 50%; box-shadow: 0 0 0 0.28rem var(--fill-2); }
     .gate-ind.open { background: var(--red); }
     .gate-ind.closed { background: var(--green); }
     .gate-ind.unknown { background: var(--label-3); }
@@ -454,14 +461,17 @@ function renderHistoryGraph(points, label, unit) {
     labels += '<text x="' + px(t).toFixed(1) + '" y="' + (H + 11) + '" font-size="8" fill="var(--label-3)" text-anchor="middle">' + hh + ':00</text>';
   }
   var gid = 'grad' + (++_graphId);
+  // Barva napevno (Safari 12 nemusí umět var() ve stop-color/stroke SVG);
+  // akcent podle aktuálního denního/nočního režimu.
+  var accent = document.body.className.indexOf('night') !== -1 ? '#0a84ff' : '#007aff';
   return '<div><div class="graph-label"><span>' + esc(label)
     + '</span><span class="graph-range">' + Math.round(minV) + '–' + Math.round(maxV) + ' ' + esc(unit) + '</span></div>'
     + '<svg viewBox="0 0 ' + W + ' ' + (H + 14) + '" class="graph-svg">'
     + '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">'
-    + '<stop offset="0%" stop-color="var(--accent)" stop-opacity="0.32"/>'
-    + '<stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>'
+    + '<stop offset="0%" stop-color="' + accent + '" stop-opacity="0.32"/>'
+    + '<stop offset="100%" stop-color="' + accent + '" stop-opacity="0"/></linearGradient></defs>'
     + '<path d="' + areaPath + '" fill="url(#' + gid + ')" stroke="none"/>'
-    + '<path d="' + linePath + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+    + '<path d="' + linePath + '" fill="none" stroke="' + accent + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
     + labels + '</svg></div>';
 }
 
