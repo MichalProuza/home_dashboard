@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T18:02:17.864183+00:00",
+  "updated": "2026-06-19T20:16:14.040543+00:00",
   "error": null,
   "devices": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "device_name": "Sklep",
-      "online": true,
+      "online": false,
       "gate_open": false,
       "dp_used": "doorcontact_state",
       "raw_dps": [
