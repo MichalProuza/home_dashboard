@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-21T08:56:35.365185+00:00",
+  "updated": "2026-06-22T10:35:43.955490+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ  - škola v přírodě Jedovnice - 1. a 2. roč.",
-      "date": "2026-06-21",
-      "time": "10:45",
-      "location": "stanový tábor Budkovan - Jedovnice",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skola-v-prirode-jedovnice-1-a-2-roc-248_140cs.html"
-    },
     {
       "title": "Multikino Špalíček 3., 4. a 5. třída",
       "date": "2026-06-23",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-fotografovani-2026-368_233cs.html"
+    },
+    {
+      "title": "ZŠ - vánoční besídka v České",
+      "date": "2026-12-21",
+      "time": "18:00",
+      "location": "Sokolovna Česká",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vanocni-besidka-v-ceske-394_244cs.html"
     }
   ]
 }
