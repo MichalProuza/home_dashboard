@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-24T08:20:34.140380+00:00",
+  "updated": "2026-06-25T08:21:38.888346+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Archeologie na Dietrichu - 5. třída",
-      "date": "2026-06-24",
-      "time": "09:30",
-      "location": "Moravské zemské muzeum, Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-archeologie-na-dietrichu-5-trida-418_254cs.html"
-    },
     {
       "title": "ZŠ - rozdání vysvědčení",
       "date": "2026-06-26",
@@ -36,6 +29,13 @@
       "time": "18:00",
       "location": "Sokolovna Česká",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-ples-5-roc-395_245cs.html"
+    },
+    {
+      "title": "ZŠ - hory 2027 malí",
+      "date": "2027-02-07",
+      "time": "13:00",
+      "location": "Penzion Na Rychtě, Malá Morávka",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-mali-303_188cs.html"
     }
   ]
 }
