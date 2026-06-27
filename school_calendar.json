@@ -1,14 +1,7 @@
 {
-  "updated": "2026-06-26T08:28:43.925282+00:00",
+  "updated": "2026-06-27T07:48:11.872121+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - rozdání vysvědčení",
-      "date": "2026-06-26",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-rozdani-vysvedceni-290_179cs.html"
-    },
     {
       "title": "ZŠ - školní fotografování 2026",
       "date": "2026-11-02",
@@ -36,6 +29,13 @@
       "time": "13:00",
       "location": "Penzion Na Rychtě, Malá Morávka",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-mali-303_188cs.html"
+    },
+    {
+      "title": "ZŠ - hory 2027 velcí",
+      "date": "2027-02-13",
+      "time": "14:00",
+      "location": "Penzion Na Rychtě, Malá Morávka",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-velci-304_189cs.html"
     }
   ]
 }
