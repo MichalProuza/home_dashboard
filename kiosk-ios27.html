@@ -414,7 +414,8 @@ function fetchNetatmo() {
   var el = document.getElementById('netatmo-content');
   return fetchDataJson('netatmo.json').then(function (data) {
     var modules = data.modules || [];
-    if (data.error || !modules.length) throw new Error(data.error || 'bez dat');
+    // Přechodná chyba API: zobraz poslední známá data (skript je zachovává)
+    if (!modules.length) throw new Error(data.error || 'bez dat');
     var html = '<div class="nm-wrap">';
     modules.forEach(function (mod) {
       var dd = mod.data || {};
@@ -431,7 +432,8 @@ function fetchNetatmo() {
     });
     html += '</div>';
     if (data.noise && data.noise.length > 1) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
-    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    html += '<div class="updated">data z ' + fmtTime(data.updated)
+      + (data.error ? ' · ⚠ stará data' : '') + '</div>';
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání Netatmo</div>';

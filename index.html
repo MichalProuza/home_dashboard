@@ -563,10 +563,13 @@ async function fetchNetatmo() {
   const el = document.getElementById('netatmo-content');
   try {
     const data = await fetchDataJson(NETATMO_JSON_URL);
-    if (data.error) { el.innerHTML=`<div class="netatmo-notice">${esc(data.error)}</div>`; return; }
-
     const modules = data.modules || [];
-    if (!modules.length) { el.innerHTML='<div class="netatmo-notice">Žádná Netatmo zařízení.</div>'; return; }
+    // Přechodná chyba API: pokud máme poslední známá data (skript je zachovává),
+    // zobraz je se značkou stáří místo holé chybové hlášky.
+    if (!modules.length) {
+      el.innerHTML=`<div class="netatmo-notice">${esc(data.error || 'Žádná Netatmo zařízení.')}</div>`;
+      return;
+    }
 
     const skip = new Set(['time_utc','date_max_temp','date_min_temp','min_temp','max_temp','Temperature']);
     let html='<div class="netatmo-grid">';
@@ -591,7 +594,7 @@ async function fetchNetatmo() {
     const upd = data.updated
       ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
       : '–';
-    html += `<div class="netatmo-updated">data z ${upd}</div>`;
+    html += `<div class="netatmo-updated">data z ${upd}${data.error ? ' · ⚠ stará data' : ''}</div>`;
 
     el.innerHTML = html;
   } catch(e) {

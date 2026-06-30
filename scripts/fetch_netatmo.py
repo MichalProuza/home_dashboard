@@ -151,6 +151,17 @@ def get_noise_history(access_token: str, device_id: str) -> list:
 
 # ── Výstup ────────────────────────────────────────────────────────────────────
 
+def load_previous():
+    """Předchozí moduly/hluk – při přechodné chybě je zachováme (jako school_calendar)."""
+    if OUTPUT_PATH.exists():
+        try:
+            old = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+            return old.get("modules") or [], old.get("noise") or []
+        except Exception:
+            pass
+    return [], []
+
+
 def write_output(error, modules=None, noise=None):
     output = {
         "updated": datetime.now(timezone.utc).isoformat(),
@@ -163,10 +174,15 @@ def write_output(error, modules=None, noise=None):
 
 
 def fetch():
+    # Stará data pro případ přechodné chyby (workflow obnoví netatmo.json z větve data)
+    old_modules, old_noise = load_previous()
+
     try:
         access_token = refresh_access_token()
     except Exception as e:
-        write_output(str(e))
+        if old_modules:
+            print(f"INFO: Zachovávám {len(old_modules)} starých modulů")
+        write_output(str(e), old_modules, old_noise)
         return
 
     try:
@@ -193,12 +209,15 @@ def fetch():
                 noise = get_noise_history(access_token, first["_id"])
             except Exception as e:
                 print(f"WARN: Historie hluku selhala: {e}")
+                noise = old_noise  # zachovej předchozí graf při výpadku historie
 
         write_output(None, modules, noise)
         print(f"✓ Načteno {len(modules)} modulů, {len(noise)} bodů hluku")
 
     except Exception as e:
-        write_output(f"Načtení dat selhalo: {e}")
+        if old_modules:
+            print(f"INFO: Zachovávám {len(old_modules)} starých modulů")
+        write_output(f"Načtení dat selhalo: {e}", old_modules, old_noise)
 
 
 if __name__ == "__main__":
