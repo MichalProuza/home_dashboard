@@ -407,8 +407,8 @@ function fetchWeather() {
 }
 
 // ── Netatmo ──────────────────────────────────────────────
-var NLABELS = {Humidity:'Vlhkost', CO2:'CO₂', Noise:'Hluk', Pressure:'Tlak', sum_rain_24:'Srážky 24h'};
-var NUNITS  = {Humidity:' %', CO2:' ppm', Noise:' dB', Pressure:' hPa', sum_rain_24:' mm'};
+var NLABELS = {Humidity:'Vlhkost', CO2:'CO₂', Noise:'Hluk', Pressure:'Tlak', Rain:'Srážky teď', sum_rain_1:'Srážky 1h', sum_rain_24:'Srážky 24h'};
+var NUNITS  = {Humidity:' %', CO2:' ppm', Noise:' dB', Pressure:' hPa', Rain:' mm', sum_rain_1:' mm', sum_rain_24:' mm'};
 
 function fetchNetatmo() {
   var el = document.getElementById('netatmo-content');
@@ -422,10 +422,11 @@ function fetchNetatmo() {
       if (dd.Temperature !== undefined) {
         html += '<div class="nm-temp">' + Number(dd.Temperature).toFixed(1) + '°</div>';
       }
-      ['Humidity', 'CO2', 'Noise', 'Pressure', 'sum_rain_24'].forEach(function (k) {
+      ['Humidity', 'CO2', 'Noise', 'Pressure', 'Rain', 'sum_rain_1', 'sum_rain_24'].forEach(function (k) {
         if (dd[k] === undefined || dd[k] === null) return;
         // Srážky ukazujeme na 1 desetinné místo (mm), ostatní zaokrouhleně
-        var val = (k === 'sum_rain_24') ? Number(dd[k]).toFixed(1) : Math.round(Number(dd[k]));
+        var isRain = (k === 'Rain' || k === 'sum_rain_1' || k === 'sum_rain_24');
+        var val = isRain ? Number(dd[k]).toFixed(1) : Math.round(Number(dd[k]));
         html += '<div class="nm-row"><span class="nm-key">' + NLABELS[k] + '</span>'
           + '<span class="nm-val">' + val + NUNITS[k] + '</span></div>';
       });
