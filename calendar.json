@@ -1,13 +1,7 @@
 {
-  "updated": "2026-07-14T16:05:22.327007+00:00",
+  "updated": "2026-07-14T17:53:40.626987+00:00",
   "error": null,
   "recurring": [
-    {
-      "summary": "Fotbal",
-      "date": "2026-07-14T15:15:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Fotbal",
       "date": "2026-07-21T15:15:00+00:00",
@@ -17,6 +11,12 @@
     {
       "summary": "Poslat mail ohledně docházky do SP",
       "date": "2026-07-28T11:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Fotbal",
+      "date": "2026-07-28T15:15:00+00:00",
       "all_day": false,
       "location": ""
     }
