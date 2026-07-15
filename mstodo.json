@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-15T19:45:50.845663+00:00",
+  "updated": "2026-07-15T21:04:12.594557+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -234,8 +234,8 @@
       "important": false
     },
     {
-      "title": "Vzít z práce bágl",
-      "due": null,
+      "title": "Zrušit proton vpn",
+      "due": "2026-08-10",
       "important": false
     }
   ]
