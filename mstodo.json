@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-16T06:22:47.882313+00:00",
+  "updated": "2026-07-16T08:41:23.058072+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -236,6 +236,11 @@
     {
       "title": "Zrušit proton vpn",
       "due": "2026-08-10",
+      "important": false
+    },
+    {
+      "title": "ZOO Lisabon",
+      "due": null,
       "important": false
     }
   ]
