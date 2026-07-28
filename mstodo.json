@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-28T08:42:14.918895+00:00",
+  "updated": "2026-07-28T11:22:16.596320+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -224,11 +224,6 @@
       "important": false
     },
     {
-      "title": "Rododendron",
-      "due": null,
-      "important": false
-    },
-    {
       "title": "Držák kol",
       "due": null,
       "important": false
@@ -239,7 +234,7 @@
       "important": false
     },
     {
-      "title": "ZOO Lisabon",
+      "title": "Balíkovna",
       "due": null,
       "important": false
     }
