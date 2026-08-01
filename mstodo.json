@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-01T04:54:45.601216+00:00",
+  "updated": "2026-08-01T07:30:07.698797+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -235,6 +235,11 @@
     },
     {
       "title": "Balíkovna",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "VOZP - kalorické tabuly",
       "due": null,
       "important": false
     }
