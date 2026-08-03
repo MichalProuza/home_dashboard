@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-03T16:32:59.072956+00:00",
+  "updated": "2026-08-03T18:27:06.935744+00:00",
   "error": "Načtení dat selhalo: 503 Server Error: Service Temporarily Unavailable for url: https://api.netatmo.com/api/getstationsdata",
   "modules": [],
   "noise": []
