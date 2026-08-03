@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-03T13:43:38.611410+00:00",
+  "updated": "2026-08-03T16:29:42.136883+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -234,12 +234,22 @@
       "important": false
     },
     {
-      "title": "Balíkovna",
+      "title": "VOZP - kalorické tabuly",
       "due": null,
       "important": false
     },
     {
-      "title": "VOZP - kalorické tabuly",
+      "title": "Aricept",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Acidum Folicum",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Nebilet",
       "due": null,
       "important": false
     }
