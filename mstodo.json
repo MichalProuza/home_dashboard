@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11T12:10:44.725362+00:00",
+  "updated": "2026-08-11T13:55:50.991249+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -229,11 +229,6 @@
       "important": false
     },
     {
-      "title": "VOZP - kalorické tabuly",
-      "due": null,
-      "important": false
-    },
-    {
       "title": "Aricept",
       "due": null,
       "important": false
@@ -250,6 +245,11 @@
     },
     {
       "title": "Atoris",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Furon",
       "due": null,
       "important": false
     }
