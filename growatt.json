@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-15T04:37:33.094158+00:00",
+  "updated": "2026-08-15T05:03:51.886274+00:00",
   "error": null,
   "plants": [
     {
@@ -13,13 +13,13 @@
           "sn": "TPJ5CMF0AZ",
           "name": "TPJ5CMF0AZ",
           "type": "mix",
-          "status": 6,
-          "solar_w": 0.0,
+          "status": 5,
+          "solar_w": 163.1,
           "battery_pct": 25.0,
           "battery_w": 0.0,
-          "grid_w": 20.0,
+          "grid_w": 30.0,
           "grid_direction": "import",
-          "load_w": 20.0,
+          "load_w": 190.0,
           "today_kwh": 0.10000000149011612,
           "total_kwh": 17042.8,
           "today_export_kwh": 0.0,
@@ -121,6 +121,10 @@
     },
     {
       "t": 1786768653,
+      "v": 25.0
+    },
+    {
+      "t": 1786770231,
       "v": 25.0
     }
   ]
