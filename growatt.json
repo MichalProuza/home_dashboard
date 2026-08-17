@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-17T17:32:58.771288+00:00",
+  "updated": "2026-08-17T18:12:53.999028+00:00",
   "error": null,
   "plants": [
     {
@@ -7,19 +7,19 @@
       "name": "RD Prouzovi",
       "today_kwh": 0.0,
       "total_kwh": 0.0,
-      "current_w": 2535.7,
+      "current_w": 160.2,
       "devices": [
         {
           "sn": "TPJ5CMF0AZ",
           "name": "TPJ5CMF0AZ",
           "type": "mix",
           "status": 5,
-          "solar_w": 20.1,
-          "battery_pct": 72.0,
-          "battery_w": -430.0,
-          "grid_w": 0.0,
-          "grid_direction": "import",
-          "load_w": 450.0,
+          "solar_w": 5.1,
+          "battery_pct": 69.0,
+          "battery_w": -260.0,
+          "grid_w": 10.0,
+          "grid_direction": "export",
+          "load_w": 250.0,
           "today_kwh": 18.600000381469727,
           "total_kwh": 17121.0,
           "today_export_kwh": 3.0,
@@ -35,14 +35,6 @@
     }
   ],
   "soc": [
-    {
-      "t": 1786901720,
-      "v": 64.0
-    },
-    {
-      "t": 1786903049,
-      "v": 59.0
-    },
     {
       "t": 1786905616,
       "v": 57.0
@@ -162,6 +154,10 @@
     {
       "t": 1786987978,
       "v": 72.0
+    },
+    {
+      "t": 1786990373,
+      "v": 69.0
     }
   ]
 }
