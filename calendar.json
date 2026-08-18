@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18T06:18:43.589047+00:00",
+  "updated": "2026-08-18T07:26:15.298438+00:00",
   "error": null,
   "recurring": [
     {
@@ -21,12 +21,5 @@
       "location": ""
     }
   ],
-  "single": [
-    {
-      "summary": "Vojkovice, fotak",
-      "date": "2026-08-18T06:45:00+00:00",
-      "all_day": false,
-      "location": ""
-    }
-  ]
+  "single": []
 }
