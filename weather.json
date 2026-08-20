@@ -1,13 +1,13 @@
 {
-  "updated": "2026-08-20T14:09:59.450399+00:00",
+  "updated": "2026-08-20T15:06:32.721253+00:00",
   "error": null,
   "current": {
-    "time": "2026-08-20T16:00",
+    "time": "2026-08-20T17:00",
     "interval": 900,
-    "temperature_2m": 29.4,
+    "temperature_2m": 26.5,
     "weather_code": 3,
-    "wind_speed_10m": 11.3,
-    "relative_humidity_2m": 45,
+    "wind_speed_10m": 3.0,
+    "relative_humidity_2m": 62,
     "precipitation": 0.0
   },
   "daily": {
