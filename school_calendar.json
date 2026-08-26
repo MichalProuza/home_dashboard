@@ -1,7 +1,14 @@
 {
-  "updated": "2026-08-25T05:29:10.400425+00:00",
+  "updated": "2026-08-26T05:32:03.265307+00:00",
   "error": null,
   "events": [
+    {
+      "title": "Výlet na Macochu",
+      "date": "2026-09-21",
+      "time": "08:00",
+      "location": "Moravský kras",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-na-macochu-454_271cs.html"
+    },
     {
       "title": "ZŠ - školní fotografování 2026",
       "date": "2026-11-02",
@@ -29,13 +36,6 @@
       "time": "13:00",
       "location": "Penzion Na Rychtě, Malá Morávka",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-mali-303_188cs.html"
-    },
-    {
-      "title": "ZŠ - hory 2027 velcí",
-      "date": "2027-02-13",
-      "time": "14:00",
-      "location": "Penzion Na Rychtě, Malá Morávka",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-velci-304_189cs.html"
     }
   ]
 }
