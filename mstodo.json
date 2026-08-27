@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T11:02:41.008085+00:00",
+  "updated": "2026-08-27T21:05:59.211587+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -229,11 +229,6 @@
       "important": false
     },
     {
-      "title": "Aricept",
-      "due": null,
-      "important": false
-    },
-    {
       "title": "Acidum Folicum",
       "due": null,
       "important": false
@@ -250,6 +245,11 @@
     },
     {
       "title": "Furon",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "R5 deal",
       "due": null,
       "important": false
     }
