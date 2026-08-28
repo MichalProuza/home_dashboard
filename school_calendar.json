@@ -1,13 +1,20 @@
 {
-  "updated": "2026-08-27T16:05:24.946636+00:00",
+  "updated": "2026-08-28T17:09:16.593721+00:00",
   "error": null,
   "events": [
     {
-      "title": "Výlet na Macochu",
+      "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
       "date": "2026-09-21",
       "time": "08:00",
       "location": "Moravský kras",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/vylet-na-macochu-454_271cs.html"
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-na-macochu-1-a-2-tr-454_271cs.html"
+    },
+    {
+      "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
+      "date": "2026-09-24",
+      "time": "08:00",
+      "location": "Moravský kras",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
     },
     {
       "title": "ZŠ - školní fotografování 2026",
@@ -17,25 +24,18 @@
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-fotografovani-2026-368_233cs.html"
     },
     {
+      "title": "ZŠ - Divadlo Radost, Kytice - 5. třída",
+      "date": "2026-11-10",
+      "time": "11:00",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-divadlo-radost-kytice-5-trida-459_274cs.html"
+    },
+    {
       "title": "ZŠ - vánoční besídka v České",
       "date": "2026-12-21",
       "time": "18:00",
       "location": "Sokolovna Česká",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vanocni-besidka-v-ceske-394_244cs.html"
-    },
-    {
-      "title": "ZŠ - školní ples 5. roč.",
-      "date": "2027-01-22",
-      "time": "18:00",
-      "location": "Sokolovna Česká",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-ples-5-roc-395_245cs.html"
-    },
-    {
-      "title": "ZŠ - hory 2027 malí",
-      "date": "2027-02-07",
-      "time": "13:00",
-      "location": "Penzion Na Rychtě, Malá Morávka",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hory-2027-mali-303_188cs.html"
     }
   ]
 }
