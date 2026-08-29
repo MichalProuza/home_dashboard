@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-28T18:25:03.294278+00:00",
+  "updated": "2026-08-29T01:50:59.712006+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -229,27 +229,12 @@
       "important": false
     },
     {
-      "title": "Acidum Folicum",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Nebilet",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Atoris",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Furon",
-      "due": null,
-      "important": false
-    },
-    {
       "title": "R5 deal",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "ATs_erk",
       "due": null,
       "important": false
     }
