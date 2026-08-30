@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-30T08:06:37.176490+00:00",
+  "updated": "2026-08-30T13:56:06.213265+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -240,6 +240,11 @@
     },
     {
       "title": "Volat neurologie",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "VZP",
       "due": null,
       "important": false
     }
