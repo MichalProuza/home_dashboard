@@ -408,12 +408,14 @@ On scrape failure the script keeps the previously stored `events` and sets
                "relative_humidity_2m": 55, "precipitation": 0},
   "daily": {"time": ["2025-02-21"], "weather_code": [2],
              "temperature_2m_max": [21.2], "temperature_2m_min": [9.8]},
-  "hourly": {"time": ["2025-02-21T10:00"], "temperature_2m": [16.8]}
+  "hourly": {"time": ["2025-02-21T10:00"], "temperature_2m": [16.8], "precipitation": [0.2]}
 }
 ```
 `current`/`daily`/`hourly` mirror the Open-Meteo response (local-time hourly
-steps feed the 10:00/14:00 forecast row). The browser queries Open-Meteo
-directly first and uses this file only as a fallback.
+steps feed the 10:00/14:00 forecast row; `hourly.precipitation` feeds the
+"expected rain next 8h/24h" line — the frontend sums it from the current
+hour). The browser queries Open-Meteo directly first and uses this file only
+as a fallback.
 
 ### `data/netatmo.json`
 ```json
@@ -430,8 +432,11 @@ directly first and uses this file only as a fallback.
 }
 ```
 `modules[].data` mirrors Netatmo `dashboard_data` keys (labels/format in
-`NLABELS`/`fmtN` in index.html); `noise` is a 24 h history (unix time, dB)
-for the noise graph. The encrypted rotating refresh token lives next to it
+`NLABELS`/`fmtN` in index.html). For the rain gauge (NAModule3) the script
+additionally computes `sum_rain_8` (rain over the last 8 h, via
+`/api/getmeasure` with `type=sum_rain&scale=1hour`) and inserts it after
+`sum_rain_1` — Netatmo itself only provides 1 h and 24 h sums. `noise` is a
+24 h history (unix time, dB) for the noise graph. The encrypted rotating refresh token lives next to it
 as `netatmo_token.enc` (on the `data` branch only).
 
 ### `data/mstodo.json`

@@ -123,6 +123,42 @@ def get_stations(access_token: str) -> list:
     return (data.get("body") or {}).get("devices") or []
 
 
+def get_rain_8h(access_token: str, device_id: str, module_id: str):
+    """Úhrn srážek za posledních 8 h (mm) přes getmeasure, nebo None bez dat.
+
+    Netatmo dashboard_data dává jen Rain / sum_rain_1 / sum_rain_24, takže
+    8h úhrn skládáme z hodinových součtů (scale=1hour, type=sum_rain).
+    """
+    now = int(time.time())
+    resp = requests.get(f"{API}/api/getmeasure", params={
+        "device_id":  device_id,
+        "module_id":  module_id,
+        "type":       "sum_rain",
+        "scale":      "1hour",
+        "date_begin": now - 8 * 3600,
+        "date_end":   now,
+        "optimize":   "true",
+    }, headers={"Authorization": f"Bearer {access_token}"}, timeout=15)
+    resp.raise_for_status()
+    body = resp.json().get("body") or []
+    values = [v[0] for series in body for v in (series.get("value") or [])
+              if v and v[0] is not None]
+    if not values:
+        return None
+    return round(sum(values), 1)
+
+
+def insert_after(d: dict, after_key: str, key: str, value) -> dict:
+    """Kopie dictu s novým klíčem vloženým za after_key (pořadí řádků na dashboardu)."""
+    out = {}
+    for k, v in d.items():
+        out[k] = v
+        if k == after_key:
+            out[key] = value
+    out.setdefault(key, value)
+    return out
+
+
 def get_noise_history(access_token: str, device_id: str) -> list:
     """24h historie hluku po 30 minutách → [{"t": unix, "v": dB}, ...]"""
     now = int(time.time())
@@ -178,12 +214,21 @@ def fetch():
         # Stanice + moduly → jednotný seznam {name, data}
         modules = []
         for station in stations:
-            mods = [(station.get("module_name") or "Vnitřní", station.get("dashboard_data"))]
+            mods = [(station.get("module_name") or "Vnitřní", station.get("dashboard_data"), None)]
             for m in station.get("modules") or []:
-                mods.append((m.get("module_name") or m.get("type", ""), m.get("dashboard_data")))
-            for name, dd in mods:
-                if dd:
-                    modules.append({"name": name, "data": dd})
+                mods.append((m.get("module_name") or m.get("type", ""), m.get("dashboard_data"), m.get("_id")))
+            for name, dd, module_id in mods:
+                if not dd:
+                    continue
+                # Srážkoměr (NAModule3): doplnit úhrn za posledních 8 h
+                if "Rain" in dd and module_id:
+                    try:
+                        rain8 = get_rain_8h(access_token, station["_id"], module_id)
+                        if rain8 is not None:
+                            dd = insert_after(dd, "sum_rain_1", "sum_rain_8", rain8)
+                    except Exception as e:
+                        print(f"WARN: Úhrn srážek za 8 h selhal: {e}")
+                modules.append({"name": name, "data": dd})
 
         # Historie hluku pro první stanici, která hluk měří
         noise = []

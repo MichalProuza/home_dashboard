@@ -371,6 +371,22 @@ function getHoursForecast(hourly) {
   return { label: tomorrow ? 'zítra' : 'dnes', t10: t10, t14: t14 };
 }
 
+// Předpokládané srážky za dalších 8 a 24 h (součet hodinové předpovědi od aktuální hodiny)
+function getRainForecast(hourly) {
+  if (!hourly || !hourly.time || !hourly.precipitation) return null;
+  var now = new Date();
+  var key = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-'
+    + ('0' + now.getDate()).slice(-2) + 'T' + ('0' + now.getHours()).slice(-2) + ':00';
+  var idx = hourly.time.indexOf(key);
+  if (idx === -1) return null;
+  function sum(n) {
+    var s = 0;
+    for (var i = idx; i < idx + n && i < hourly.precipitation.length; i++) s += Number(hourly.precipitation[i]) || 0;
+    return s;
+  }
+  return { h8: sum(8), h24: sum(24) };
+}
+
 function fetchWeather() {
   var el = document.getElementById('weather-content');
   return fetchDataJson('weather.json').then(function (w) {
@@ -382,6 +398,10 @@ function fetchWeather() {
       + '<span class="w-now-ico">' + (WMO_ICON[c.weather_code] || '') + '</span></div>'
       + '<div class="w-cond">' + esc(WMO[c.weather_code] || '–')
       + ' · 💨 ' + Math.round(c.wind_speed_10m) + ' km/h · 💧 ' + esc(c.relative_humidity_2m) + ' %</div>';
+    var rf = getRainForecast(w.hourly);
+    if (rf) {
+      html += '<div class="w-cond">☔ srážky · 8h ' + rf.h8.toFixed(1) + ' mm · 24h ' + rf.h24.toFixed(1) + ' mm</div>';
+    }
     function trioCell(label, temp) {
       return '<div class="w-trio-cell"><div class="w-trio-label">' + esc(label) + '</div>'
         + '<div class="w-trio-temp">' + (temp === null ? '–' : Math.round(temp) + '°') + '</div></div>';
@@ -407,8 +427,8 @@ function fetchWeather() {
 }
 
 // ── Netatmo ──────────────────────────────────────────────
-var NLABELS = {Humidity:'Vlhkost', CO2:'CO₂', Noise:'Hluk', Pressure:'Tlak', Rain:'Srážky teď', sum_rain_1:'Srážky 1h', sum_rain_24:'Srážky 24h'};
-var NUNITS  = {Humidity:' %', CO2:' ppm', Noise:' dB', Pressure:' hPa', Rain:' mm', sum_rain_1:' mm', sum_rain_24:' mm'};
+var NLABELS = {Humidity:'Vlhkost', CO2:'CO₂', Noise:'Hluk', Pressure:'Tlak', Rain:'Srážky teď', sum_rain_1:'Srážky 1h', sum_rain_8:'Srážky 8h', sum_rain_24:'Srážky 24h'};
+var NUNITS  = {Humidity:' %', CO2:' ppm', Noise:' dB', Pressure:' hPa', Rain:' mm', sum_rain_1:' mm', sum_rain_8:' mm', sum_rain_24:' mm'};
 
 function fetchNetatmo() {
   var el = document.getElementById('netatmo-content');
@@ -422,10 +442,10 @@ function fetchNetatmo() {
       if (dd.Temperature !== undefined) {
         html += '<div class="nm-temp">' + Number(dd.Temperature).toFixed(1) + '°</div>';
       }
-      ['Humidity', 'CO2', 'Noise', 'Pressure', 'Rain', 'sum_rain_1', 'sum_rain_24'].forEach(function (k) {
+      ['Humidity', 'CO2', 'Noise', 'Pressure', 'Rain', 'sum_rain_1', 'sum_rain_8', 'sum_rain_24'].forEach(function (k) {
         if (dd[k] === undefined || dd[k] === null) return;
         // Srážky ukazujeme na 1 desetinné místo (mm), ostatní zaokrouhleně
-        var isRain = (k === 'Rain' || k === 'sum_rain_1' || k === 'sum_rain_24');
+        var isRain = (k.indexOf('rain') !== -1 || k === 'Rain');
         var val = isRain ? Number(dd[k]).toFixed(1) : Math.round(Number(dd[k]));
         html += '<div class="nm-row"><span class="nm-key">' + NLABELS[k] + '</span>'
           + '<span class="nm-val">' + val + NUNITS[k] + '</span></div>';
