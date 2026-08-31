@@ -27,7 +27,7 @@ URL = (
     f"?latitude={LAT}&longitude={LON}"
     "&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation"
     "&daily=weather_code,temperature_2m_max,temperature_2m_min"
-    "&hourly=temperature_2m"
+    "&hourly=temperature_2m,precipitation"
     "&timezone=Europe%2FPrague&forecast_days=5"
 )
 
