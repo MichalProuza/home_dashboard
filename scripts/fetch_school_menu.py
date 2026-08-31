@@ -100,7 +100,7 @@ def fetch():
                 continue
 
             if el.name == "p":
-                bold = el.find("b")
+                bold = el.find("b") or el.find("strong")
                 if bold:
                     text = bold.get_text(strip=True).rstrip(":").strip()
                     if text in DAY_NAMES:

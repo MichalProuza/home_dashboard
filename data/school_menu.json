@@ -1,51 +1,51 @@
 {
-  "updated": "2026-06-09T08:28:50.320481+00:00",
+  "updated": "2026-08-31T00:00:00+00:00",
   "error": null,
-  "week": "8.6. – 12.6.2026",
+  "week": "31.8.-4.9.2026",
   "days": {
     "pondeli": {
       "name": "Pondělí",
       "meals": [
-        "cereálie s mlékem 1,7",
-        "hovězí vývar s nudlemi 1,9",
-        "kuřecí čína, jasmínová rýže",
-        "rohlík, ředkvičková pomazánka, rajčátko 1,7"
+        "čokokuličky s mlékem 1,7",
+        "zeleninová polévka s noky 1,3,7,9",
+        "smažený květák, vařené brambory, jogurtový dip 1,3,7",
+        "žitný chléb, pórková pomazánka, okurek 1,7"
       ]
     },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "grahamový chlebík, lučina s pažitkou, pomeranč 1,7",
-        "brokolicový krém 1,7",
-        "pečená štika na másle, brambory, zeleninový salát 4,7",
-        "dalamánek, máslo, hravá parenička, okurek 1,7"
+        "rohlík, žervé, šunka, paprika 1,7",
+        "gulášová polévka 1,7",
+        "těstoviny s mákem 1,7",
+        "bagel, sardinková pomazánka , banán 1,4,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "žitný chléb se šunkou, paprika 1,3,7",
-        "hrstková polévka 1,9",
-        "ovocný táč 1,3,7",
-        "houska, játrová pomazánka, kedlubna 1"
+        "opékaný toust, cottage sýr s lahůdkovou cibulkou, rajče 1,7",
+        "hovězí vývar s nudlemi 1,7,9",
+        "rajská omáčka, houskový knedlík, masové kuličky 1,3,7",
+        "snack Madeland 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "domácí pribináček 7",
-        "frankfurtská polévka 1,9",
-        "vepřová kotleta na zelenině, těstoviny 1",
-        "chléb, sýrová pomazánka, hruška 1,7"
+        "houska, jahodové máslo, jablko 1,7",
+        "čočková polévka 1",
+        "pečená štika, brambory, ledový salát s mrkví 7",
+        "bagetka, máslo, eidam, paprika 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "kukuřičný plátek, budapešťská pomazánka, paprika 1,7",
-        "zahrádková polévka 1",
-        "stripsy, opékaný brambor, salát 7",
-        "tvarohový hřeben 1,7"
+        "chlebíček, pomazánka z třené nivy, okurek 1,7",
+        "brokolicový krém 1,7",
+        "vídeňská hovězí pečeně, kuskus, zelný salát 1",
+        "loupáček, hruška 1,7"
       ]
     }
   }
