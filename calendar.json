@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-01T10:34:17.532841+00:00",
+  "updated": "2026-09-01T15:14:47.933618+00:00",
   "error": null,
   "recurring": [
     {
@@ -21,5 +21,18 @@
       "location": ""
     }
   ],
-  "single": []
+  "single": [
+    {
+      "summary": "Turnaj Miroslav",
+      "date": "2026-09-19T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "40 Beskydy",
+      "date": "2026-09-25T00:00:00+00:00",
+      "all_day": true,
+      "location": ""
+    }
+  ]
 }
