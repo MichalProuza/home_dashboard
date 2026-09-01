@@ -1,7 +1,21 @@
 {
-  "updated": "2026-08-31T11:20:54.102834+00:00",
+  "updated": "2026-09-01T09:44:52.335587+00:00",
   "error": null,
   "events": [
+    {
+      "title": "MŠ  - Třídní schůzky u Soviček 2.9.",
+      "date": "2026-09-02",
+      "time": "16:30",
+      "location": "MŠ - třída Soviček",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-tridni-schuzky-u-sovicek-29-467_279cs.html"
+    },
+    {
+      "title": "MŠ - Třídní schůzky u Motýlků 3.9.",
+      "date": "2026-09-03",
+      "time": "16:30",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-tridni-schuzky-u-motylku-39-468_280cs.html"
+    },
     {
       "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
       "date": "2026-09-21",
@@ -22,20 +36,6 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-fotografovani-2026-368_233cs.html"
-    },
-    {
-      "title": "ZŠ - Divadlo Radost, Kytice - 5. třída",
-      "date": "2026-11-10",
-      "time": "11:00",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-divadlo-radost-kytice-5-trida-459_274cs.html"
-    },
-    {
-      "title": "ZŠ - vánoční besídka v České",
-      "date": "2026-12-21",
-      "time": "18:00",
-      "location": "Sokolovna Česká",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vanocni-besidka-v-ceske-394_244cs.html"
     }
   ]
 }
