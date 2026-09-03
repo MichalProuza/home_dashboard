@@ -1,14 +1,7 @@
 {
-  "updated": "2026-09-02T09:17:42.143404+00:00",
+  "updated": "2026-09-03T09:27:23.503351+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ  - Třídní schůzky u Soviček 2.9.",
-      "date": "2026-09-02",
-      "time": "16:30",
-      "location": "MŠ - třída Soviček",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-tridni-schuzky-u-sovicek-29-467_279cs.html"
-    },
     {
       "title": "MŠ - Třídní schůzky u Motýlků 3.9.",
       "date": "2026-09-03",
@@ -29,6 +22,13 @@
       "time": "08:00",
       "location": "Moravský kras",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
+    },
+    {
+      "title": "ZŠ - Jezírko - Sojčí lumpárny, 5. třída",
+      "date": "2026-10-09",
+      "time": "08:30",
+      "location": "Jezírko",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-sojci-lumparny-5-trida-471_283cs.html"
     },
     {
       "title": "ZŠ - školní fotografování 2026",
