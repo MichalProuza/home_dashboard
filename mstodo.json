@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-04T05:40:06.546924+00:00",
+  "updated": "2026-09-04T10:56:59.209100+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -235,11 +235,6 @@
     },
     {
       "title": "ATs_erk",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Volat neurologie",
       "due": null,
       "important": false
     },
