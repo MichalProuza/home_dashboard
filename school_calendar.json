@@ -1,13 +1,20 @@
 {
-  "updated": "2026-09-03T09:27:23.503351+00:00",
+  "updated": "2026-09-04T09:19:26.412270+00:00",
   "error": null,
   "events": [
     {
-      "title": "MŠ - Třídní schůzky u Motýlků 3.9.",
-      "date": "2026-09-03",
-      "time": "16:30",
+      "title": "MŠ - DIvadlo Sandry Riedlové",
+      "date": "2026-09-09",
+      "time": "09:30",
       "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-tridni-schuzky-u-motylku-39-468_280cs.html"
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-sandry-riedlove-472_284cs.html"
+    },
+    {
+      "title": "MŠ - Program HUSKY",
+      "date": "2026-09-15",
+      "time": "09:32",
+      "location": "MŠ - třída Soviček",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-program-husky-473_285cs.html"
     },
     {
       "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
@@ -17,25 +24,18 @@
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-na-macochu-1-a-2-tr-454_271cs.html"
     },
     {
+      "title": "MŠ - Zakládáme portfólia s rodiči",
+      "date": "2026-09-21",
+      "time": "21:34",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zakladame-portfolia-s-rodici-474_286cs.html"
+    },
+    {
       "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
       "date": "2026-09-24",
       "time": "08:00",
       "location": "Moravský kras",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
-    },
-    {
-      "title": "ZŠ - Jezírko - Sojčí lumpárny, 5. třída",
-      "date": "2026-10-09",
-      "time": "08:30",
-      "location": "Jezírko",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-sojci-lumparny-5-trida-471_283cs.html"
-    },
-    {
-      "title": "ZŠ - školní fotografování 2026",
-      "date": "2026-11-02",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-skolni-fotografovani-2026-368_233cs.html"
     }
   ]
 }
