@@ -2,7 +2,7 @@ name: Fetch School Menu
 
 on:
   schedule:
-    - cron: '0 5 * * 1-5'   # každý pracovní den v 5:00 UTC (6:00 zimního / 7:00 letního času)
+    - cron: '0 5 * * *'   # denně v 5:00 UTC (6:00 zimního / 7:00 letního času) – škola zveřejňuje jídelníček na nový týden už o víkendu
   workflow_dispatch:           # možnost spustit ručně
 
 jobs:
