@@ -35,6 +35,7 @@ home_dashboard/
 │   └── mstodo.json
 ├── garmin-watchface/               # Garmin watch face (Connect IQ, separate project)
 ├── Odkazy.md                        # Useful links (Tuya, etc.)
+├── .claude/skills/                 # Project skills + check scripts (see "Skills" below)
 └── .github/workflows/
     ├── growatt.yml                 # fetch_growatt.py (15 min daytime, hourly at night)
     ├── tuya.yml                    # fetch_tuya.py (every 30 min + manual)
@@ -470,6 +471,32 @@ Follows Conventional Commits in Czech:
 feat: přidat novou sekci XYZ
 fix: opravit chybu v načítání dat Growatt
 chore: update school menu   ← bot commits (only on the data branch)
+```
+
+---
+
+## Skills (`.claude/skills/`)
+
+Project skills distilled from the recurring work in this repo. Claude loads them
+automatically from their `description`; invoke one by name with `/<name>`.
+`.claude/skills/README.md` has the full table.
+
+| Skill | Covers |
+|-------|--------|
+| `kiosk-safari12` | Safari 12 / iPad Air 1 rules for `kiosk*.html` + compat linter |
+| `dashboard-frontend` | Adding a section across all three frontends + parity check |
+| `dashboard-data-source` | The six pieces of a data source (script, workflow, seed, secrets, frontend, docs) |
+| `dashboard-actions-debug` | Diagnosing a failing workflow from logs + the gotcha catalogue |
+| `dashboard-scraper-repair` | Repairing the school menu / event-plan scrapers |
+| `dashboard-ship` | Pre-commit checks, Czech Conventional Commits, CLAUDE.md sync |
+
+The three check scripts also run standalone — they are the only mechanical
+verification this repo has:
+
+```bash
+bash .claude/skills/kiosk-safari12/scripts/check_compat.sh          # kiosk*.html vs Safari 12
+python3 .claude/skills/dashboard-data-source/scripts/validate_data_json.py  # data/*.json shape
+bash .claude/skills/dashboard-frontend/scripts/check_parity.sh      # feature in all 3 frontends
 ```
 
 ---
