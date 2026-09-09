@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-08T09:21:45.786829+00:00",
+  "updated": "2026-09-09T09:23:34.786089+00:00",
   "error": null,
   "events": [
     {
@@ -17,6 +17,13 @@
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-program-husky-473_285cs.html"
     },
     {
+      "title": "ZŠ - třídní schůzky",
+      "date": "2026-09-16",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-553_355cs.html"
+    },
+    {
       "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
       "date": "2026-09-21",
       "time": "08:00",
@@ -29,13 +36,6 @@
       "time": "21:34",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zakladame-portfolia-s-rodici-474_286cs.html"
-    },
-    {
-      "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
-      "date": "2026-09-24",
-      "time": "08:00",
-      "location": "Moravský kras",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
     }
   ]
 }
