@@ -1,14 +1,7 @@
 {
-  "updated": "2026-09-09T09:23:34.786089+00:00",
+  "updated": "2026-09-10T09:23:03.810856+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - DIvadlo Sandry Riedlové",
-      "date": "2026-09-09",
-      "time": "09:30",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-sandry-riedlove-472_284cs.html"
-    },
     {
       "title": "MŠ - Program HUSKY",
       "date": "2026-09-15",
@@ -36,6 +29,13 @@
       "time": "21:34",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zakladame-portfolia-s-rodici-474_286cs.html"
+    },
+    {
+      "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
+      "date": "2026-09-24",
+      "time": "08:00",
+      "location": "Moravský kras",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
     }
   ]
 }
