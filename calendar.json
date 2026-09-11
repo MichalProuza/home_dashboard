@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-11T11:51:37.867934+00:00",
+  "updated": "2026-09-11T15:18:04.505374+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "Hody",
-      "date": "2026-09-11T06:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Přípravka - trénink",
       "date": "2026-09-16T15:00:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "Turnaj Miroslav",
       "date": "2026-09-19T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Neurologie - kontrola",
+      "date": "2026-09-22T09:10:00+00:00",
       "all_day": false,
       "location": ""
     }
