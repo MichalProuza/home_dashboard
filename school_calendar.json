@@ -1,14 +1,7 @@
 {
-  "updated": "2026-09-15T09:46:31.505132+00:00",
+  "updated": "2026-09-16T09:40:29.171084+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Program HUSKY",
-      "date": "2026-09-15",
-      "time": "09:32",
-      "location": "MŠ - třída Soviček",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-program-husky-473_285cs.html"
-    },
     {
       "title": "ZŠ - třídní schůzky",
       "date": "2026-09-16",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Moravský kras",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
+    },
+    {
+      "title": "MŠ - Říjnová výzva pro domácí tvoření",
+      "date": "2026-10-01",
+      "time": "00:07",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-rijnova-vyzva-pro-domaci-tvoreni-478_289cs.html"
     }
   ]
 }
