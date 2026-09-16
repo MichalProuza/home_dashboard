@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-16T12:14:45.908795+00:00",
+  "updated": "2026-09-16T17:19:16.266885+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "Přípravka - trénink",
-      "date": "2026-09-16T15:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Turnaj Miroslav",
       "date": "2026-09-19T07:00:00+00:00",
       "all_day": false,
@@ -38,6 +32,12 @@
       "summary": "Neurologie - kontrola",
       "date": "2026-09-22T09:10:00+00:00",
       "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "40 Beskydy",
+      "date": "2026-09-25T00:00:00+00:00",
+      "all_day": true,
       "location": ""
     }
   ]
