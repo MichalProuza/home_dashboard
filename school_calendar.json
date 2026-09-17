@@ -1,14 +1,7 @@
 {
-  "updated": "2026-09-16T09:40:29.171084+00:00",
+  "updated": "2026-09-17T09:49:00.159161+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - třídní schůzky",
-      "date": "2026-09-16",
-      "time": "17:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-553_355cs.html"
-    },
     {
       "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
       "date": "2026-09-21",
@@ -36,6 +29,13 @@
       "time": "00:07",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-rijnova-vyzva-pro-domaci-tvoreni-478_289cs.html"
+    },
+    {
+      "title": "ZŠ - logická olympiáda - 5. roč.",
+      "date": "2026-10-01",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-logicka-olympiada-5-roc-545_347cs.html"
     }
   ]
 }
