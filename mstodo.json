@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-17T10:18:33.039480+00:00",
+  "updated": "2026-09-17T15:13:13.896244+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -235,11 +235,6 @@
     },
     {
       "title": "ATs_erk",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Lampička IKEA",
       "due": null,
       "important": false
     }
