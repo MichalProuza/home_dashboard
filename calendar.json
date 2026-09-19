@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-19T14:52:19.696455+00:00",
+  "updated": "2026-09-19T17:30:22.249347+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "Turnaj Miroslav",
-      "date": "2026-09-19T07:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Neurologie - kontrola",
       "date": "2026-09-22T09:10:00+00:00",
       "all_day": false,
@@ -38,6 +32,12 @@
       "summary": "40 Beskydy",
       "date": "2026-09-25T00:00:00+00:00",
       "all_day": true,
+      "location": ""
+    },
+    {
+      "summary": "Geriatrie - odběry",
+      "date": "2026-10-02T05:00:00+00:00",
+      "all_day": false,
       "location": ""
     }
   ]
