@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T07:31:36.093307+00:00",
+  "updated": "2026-09-22T13:15:29.905275+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -120,7 +120,7 @@
     },
     {
       "title": "Popelnice",
-      "due": "2026-07-21",
+      "due": "2026-09-29",
       "important": false
     },
     {
@@ -235,6 +235,16 @@
     },
     {
       "title": "ATs_erk",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Godasal",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Pantomyl",
       "due": null,
       "important": false
     }
