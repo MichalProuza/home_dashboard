@@ -1,21 +1,7 @@
 {
-  "updated": "2026-09-21T10:24:06.390337+00:00",
+  "updated": "2026-09-22T09:37:41.718360+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - výlet na Macochu 1. a 2. tř.",
-      "date": "2026-09-21",
-      "time": "08:00",
-      "location": "Moravský kras",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-na-macochu-1-a-2-tr-454_271cs.html"
-    },
-    {
-      "title": "MŠ - Zakládáme portfólia s rodiči",
-      "date": "2026-09-21",
-      "time": "21:34",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-zakladame-portfolia-s-rodici-474_286cs.html"
-    },
     {
       "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
       "date": "2026-09-24",
@@ -36,6 +22,20 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-logicka-olympiada-5-roc-545_347cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-10-01",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-527_329cs.html"
+    },
+    {
+      "title": "MŠ - Divadlo Kača a Kača",
+      "date": "2026-10-07",
+      "time": "09:30",
+      "location": "MŠ - třída Soviček",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-kaca-a-kaca-488_294cs.html"
     }
   ]
 }
