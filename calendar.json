@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T06:53:36.429440+00:00",
+  "updated": "2026-09-22T12:08:19.509638+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,15 +23,15 @@
   ],
   "single": [
     {
-      "summary": "Neurologie - kontrola",
-      "date": "2026-09-22T09:10:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "40 Beskydy",
       "date": "2026-09-25T00:00:00+00:00",
       "all_day": true,
+      "location": ""
+    },
+    {
+      "summary": "Neuro",
+      "date": "2026-09-25T06:30:00+00:00",
+      "all_day": false,
       "location": ""
     },
     {
