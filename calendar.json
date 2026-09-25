@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25T02:01:51.325024+00:00",
+  "updated": "2026-09-25T08:13:11.706435+00:00",
   "error": null,
   "recurring": [
     {
@@ -29,14 +29,14 @@
       "location": ""
     },
     {
-      "summary": "Neuro",
-      "date": "2026-09-25T06:30:00+00:00",
+      "summary": "Geriatrie - odběry",
+      "date": "2026-10-02T05:00:00+00:00",
       "all_day": false,
       "location": ""
     },
     {
-      "summary": "Geriatrie - odběry",
-      "date": "2026-10-02T05:00:00+00:00",
+      "summary": "Turnaj Vracov",
+      "date": "2026-10-03T05:00:00+00:00",
       "all_day": false,
       "location": ""
     }
