@@ -1,14 +1,7 @@
 {
-  "updated": "2026-09-24T09:42:25.578334+00:00",
+  "updated": "2026-09-25T09:59:30.472482+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Výlet do Punkevních jeskyní - 3. a 4.třída",
-      "date": "2026-09-24",
-      "time": "08:00",
-      "location": "Moravský kras",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-vylet-do-punkevnich-jeskyni-3-a-4trida-460_275cs.html"
-    },
     {
       "title": "MŠ - Říjnová výzva pro domácí tvoření",
       "date": "2026-10-01",
@@ -36,6 +29,13 @@
       "time": "09:30",
       "location": "MŠ - třída Soviček",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-kaca-a-kaca-488_294cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-10-08",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-528_330cs.html"
     }
   ]
 }
