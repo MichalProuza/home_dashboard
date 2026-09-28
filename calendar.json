@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-27T21:40:29.580477+00:00",
+  "updated": "2026-09-28T00:02:03.442801+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "40 Beskydy",
-      "date": "2026-09-25T00:00:00+00:00",
-      "all_day": true,
-      "location": ""
-    },
-    {
       "summary": "Geriatrie - odběry",
       "date": "2026-10-02T05:00:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "Turnaj Vracov",
       "date": "2026-10-03T05:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Elis - trhání zubu",
+      "date": "2026-10-08T06:40:00+00:00",
       "all_day": false,
       "location": ""
     }
