@@ -1,7 +1,14 @@
 {
-  "updated": "2026-09-27T10:21:37.387634+00:00",
+  "updated": "2026-09-28T11:26:15.190779+00:00",
   "error": null,
   "events": [
+    {
+      "title": "ŠD - Zmrzlinový den",
+      "date": "2026-09-30",
+      "time": "13:00",
+      "location": "Obec, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-zmrzlinovy-den-598_399cs.html"
+    },
     {
       "title": "MŠ - Říjnová výzva pro domácí tvoření",
       "date": "2026-10-01",
@@ -29,13 +36,6 @@
       "time": "09:30",
       "location": "MŠ - třída Soviček",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-kaca-a-kaca-488_294cs.html"
-    },
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-10-08",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-528_330cs.html"
     }
   ]
 }
