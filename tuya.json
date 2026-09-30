@@ -1,54 +1,5 @@
 {
-  "updated": "2026-09-30T04:59:32.200065+00:00",
-  "error": null,
-  "devices": [
-    {
-      "device_name": "Garáž ",
-      "online": true,
-      "gate_open": false,
-      "dp_used": "switch",
-      "raw_dps": [
-        {
-          "code": "switch",
-          "value": false
-        },
-        {
-          "code": "battery",
-          "value": 37
-        }
-      ]
-    },
-    {
-      "device_name": "Brána",
-      "online": false,
-      "gate_open": false,
-      "dp_used": "doorcontact_state",
-      "raw_dps": [
-        {
-          "code": "doorcontact_state",
-          "value": false
-        },
-        {
-          "code": "battery_percentage",
-          "value": 100
-        }
-      ]
-    },
-    {
-      "device_name": "Sklep",
-      "online": false,
-      "gate_open": false,
-      "dp_used": "doorcontact_state",
-      "raw_dps": [
-        {
-          "code": "doorcontact_state",
-          "value": false
-        },
-        {
-          "code": "battery_percentage",
-          "value": 44
-        }
-      ]
-    }
-  ]
+  "updated": "2026-09-30T11:05:35.555280+00:00",
+  "error": "Status chyba: IoT Core service subscription has expired.",
+  "devices": []
 }
