@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01T07:01:27.730008+00:00",
+  "updated": "2026-10-01T14:41:39.818173+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -214,11 +214,6 @@
       "important": false
     },
     {
-      "title": "Gymnathlon - 26/27",
-      "due": null,
-      "important": false
-    },
-    {
       "title": "Změna PnP",
       "due": null,
       "important": false
@@ -245,11 +240,6 @@
     },
     {
       "title": "Pantomyl",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Komoda",
       "due": null,
       "important": false
     }
