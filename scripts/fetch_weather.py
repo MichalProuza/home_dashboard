@@ -10,6 +10,7 @@ z prohlížeče nemusí projít.
 
 import json
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -34,11 +35,33 @@ URL = (
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "weather.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+RETRIES = 5          # Open-Meteo občas vrací přechodné 5xx/429
+BACKOFF_S = 10       # čekání mezi pokusy: 10, 20, 30, 40 s
+
+
+def get_with_retry():
+    last_exc = None
+    for attempt in range(1, RETRIES + 1):
+        try:
+            res = requests.get(URL, timeout=30)
+            res.raise_for_status()
+            return res
+        except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if isinstance(e, requests.HTTPError) and status not in (429, 500, 502, 503, 504):
+                raise  # trvalá chyba (4xx) — opakování nepomůže
+            last_exc = e
+            if attempt < RETRIES:
+                wait = BACKOFF_S * attempt
+                print(f"Pokus {attempt}/{RETRIES} selhal ({e}), čekám {wait} s…")
+                time.sleep(wait)
+    raise last_exc
+
+
 def fetch():
     now_utc = datetime.now(timezone.utc).isoformat()
     try:
-        res = requests.get(URL, timeout=30)
-        res.raise_for_status()
+        res = get_with_retry()
         body = res.json()
         if "current" not in body or "daily" not in body:
             raise ValueError(f"neúplná odpověď (klíče: {sorted(body.keys())})")
