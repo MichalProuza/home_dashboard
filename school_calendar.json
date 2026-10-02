@@ -1,28 +1,7 @@
 {
-  "updated": "2026-10-01T11:22:49.204906+00:00",
+  "updated": "2026-10-02T10:52:48.801938+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - logická olympiáda - 5. roč.",
-      "date": "2026-10-01",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-logicka-olympiada-5-roc-545_347cs.html"
-    },
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-10-01",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-527_329cs.html"
-    },
-    {
-      "title": "MŠ - Říjnová výzva pro domácí tvoření",
-      "date": "2026-10-01",
-      "time": "00:07",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-rijnova-vyzva-pro-domaci-tvoreni-478_289cs.html"
-    },
     {
       "title": "MŠ - Divadlo Kača a Kača",
       "date": "2026-10-07",
@@ -36,6 +15,27 @@
       "time": "08:00",
       "location": "Kuřim",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-528_330cs.html"
+    },
+    {
+      "title": "ZŠ - Jezírko - Sojčí lumpárny, 5. třída",
+      "date": "2026-10-09",
+      "time": "08:30",
+      "location": "Jezírko",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-sojci-lumparny-5-trida-471_283cs.html"
+    },
+    {
+      "title": "MŠ - Jezírko LIPKA Soběšice, 14.10. 2026",
+      "date": "2026-10-14",
+      "time": "08:00",
+      "location": "Jezírko",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-jezirko-lipka-sobesice-1410-2026-486_293cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-10-15",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-529_331cs.html"
     }
   ]
 }
