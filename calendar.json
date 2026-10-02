@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02T07:35:01.190433+00:00",
+  "updated": "2026-10-02T14:11:04.285596+00:00",
   "error": null,
   "recurring": [
     {
@@ -29,14 +29,14 @@
       "location": ""
     },
     {
-      "summary": "Elis - trhání zubu",
-      "date": "2026-10-08T06:40:00+00:00",
+      "summary": "Pejčoch",
+      "date": "2026-10-06T09:30:00+00:00",
       "all_day": false,
       "location": ""
     },
     {
-      "summary": "Geriatrie",
-      "date": "2026-10-09T07:00:00+00:00",
+      "summary": "Elis - trhání zubu",
+      "date": "2026-10-08T06:40:00+00:00",
       "all_day": false,
       "location": ""
     }
