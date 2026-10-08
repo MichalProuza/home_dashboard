@@ -1,14 +1,7 @@
 {
-  "updated": "2026-10-07T11:31:09.206221+00:00",
+  "updated": "2026-10-08T11:46:26.199414+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Divadlo Kača a Kača",
-      "date": "2026-10-07",
-      "time": "09:30",
-      "location": "MŠ - třída Soviček",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-divadlo-kaca-a-kaca-488_294cs.html"
-    },
     {
       "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
       "date": "2026-10-08",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Kuřim",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-529_331cs.html"
+    },
+    {
+      "title": "ZŠ - přespání ve škole",
+      "date": "2026-10-16",
+      "time": "15:30",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-prespani-ve-skole-550_352cs.html"
     }
   ]
 }
