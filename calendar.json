@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T06:50:26.142897+00:00",
+  "updated": "2026-10-09T13:53:15.792536+00:00",
   "error": null,
   "recurring": [
     {
@@ -22,12 +22,6 @@
     }
   ],
   "single": [
-    {
-      "summary": "Geriatrie",
-      "date": "2026-10-09T07:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
     {
       "summary": "Nuero",
       "date": "2026-10-26T08:30:00+00:00",
