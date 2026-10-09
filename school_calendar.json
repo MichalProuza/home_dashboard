@@ -1,14 +1,7 @@
 {
-  "updated": "2026-10-08T11:46:26.199414+00:00",
+  "updated": "2026-10-09T11:39:00.035347+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-10-08",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-528_330cs.html"
-    },
     {
       "title": "ZŠ - Jezírko - Sojčí lumpárny, 5. třída",
       "date": "2026-10-09",
@@ -36,6 +29,13 @@
       "time": "15:30",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-prespani-ve-skole-550_352cs.html"
+    },
+    {
+      "title": "ZŠ - FAKESCAPE prevence 4.,5. roč.",
+      "date": "2026-10-19",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fakescape-prevence-45-roc-543_345cs.html"
     }
   ]
 }
