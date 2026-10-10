@@ -1,14 +1,7 @@
 {
-  "updated": "2026-10-09T11:39:00.035347+00:00",
+  "updated": "2026-10-10T10:56:47.164574+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Jezírko - Sojčí lumpárny, 5. třída",
-      "date": "2026-10-09",
-      "time": "08:30",
-      "location": "Jezírko",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-sojci-lumparny-5-trida-471_283cs.html"
-    },
     {
       "title": "MŠ - Jezírko LIPKA Soběšice, 14.10. 2026",
       "date": "2026-10-14",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fakescape-prevence-45-roc-543_345cs.html"
+    },
+    {
+      "title": "MŠ - Podzimní dílničky (15:30 hod) u Motýlků",
+      "date": "2026-10-21",
+      "time": "15:30",
+      "location": "Třída Motýlků, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-podzimni-dilnicky-1530-hod-u-motylku-483_292cs.html"
     }
   ]
 }
