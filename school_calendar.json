@@ -1,14 +1,7 @@
 {
-  "updated": "2026-10-14T09:55:05.859004+00:00",
+  "updated": "2026-10-15T09:36:30.639052+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Jezírko LIPKA Soběšice, 14.10. 2026",
-      "date": "2026-10-14",
-      "time": "08:00",
-      "location": "Jezírko",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-jezirko-lipka-sobesice-1410-2026-486_293cs.html"
-    },
     {
       "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
       "date": "2026-10-15",
@@ -36,6 +29,13 @@
       "time": "15:30",
       "location": "Třída Motýlků, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-podzimni-dilnicky-1530-hod-u-motylku-483_292cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-10-22",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-530_332cs.html"
     }
   ]
 }
