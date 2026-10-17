@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T05:06:13.430396+00:00",
+  "updated": "2026-10-17T09:45:33.642790+00:00",
   "error": null,
   "recurring": [
     {
@@ -22,6 +22,12 @@
     }
   ],
   "single": [
+    {
+      "summary": "Střih",
+      "date": "2026-10-21T07:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
     {
       "summary": "Nuero",
       "date": "2026-10-26T08:30:00+00:00",
