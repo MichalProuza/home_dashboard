@@ -1,20 +1,13 @@
 {
-  "updated": "2026-10-16T09:29:32.693308+00:00",
+  "updated": "2026-10-17T09:00:21.661139+00:00",
   "error": null,
   "events": [
     {
-      "title": "ZŠ - přespání ve škole",
-      "date": "2026-10-16",
-      "time": "15:30",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-prespani-ve-skole-550_352cs.html"
-    },
-    {
-      "title": "ZŠ - FAKESCAPE prevence 4.,5. roč.",
+      "title": "ZŠ - FAKESCAPE prevence 4.,5. roč. - zrušeno!!",
       "date": "2026-10-19",
       "time": "08:00",
       "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fakescape-prevence-45-roc-543_345cs.html"
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fakescape-prevence-45-roc-zruseno-543_345cs.html"
     },
     {
       "title": "MŠ - Podzimní dílničky (15:30 hod) u Motýlků",
@@ -36,6 +29,13 @@
       "time": "15:30",
       "location": "MŠ - třída Soviček",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-podzimni-dilnicky-1530-hod-u-sovicek-481_291cs.html"
+    },
+    {
+      "title": "ZŠ - workshop pro rodiče",
+      "date": "2026-10-22",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-workshop-pro-rodice-572_374cs.html"
     }
   ]
 }
