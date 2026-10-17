@@ -1,42 +1,42 @@
 {
-  "updated": "2026-10-16T09:26:26.508077+00:00",
+  "updated": "2026-10-17T08:57:48.803849+00:00",
   "error": null,
-  "week": "12.10. – 16.10.2026",
+  "week": "",
   "days": {
     "utery": {
       "name": "Úterý",
       "meals": [
-        "rohlík s debrecínkou pečení, kedluben 1,7",
-        "polévka s játrovým kapáním 1",
-        "bretaňské fazole, pečivo 1",
-        "čokoládové brownie, pomeranč 1,7"
+        "rohlíček, šunkov á pěna, paprika 1,7",
+        "gulášová polévka 1,9",
+        "dukátové buchtičky s krémem 1,7",
+        "podmáslový chléb, pomazánka budapešť, pomeranč 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "toustový chléb, philadelphia, paprika 1,7",
-        "krém z pečen é mrkve 1",
-        "losos na m ásle, brambory, holandská omáčka 4,7",
-        "houska, máslo, hravá parenička , ředkvička 1,7"
+        "zapečený toust, okurek 1,7",
+        "masový vývar se sýrovým kapáním 1,7,9",
+        "holandský řízek, bramborová kaše, caciky 1,7",
+        "bulka, cottage, mandarinka 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "kukuřičné lupínky 7",
-        "česneková polévka 1,3,9",
-        "hovězí nudličky stroganov, tarhoňa 1,7",
-        "dalamánek, vajíčková pomazánka, mrkev 1, 7"
+        "čokoládový jogurt 7",
+        "zeleninová polévka 1,9",
+        "koprová omáčka, houskový knedlík , vejce 1,3,7",
+        "rohlík, vajíčková pomazánka, jablko 1,3,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "kmínový chléb, sardinková pomazánka, okurek 1,7",
-        "masový vývar s nudlemi 1,9",
-        "pizza šunka a sýr 1,7",
-        "loupáček, banán 1,7"
+        "žitný chléb, krůtí šunka, kedlubna 1,7",
+        "hráškový krém s krutony 1",
+        "těstovinový salát s kuřecím masem 1,7",
+        "croassant, pomeranč 1,7"
       ]
     }
   }
