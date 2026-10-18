@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T03:53:26.738013+00:00",
+  "updated": "2026-10-18T08:43:40.342510+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -240,6 +240,11 @@
     },
     {
       "title": "Pantomyl",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "VP 26",
       "due": null,
       "important": false
     }
