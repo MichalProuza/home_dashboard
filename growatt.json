@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-20T21:55:04.833246+00:00",
+  "updated": "2026-10-20T22:50:47.609681+00:00",
   "error": null,
   "plants": [
     {
@@ -20,10 +20,10 @@
           "grid_w": 120.0,
           "grid_direction": "import",
           "load_w": 120.0,
-          "today_kwh": 2.700000047683716,
+          "today_kwh": 0.0,
           "total_kwh": 18387.8,
-          "today_export_kwh": 0.1,
-          "today_import_kwh": 6.6
+          "today_export_kwh": 0.0,
+          "today_import_kwh": 0.2
         },
         {
           "sn": "meter",
@@ -61,6 +61,10 @@
     },
     {
       "t": 1792533304,
+      "v": 27.0
+    },
+    {
+      "t": 1792536647,
       "v": 27.0
     }
   ]
