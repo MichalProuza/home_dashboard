@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T00:30:52.451620+00:00",
+  "updated": "2026-10-22T05:52:45.728414+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -230,16 +230,6 @@
     },
     {
       "title": "ATs_erk",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Godasal",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Pantomyl",
       "due": null,
       "important": false
     }
