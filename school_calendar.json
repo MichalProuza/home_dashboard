@@ -1,28 +1,7 @@
 {
-  "updated": "2026-10-22T09:50:06.309076+00:00",
+  "updated": "2026-10-23T09:44:23.347718+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-10-22",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-530_332cs.html"
-    },
-    {
-      "title": "MŠ - Podzimní dílničky (15:30 hod) u Soviček",
-      "date": "2026-10-22",
-      "time": "15:30",
-      "location": "MŠ - třída Soviček",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-podzimni-dilnicky-1530-hod-u-sovicek-481_291cs.html"
-    },
-    {
-      "title": "ZŠ - workshop pro rodiče",
-      "date": "2026-10-22",
-      "time": "17:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-workshop-pro-rodice-572_374cs.html"
-    },
     {
       "title": "ZŠ - FAKESCAPE - prevence pro 4. a 5. roč.",
       "date": "2026-10-26",
@@ -36,6 +15,27 @@
       "time": "08:00",
       "location": "Jezírko",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-papousek-na-vetvi-2-trida-526_328cs.html"
+    },
+    {
+      "title": "ZŠ - soutěž mediální gramotnosti - 5. roč.",
+      "date": "2026-10-27",
+      "time": "11:50",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-soutez-medialni-gramotnosti-5-roc-609_403cs.html"
+    },
+    {
+      "title": "ZŠ - podzimní prázdniny",
+      "date": "2026-10-29",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-podzimni-prazdniny-557_359cs.html"
+    },
+    {
+      "title": "ZŠ - fotografování",
+      "date": "2026-11-02",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fotografovani-552_354cs.html"
     }
   ]
 }
