@@ -1,42 +1,48 @@
 {
-  "updated": "2026-10-23T09:42:17.945202+00:00",
+  "updated": "2026-10-24T09:15:00.578719+00:00",
   "error": null,
-  "week": "",
+  "week": "26.10. – 30.10.2026",
   "days": {
+    "pondeli": {
+      "name": "Pondělí",
+      "meals": [
+        "racio chlebík, lučina, paprika 7",
+        "čočková polévka 1,9",
+        "boloňské špagety sypané sýrem 1,7",
+        "houska, bylinkové máslo, banán 1,7"
+      ]
+    },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "rohlíček, šunkov á pěna, paprika 1,7",
-        "gulášová polévka 1,9",
-        "dukátové buchtičky s krémem 1,7",
-        "podmáslový chléb, pomazánka budapešť, pomeranč 1,7"
+        "chléb, tvarohová pomazánka, okurek 1, 7",
+        "kuřecí vývar s písmenky 1,7",
+        "štika argentina, šťouchané brambory, salát z červeného zelí s jablky 4",
+        "žitný chléb, sedlácká pomazánka, rajče 1,3,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "zapečený toust, okurek 1,7",
-        "masový vývar se sýrovým kapáním 1,7,9",
-        "holandský řízek, bramborová kaše, caciky 1,7",
-        "bulka, cottage, mandarinka 1,7"
+        "Státní svátek"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "čokoládový jogurt 7",
-        "zeleninová polévka 1,9",
-        "koprová omáčka, houskový knedlík , vejce 1,3,7",
-        "rohlík, vajíčková pomazánka, jablko 1,3,7"
+        "jablečná přesnídávka s piškotem 1",
+        "kuřecí vývar s písmenky 1,7",
+        "pečené masíčko, brambory, salátek 7",
+        "bulka, hravá parenička, pomeranč 1,3,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "žitný chléb, krůtí šunka, kedlubna 1,7",
-        "hráškový krém s krutony 1",
-        "těstovinový salát s kuřecím masem 1,7",
-        "croassant, pomeranč 1,7"
+        "opékaný toustový chléb, máslo, eidam, paprika 1,7",
+        "zeleninová polévka 1,9",
+        "nudle s mákem 1,7",
+        "snack madeland 1,7"
       ]
     }
   }
