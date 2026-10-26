@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T05:28:51.624083+00:00",
+  "updated": "2026-10-26T11:36:38.503824+00:00",
   "error": null,
   "recurring": [
     {
@@ -21,12 +21,5 @@
       "location": ""
     }
   ],
-  "single": [
-    {
-      "summary": "Nuero",
-      "date": "2026-10-26T08:30:00+00:00",
-      "all_day": false,
-      "location": ""
-    }
-  ]
+  "single": []
 }
