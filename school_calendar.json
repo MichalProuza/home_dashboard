@@ -1,13 +1,13 @@
 {
-  "updated": "2026-10-26T10:45:34.049180+00:00",
+  "updated": "2026-10-27T10:11:59.165503+00:00",
   "error": null,
   "events": [
     {
-      "title": "ZŠ - FAKESCAPE - prevence pro 4. a 5. roč.",
-      "date": "2026-10-26",
-      "time": "08:00",
+      "title": "ZŠ - soutěž mediální gramotnosti - 5. roč.",
+      "date": "2026-10-27",
+      "time": "11:50",
       "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fakescape-prevence-pro-4-a-5-roc-607_401cs.html"
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-soutez-medialni-gramotnosti-5-roc-609_403cs.html"
     },
     {
       "title": "ZŠ - Jezírko, Papoušek na větvi, 2. třída",
@@ -15,13 +15,6 @@
       "time": "08:00",
       "location": "Jezírko",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-papousek-na-vetvi-2-trida-526_328cs.html"
-    },
-    {
-      "title": "ZŠ - soutěž mediální gramotnosti - 5. roč.",
-      "date": "2026-10-27",
-      "time": "11:50",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-soutez-medialni-gramotnosti-5-roc-609_403cs.html"
     },
     {
       "title": "ZŠ - podzimní prázdniny",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fotografovani-552_354cs.html"
+    },
+    {
+      "title": "ZŠ - IT soutěž iBobr - 5. roč.",
+      "date": "2026-11-03",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-it-soutez-ibobr-5-roc-547_349cs.html"
     }
   ]
 }
