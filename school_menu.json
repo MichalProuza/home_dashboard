@@ -1,48 +1,42 @@
 {
-  "updated": "2026-10-29T11:13:42.156393+00:00",
+  "updated": "2026-10-30T11:08:04.509774+00:00",
   "error": null,
-  "week": "26.10. – 30.10.2026",
+  "week": "2.11. – 6.11.2026",
   "days": {
-    "pondeli": {
-      "name": "Pondělí",
-      "meals": [
-        "racio chlebík, lučina, paprika 7",
-        "čočková polévka 1,9",
-        "boloňské špagety sypané sýrem 1,7",
-        "houska, bylinkové máslo, banán 1,7"
-      ]
-    },
     "utery": {
       "name": "Úterý",
       "meals": [
-        "chléb, tvarohová pomazánka, okurek 1, 7",
-        "kuřecí vývar s písmenky 1,7",
-        "štika argentina, šťouchané brambory, salát z červeného zelí s jablky 4",
-        "žitný chléb, sedlácká pomazánka, rajče 1,3,7"
+        "chléb, pažitkové máslo, mrkev 1,7",
+        "zelná polévka 1,7",
+        "vdolky s povidlím 1,3,7",
+        "rohlíček, máslo, gouda, mandarinka 1,7"
       ]
     },
     "streda": {
       "name": "Středa",
       "meals": [
-        "Státní svátek"
+        "sýrové tyčinky z listového těsta 1,7",
+        "kapustová polévka 1,7",
+        "čočka na kyselo, vejce, pečivo 1,3",
+        "žitný chléb, česneková pomazánka, paprika 1,7"
       ]
     },
     "ctvrtek": {
       "name": "Čtvrtek",
       "meals": [
-        "jablečná přesnídávka s piškotem 1",
-        "kuřecí vývar s písmenky 1,7",
-        "pečené masíčko, brambory, salátek 7",
-        "bulka, hravá parenička, pomeranč 1,3,7"
+        "tvarohová miska 7",
+        "cuketová polévka s krutony 1,9",
+        "obalovaná treska, brambory, salát coleslaw 1,",
+        "rohlíček, šunka, hruška 1,7"
       ]
     },
     "patek": {
       "name": "Pátek",
       "meals": [
-        "opékaný toustový chléb, máslo, eidam, paprika 1,7",
-        "zeleninová polévka 1,9",
-        "nudle s mákem 1,7",
-        "snack madeland 1,7"
+        "bagetka, žervé, jablíčko 1,7",
+        "miliónová polévka 1,9",
+        "hovězí tokáň s rýží, jogurtová miska 1,7",
+        "podmáslový chléb, máslo, vejce, rajče 1,3,7"
       ]
     }
   }
