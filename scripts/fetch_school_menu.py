@@ -100,9 +100,12 @@ def fetch():
                 continue
 
             if el.name == "p":
-                bold = el.find("b") or el.find("strong")
-                if bold:
-                    text = bold.get_text(strip=True).rstrip(":").strip()
+                # CMS střídá <b>/<strong> a umí název dne rozdělit do více
+                # tagů (<strong>PONDĚL</strong><strong>Í:</strong>) → spojit všechny
+                bolds = el.find_all(["b", "strong"])
+                if bolds:
+                    text = "".join(b.get_text() for b in bolds)
+                    text = re.sub(r"\s+", "", text).rstrip(":")
                     if text in DAY_NAMES:
                         current_day = DAY_NAMES[text]
                         days[current_day] = {
