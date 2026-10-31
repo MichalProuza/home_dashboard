@@ -1,8 +1,17 @@
 {
-  "updated": "2026-10-30T11:08:04.509774+00:00",
+  "updated": "2026-10-31T10:41:31.943174+00:00",
   "error": null,
   "week": "2.11. – 6.11.2026",
   "days": {
+    "pondeli": {
+      "name": "Pondělí",
+      "meals": [
+        "cereálie s mlékem 1,7",
+        "hovězí vývar s vlasovými nudlemi 1,9",
+        "rajská omáčka s masovými kuličkami, těstoviny 1,9",
+        "podmáslová raženka, námořnická pěna, jablko 1,7"
+      ]
+    },
     "utery": {
       "name": "Úterý",
       "meals": [
