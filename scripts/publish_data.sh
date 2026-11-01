@@ -50,14 +50,20 @@ if git diff --cached --quiet; then
 fi
 git commit -m "$MSG"
 
-# Push s retry – jiný workflow mohl mezitím pushnout
-for attempt in 1 2 3; do
+# Push s retry – plánovač i tlačítko „obnovit" spouští 5–8 workflowů naráz,
+# takže pushují na data ve stejnou chvíli. Bez náhodného odstupu se srazí
+# při každém pokusu znovu → čekat náhodně 1–(2×pokus) s a pak rebase.
+MAX_ATTEMPTS=8
+for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
   if git push origin HEAD:refs/heads/data; then
     echo "✓ Publikováno do větve data (${COPIED[*]})"
     exit 0
   fi
-  echo "WARN: Push selhal (pokus $attempt), zkouším rebase…"
+  [ "$attempt" -eq "$MAX_ATTEMPTS" ] && break
+  delay=$(( RANDOM % (2 * attempt) + 1 ))
+  echo "WARN: Push selhal (pokus $attempt/$MAX_ATTEMPTS), za ${delay} s rebase a znovu…"
+  sleep "$delay"
   git pull --rebase origin data
 done
-git push origin HEAD:refs/heads/data
-echo "✓ Publikováno do větve data (${COPIED[*]})"
+echo "ERROR: Push do větve data se nepodařil ani po $MAX_ATTEMPTS pokusech." >&2
+exit 1
