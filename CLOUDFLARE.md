@@ -29,6 +29,10 @@ přesun sběru dat mimo Actions (domácí cron / VPS).
 
 - `functions/api/data/[name].js` — Pages Function, čte `data` větev přes
   `GH_DATA_TOKEN`, vrací JSON. Povoluje jen názvy `*.json` (žádný path traversal).
+- `functions/api/refresh.js` — Pages Function pro tlačítko „obnovit" (kiosky i
+  index.html): přes `GH_ACTIONS_TOKEN` ručně spustí workflowy Netatmo, Tuya,
+  Growatt, Počasí a To Do (`workflow_dispatch`); frontend pak data znovu načte
+  po 1 a 2 minutách. Ruční běh v posledních 3 min → nespouští znovu.
 - `index.html` i `kiosk.html` — `DATA_BRANCH_BASE` se přepíná podle domény:
   - na `*.github.io` → veřejné `raw`,
   - jinde (Cloudflare doména, i `localhost`) → same-origin `/api/data/`.
@@ -57,6 +61,16 @@ přesun sběru dat mimo Actions (domácí cron / VPS).
   až novým nasazením: Deployments → Retry deployment).
 - Ověř: `https://dashboard.prouza.co.uk/api/data/weather.json` vrátí JSON.
 
+### 3b. Token pro tlačítko „obnovit"
+- GitHub → profil → **Settings → Developer settings → Personal access tokens →
+  Fine-grained tokens → Generate new token**
+  (přímo `https://github.com/settings/personal-access-tokens/new`).
+- Repository access: **Only select repositories** → `home_dashboard`.
+  Permissions → Repository permissions → **Actions: Read and write**.
+- Pages projekt → Settings → **Variables and Secrets** → **`GH_ACTIONS_TOKEN`**
+  (typ Secret, Production). **Pak redeploy.**
+- Bez tokenu tlačítko ukáže „nelze spustit" a jen znovu načte stávající data.
+
 ### 4. Microsoft To Do v prohlížeči (jen index.html)
 - Browser To Do dělá OAuth redirect na aktuální URL. Po přesunu na novou doménu
   je nutné v **Azure → App registrations → [app] → Authentication** přidat pod
@@ -81,8 +95,8 @@ přesun sběru dat mimo Actions (domácí cron / VPS).
 
 ## Údržba / na co nezapomenout
 - **Změna domácí IP** → kiosk by chtěl login → aktualizuj IP v Bypass politice.
-- **`GH_DATA_TOKEN`** má expiraci (rok) → po vypršení vygeneruj nový a v Cloudflare
-  ho přepiš **+ redeploy**.
+- **`GH_DATA_TOKEN`** a **`GH_ACTIONS_TOKEN`** mají expiraci (max. rok) → po
+  vypršení vygeneruj nový a v Cloudflare ho přepiš **+ redeploy**.
 - **Nový obsah**: push/merge do `main` → Cloudflare Pages se **sám** redeployne.
   Jen po změně env proměnných je nutný ruční redeploy.
 - **WARP/device politiky** na iPad Air 1 (iOS 12) nepoběží — proto IP bypass.

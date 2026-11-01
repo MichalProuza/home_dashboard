@@ -88,6 +88,7 @@
       margin-left: auto;
     }
     .refresh-btn:hover { background: var(--paper-dark); }
+    .refresh-btn:disabled { opacity: 0.6; cursor: default; }
 
     /* ── SECTIONS ── */
     section {
@@ -295,7 +296,7 @@
     </div>
     <div class="header-right">
       <div id="last-update">–</div>
-      <button class="refresh-btn" onclick="initAll()">↺ obnovit</button>
+      <button class="refresh-btn" onclick="refreshNow(this)">↺ obnovit</button>
     </div>
   </header>
 
@@ -1077,6 +1078,28 @@ async function fetchSchoolMenu() {
 //  INIT
 // ════════════════════════════════════════════════════════
 const REFRESH_MS = 15*60*1000;
+// Tlačítko „obnovit": na Cloudflare spustí stahovací workflowy (Pages Function
+// /api/refresh) a data znovu načte po 1 a 2 minutách (workflowy doběhnou za
+// ~20–90 s). Na GitHub Pages /api/refresh není → jen znovu načíst data.
+async function refreshNow(btn) {
+  if (location.hostname.endsWith('github.io')) return initAll();
+  if (btn.disabled) return;
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'stahuji…';
+  try {
+    const res = await fetch('/api/refresh', { method: 'POST', cache: 'no-store',
+      headers: { 'X-Dashboard-Refresh': '1' }, signal: fetchTimeout(15000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    setTimeout(initAll, 60 * 1000);
+    setTimeout(async () => { await initAll(); btn.disabled = false; btn.textContent = label; }, 120 * 1000);
+  } catch (e) {
+    btn.textContent = 'nelze spustit';
+    await initAll();
+    setTimeout(() => { btn.disabled = false; btn.textContent = label; }, 5000);
+  }
+}
+
 let _refreshing = false;
 let _lastRefreshTs = 0;
 

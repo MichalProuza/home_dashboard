@@ -65,6 +65,17 @@
       font-style: italic; color: var(--ink-mid); font-size: 1.3rem;
     }
 
+    /* Tlačítko „obnovit" vpravo v liště (velký cíl pro prst) */
+    .topbar-btn { display: table-cell; vertical-align: bottom; width: 1%; padding-left: 2vmin; }
+    #refresh-btn {
+      -webkit-appearance: none; border-radius: 0; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+      color: var(--ink); background: transparent; border: 2px solid var(--ink);
+      padding: 1vmin 1.6vmin;
+    }
+    #refresh-btn:active { background: var(--paper-dark); }
+
     /* Pevná mřížka přes celou obrazovku — každá sekce má své místo
        a vyplní celou buňku (Safari 12 umí grid-template-areas i grid-gap) */
     main {
@@ -193,6 +204,7 @@
   <header class="topbar">
     <span id="clock">--:--</span>
     <span id="datum">&nbsp;</span>
+    <span class="topbar-btn"><button id="refresh-btn" type="button" onclick="refreshNow()">↻ obnovit</button></span>
   </header>
 
   <main>
@@ -653,6 +665,38 @@ function fetchMsTodo() {
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání úkolů</div>';
   });
+}
+
+// ── Tlačítko „obnovit" ───────────────────────────────────
+// Na Cloudflare spustí stahovací workflowy (Pages Function /api/refresh) —
+// doběhnou za ~20–90 s, proto data znovu načteme po 1 a po 2 minutách.
+// Na GitHub Pages /api/refresh není → jen znovu načíst data.
+var REFRESH_LABEL = '↻ obnovit';
+var refreshBusy = false;
+
+function setRefreshLabel(txt) {
+  document.getElementById('refresh-btn').textContent = txt;
+}
+
+function refreshNow() {
+  if (refreshBusy) return;
+  if (location.hostname.indexOf('github.io') !== -1) { initAll(); return; }
+  refreshBusy = true;
+  setRefreshLabel('stahuji…');
+  function finish(label, delay) {
+    setRefreshLabel(label);
+    setTimeout(function () { refreshBusy = false; setRefreshLabel(REFRESH_LABEL); }, delay);
+  }
+  fetch('/api/refresh', { method: 'POST', cache: 'no-store', headers: { 'X-Dashboard-Refresh': '1' } })
+    .then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      setTimeout(initAll, 60 * 1000);
+      setTimeout(function () { initAll().then(function () { finish('✓ hotovo', 3000); }); }, 120 * 1000);
+    })
+    .catch(function () {
+      initAll();
+      finish('nelze spustit', 5000);
+    });
 }
 
 // ── Spuštění ─────────────────────────────────────────────
