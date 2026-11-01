@@ -33,6 +33,8 @@ home_dashboard/
 │   ├── school_calendar.json
 │   ├── calendar.json
 │   └── mstodo.json
+├── functions/api/                  # Cloudflare Pages Functions: data/[name].js (data proxy), refresh.js (button)
+├── workers/scheduler/              # Cloudflare Worker with Cron Trigger — runs the fetch workflows on schedule
 ├── garmin-watchface/               # Garmin watch face (Connect IQ, separate project)
 ├── Odkazy.md                        # Useful links (Tuya, etc.)
 ├── .claude/skills/                 # Project skills + check scripts (see "Skills" below)
@@ -106,7 +108,12 @@ mstodo workflows via `workflow_dispatch` (secret `GH_ACTIONS_TOKEN`, Actions
 read+write; skipped if a manual run started < 3 min ago), then re-runs
 `initAll()` after 1 and 2 minutes. On `*.github.io` it only re-runs `initAll()`.
 Scheduled runs are heavily throttled by GitHub (~5/day per workflow in practice),
-so this button is the way to get current data on demand. See `CLOUDFLARE.md`.
+so the workflows are actually driven by the Cloudflare Worker
+`workers/scheduler/` (Cron Trigger every 10 min, `workflow_dispatch`): 05:00–07:59
+Europe/Prague every 10 min for netatmo/tuya/growatt/weather/mstodo, otherwise
+every 2 h (+ calendar), plus school_menu/school_calendar at 05:00 — schedule in
+`pickWorkflows()`. The `schedule:` crons in the workflows remain only as a
+fallback. The button is for current data on demand. See `CLOUDFLARE.md`.
 
 `initAll()` first runs `handleMsTodoCallback()` (OAuth2 redirect handling),
 then calls all fetch functions via `Promise.allSettled`, and finally

@@ -1,0 +1,14 @@
+# Plánovač stahování dat (Cloudflare Worker s Cron Triggerem) — viz index.js
+# a CLOUDFLARE.md. Samostatný Worker, nezávislý na Pages projektu dashboardu.
+name = "home-dashboard-scheduler"
+main = "index.js"
+compatibility_date = "2026-06-16"
+# Žádná veřejná URL — Worker se spouští jen cronem
+workers_dev = false
+
+[triggers]
+# Každých 10 min (UTC); co se v daném slotu spustí, rozhoduje pickWorkflows()
+crons = ["*/10 * * * *"]
+
+[observability]
+enabled = true

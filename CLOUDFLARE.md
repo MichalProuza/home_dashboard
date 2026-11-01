@@ -71,6 +71,31 @@ přesun sběru dat mimo Actions (domácí cron / VPS).
   (typ Secret, Production). **Pak redeploy.**
 - Bez tokenu tlačítko ukáže „nelze spustit" a jen znovu načte stávající data.
 
+### 3c. Plánovač — Worker s Cron Triggerem (`workers/scheduler/`)
+GitHub plánované běhy (`schedule`) reálně pouští ~5× denně, proto workflowy
+pravidelně spouští samostatný Worker přes `workflow_dispatch`:
+5:00–7:59 pražského času každých 10 min (Netatmo, Tuya, Growatt, Počasí, To Do),
+jinak každé 2 h (+ kalendář), v 5:00 navíc jídelníček a akce ZŠ. Rozvrh je
+v `pickWorkflows()` v `workers/scheduler/index.js`. `schedule` v GitHub
+workflowech zůstávají jako záloha.
+
+**⚠️ Nejdřív vypni Preview buildy z větve `data`** (Pages projekt → Settings →
+Builds → Branch control → Preview branches: None, nebo Exclude `data`). Každý
+běh workflowu pushne na `data` (~160× denně) a každý push by jinak spustil
+Preview build — limit Free plánu je 500 buildů/měsíc.
+
+Nasazení (stačí jednou, kód se mění zřídka):
+- Workers & Pages → **Create** → **Worker** → *Start with Hello World* →
+  název `home-dashboard-scheduler` → **Deploy** → **Edit code** → obsah
+  `workers/scheduler/index.js` vložit místo vzorového kódu → **Deploy**.
+- Worker → Settings → **Variables and Secrets** → **`GH_ACTIONS_TOKEN`**
+  (Secret, stejný token jako u Pages).
+- Worker → Settings → **Trigger events** (Triggers) → **Cron Triggers** →
+  `*/10 * * * *`.
+- Ověření: Worker → **Logs** (Observability) / Cron Events — každých 10 min
+  ráno „spuštěno 5/5"; na GitHubu Actions běhy s událostí `workflow_dispatch`.
+- Po změně `index.js` v repu kód do Workeru znovu vložit (Edit code → Deploy).
+
 ### 4. Microsoft To Do v prohlížeči (jen index.html)
 - Browser To Do dělá OAuth redirect na aktuální URL. Po přesunu na novou doménu
   je nutné v **Azure → App registrations → [app] → Authentication** přidat pod
