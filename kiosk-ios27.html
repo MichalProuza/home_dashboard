@@ -87,6 +87,16 @@
     }
     #datum .day { color: var(--label); font-weight: 600; display: block; }
 
+    /* Tlačítko „obnovit" vpravo v liště (velký cíl pro prst) */
+    .topbar-right { margin-left: auto; }
+    #refresh-btn {
+      -webkit-appearance: none; border: none; cursor: pointer; margin-left: 2vmin;
+      font-family: inherit; font-size: 1rem; font-weight: 600; white-space: nowrap;
+      color: var(--accent); background: var(--fill); border-radius: 1.4vmin;
+      padding: 1.1vmin 1.8vmin;
+    }
+    #refresh-btn:active { background: var(--fill-2); }
+
     /* ── Mřížka widgetů přes celou obrazovku ─────────────────────────────── */
     main {
       height: calc(100% - 8.4vmin);
@@ -245,6 +255,7 @@
   <header class="topbar">
     <span id="clock">--:--</span>
     <span class="topbar-right"><span id="datum">&nbsp;</span></span>
+    <button id="refresh-btn" type="button" onclick="refreshNow()">↻ obnovit</button>
   </header>
 
   <main>
@@ -713,6 +724,38 @@ function fetchMsTodo() {
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání úkolů</div>';
   });
+}
+
+// ── Tlačítko „obnovit" ───────────────────────────────────
+// Na Cloudflare spustí stahovací workflowy (Pages Function /api/refresh) —
+// doběhnou za ~20–90 s, proto data znovu načteme po 1 a po 2 minutách.
+// Na GitHub Pages /api/refresh není → jen znovu načíst data.
+var REFRESH_LABEL = '↻ obnovit';
+var refreshBusy = false;
+
+function setRefreshLabel(txt) {
+  document.getElementById('refresh-btn').textContent = txt;
+}
+
+function refreshNow() {
+  if (refreshBusy) return;
+  if (location.hostname.indexOf('github.io') !== -1) { initAll(); return; }
+  refreshBusy = true;
+  setRefreshLabel('stahuji…');
+  function finish(label, delay) {
+    setRefreshLabel(label);
+    setTimeout(function () { refreshBusy = false; setRefreshLabel(REFRESH_LABEL); }, delay);
+  }
+  fetch('/api/refresh', { method: 'POST', cache: 'no-store', headers: { 'X-Dashboard-Refresh': '1' } })
+    .then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      setTimeout(initAll, 60 * 1000);
+      setTimeout(function () { initAll().then(function () { finish('✓ hotovo', 3000); }); }, 120 * 1000);
+    })
+    .catch(function () {
+      initAll();
+      finish('nelze spustit', 5000);
+    });
 }
 
 // ── Spuštění ─────────────────────────────────────────────

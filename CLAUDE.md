@@ -99,6 +99,15 @@ function called inside `initAll()`:
 | School events (Plán akcí ZŠ) | `fetchZsCalendar()` | `school_calendar.json` (data branch) |
 | Tasks (Úkoly) | `renderTasks()` | `localStorage` (`dashboard_tasks`), managed via `tasks.html` |
 
+The "↺ obnovit" button (header of `index.html`, top bar of both kiosks) calls
+`refreshNow()`: on Cloudflare it POSTs to the Pages Function
+`functions/api/refresh.js`, which triggers the netatmo/tuya/growatt/weather/
+mstodo workflows via `workflow_dispatch` (secret `GH_ACTIONS_TOKEN`, Actions
+read+write; skipped if a manual run started < 3 min ago), then re-runs
+`initAll()` after 1 and 2 minutes. On `*.github.io` it only re-runs `initAll()`.
+Scheduled runs are heavily throttled by GitHub (~5/day per workflow in practice),
+so this button is the way to get current data on demand. See `CLOUDFLARE.md`.
+
 `initAll()` first runs `handleMsTodoCallback()` (OAuth2 redirect handling),
 then calls all fetch functions via `Promise.allSettled`, and finally
 `renderTasks()`. It is called on page load, every 15 minutes via
