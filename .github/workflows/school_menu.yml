@@ -23,6 +23,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4
 
+      - name: Load previous data (záloha při chybě scrapu)
+        run: |
+          git fetch origin data 2>/dev/null || true
+          git show origin/data:school_menu.json > data/school_menu.json 2>/dev/null || true
+
       - name: Fetch school menu
         run: python scripts/fetch_school_menu.py
 

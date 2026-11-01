@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Stahuje jídelníček MŠ Vranov ze skolavranov.cz a ukládá do data/school_menu.json.
-Spouští se přes GitHub Actions každý pracovní den.
+Spouští se přes GitHub Actions denně.
 """
 
 import json
 import re
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 try:
@@ -42,6 +42,50 @@ DAY_LABELS = {
 }
 
 
+DAY_ORDER = ["pondeli", "utery", "streda", "ctvrtek", "patek"]
+
+
+def week_monday(week_str: str) -> date | None:
+    """Pondělí týdne z popisku typu "2.11. – 6.11.2026" (rok jen u konce)."""
+    m = re.search(r"(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})?\s*[–—-]\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})",
+                  week_str)
+    if not m:
+        return None
+    sd, sm, sy, _ed, em, ey = m.groups()
+    try:
+        year = int(sy) if sy else int(ey) - (1 if int(sm) > int(em) else 0)  # přes Nový rok
+        start = date(year, int(sm), int(sd))
+    except ValueError:
+        return None
+    return start - timedelta(days=start.weekday())
+
+
+def load_previous() -> dict:
+    """Poslední publikovaný jídelníček (workflow ho obnoví z větve data)."""
+    try:
+        prev = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+        if isinstance(prev.get("days"), dict):
+            return prev
+    except Exception:
+        pass
+    return {}
+
+
+def write_error(now_utc: str, error: str):
+    """Při chybě zachovat poslední známý jídelníček a jen nastavit error."""
+    prev = load_previous()
+    if prev.get("days"):
+        print(f"INFO: Zachovávám poslední jídelníček ({prev.get('week', '')})")
+    output = {
+        "updated": now_utc,
+        "error":   error,
+        "week":    prev.get("week", ""),
+        "days":    prev.get("days", {}),
+    }
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"✓ Uloženo do {OUTPUT_PATH}")
+
+
 def fetch():
     now_utc = datetime.now(timezone.utc).isoformat()
 
@@ -61,14 +105,7 @@ def fetch():
 
     if resp is None or not resp.ok:
         print(f"ERROR: Všechny pokusy selhaly: {last_exc}")
-        output = {
-            "updated": now_utc,
-            "error":   str(last_exc),
-            "week":    "",
-            "days":    {},
-        }
-        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"✓ Uloženo do {OUTPUT_PATH}")
+        write_error(now_utc, str(last_exc))
         return
 
     try:
@@ -123,6 +160,15 @@ def fetch():
         if not days:
             raise RuntimeError("Žádné dny nenalezeny – struktura stránky se možná změnila")
 
+        # Datum každého dne → frontend vybere den podle data, ne jen podle
+        # dne v týdnu (škola zveřejňuje příští týden už v pátek)
+        monday = week_monday(week_str)
+        if monday:
+            for key, day in days.items():
+                day["date"] = (monday + timedelta(days=DAY_ORDER.index(key))).isoformat()
+        else:
+            print(f"WARN: Z popisku týdne nejde určit datum: {week_str!r}")
+
         output = {
             "updated": now_utc,
             "error":   None,
@@ -135,12 +181,8 @@ def fetch():
 
     except Exception as e:
         print(f"ERROR: {e}")
-        output = {
-            "updated": now_utc,
-            "error":   str(e),
-            "week":    "",
-            "days":    {},
-        }
+        write_error(now_utc, str(e))
+        return
 
     OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"✓ Uloženo do {OUTPUT_PATH}")

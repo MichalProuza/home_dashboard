@@ -202,6 +202,9 @@
       border-radius: 2px; color: var(--ink-mid); margin-left: 4px;
     }
     .growatt-updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 8px; }
+    .weather-updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: 8px; }
+    /* Data starší než limit zdroje (viz updatedLabel) */
+    .stale { color: #c0392b; font-weight: 600; }
     .growatt-notice { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; }
 
     /* ── CALENDAR ── */
@@ -310,6 +313,7 @@
     <div class="weather-hours" id="w-hours"></div>
     <div class="weather-hours" id="w-rain-hours"></div>
     <div class="weather-forecast" id="w-forecast"></div>
+    <div class="weather-updated" id="w-updated"></div>
   </section>
 
   <section>
@@ -417,13 +421,30 @@ async function fetchJson(url, opts = {}) {
   return res.json();
 }
 
-// JSON generovaný workflows: primárně z větve "data", fallback lokální ./data/
+// JSON generovaný workflows z větve "data". Záloha ./data/ (seed v main) jen
+// při lokálním vývoji — v produkci by tiše ukázala měsíce stará data jako aktuální.
+const IS_LOCAL = ['localhost', '127.0.0.1', ''].includes(location.hostname);
 async function fetchDataJson(name) {
   try {
     return await fetchJson(`${DATA_BRANCH_BASE}${name}?t=${Date.now()}`);
   } catch (e) {
+    if (!IS_LOCAL) throw e;
     return fetchJson(`./data/${name}?t=${Date.now()}`);
   }
+}
+
+// "data z HH:MM" (+ datum, není-li dnešní); starší než maxMin → varování.
+// Limity (min) u volání = plán workflow + rezerva.
+function updatedLabel(iso, maxMin, prefix = 'data z') {
+  const d = iso ? new Date(iso) : null;
+  if (!d || isNaN(d)) return `<span class="stale">⚠ data bez času aktualizace</span>`;
+  const now = new Date();
+  let txt = d.toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'});
+  if (d.toDateString() !== now.toDateString()) txt = `${d.getDate()}. ${d.getMonth()+1}. ${txt}`;
+  const age = Math.round((now - d) / 60000);
+  if (age <= maxMin) return `${prefix} ${txt}`;
+  const ageTxt = age < 120 ? `${age} min` : age < 48*60 ? `${Math.round(age/60)} h` : `${Math.round(age/1440)} dny`;
+  return `<span class="stale">⚠ ${prefix} ${txt} (před ${ageTxt})</span>`;
 }
 
 // ════════════════════════════════════════════════════════
@@ -494,7 +515,7 @@ async function fetchWeather() {
       +`&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation`
       +`&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,precipitation`
       +`&timezone=Europe%2FPrague&forecast_days=5`;
-    let c, d, h;
+    let c, d, h, upd = '';
     try {
       // Přímý dotaz — nejčerstvější data
       ({current: c, daily: d, hourly: h} = await fetchJson(url));
@@ -503,7 +524,9 @@ async function fetchWeather() {
       const w = await fetchDataJson(WEATHER_JSON_URL);
       if (!w.current || !w.daily) throw new Error(w.error || 'weather.json bez dat');
       c = w.current; d = w.daily; h = w.hourly;
+      upd = updatedLabel(w.updated, 90, 'záložní data z');
     }
+    document.getElementById('w-updated').innerHTML = upd;
     document.getElementById('w-hours').innerHTML = renderHoursForecast(h);
     document.getElementById('w-rain-hours').innerHTML = renderRainForecast(h);
     document.getElementById('w-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
@@ -601,10 +624,7 @@ async function fetchNetatmo() {
     // Graf hluku za posledních 24 h
     if (data.noise?.length) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
 
-    const upd = data.updated
-      ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
-      : '–';
-    html += `<div class="netatmo-updated">data z ${upd}</div>`;
+    html += `<div class="netatmo-updated">${updatedLabel(data.updated, 60)}</div>`;
 
     el.innerHTML = html;
   } catch(e) {
@@ -624,10 +644,6 @@ async function fetchTuya() {
       el.innerHTML = `<div class="gate-notice">Chyba: ${esc(data.error)}</div>`;
       return;
     }
-
-    const upd = data.updated
-      ? new Date(data.updated).toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'})
-      : '–';
 
     const devices = data.devices || [];
     if (!devices.length) {
@@ -649,7 +665,7 @@ async function fetchTuya() {
         <div class="gate-meta">${esc(name)}${online === false ? ' · offline' : ''}</div>`;
     }).join('');
 
-    el.innerHTML = rows + `<div class="gate-meta" style="margin-top:6px">data z ${upd}</div>`;
+    el.innerHTML = rows + `<div class="gate-meta" style="margin-top:6px">${updatedLabel(data.updated, 60)}</div>`;
 
   } catch(e) {
     el.innerHTML = '<div class="gate-notice">data/tuya.json nenalezen – nastav GitHub Secrets a spusť workflow.</div>';
@@ -683,9 +699,6 @@ async function fetchGrowatt() {
     const imp_kwh   = sf(dev?.today_import_kwh);
 
     const fmt_w = w => Math.abs(w)>=1000 ? `${(Math.abs(w)/1000).toFixed(2)} kW` : `${Math.round(Math.abs(w))} W`;
-    const upd   = data.updated
-      ? new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})
-      : '–';
 
     el.innerHTML = `
       <div class="growatt-main">
@@ -715,7 +728,7 @@ async function fetchGrowatt() {
         </div>
       </div>
       ${data.soc?.length ? renderHistoryGraph(data.soc, 'Baterie / 24h', '%') : ''}
-      <div class="growatt-updated">data z ${upd}</div>`;
+      <div class="growatt-updated">${updatedLabel(data.updated, 90)}</div>`;
 
   } catch(e) {
     el.innerHTML='<div class="growatt-notice">data/growatt.json nenalezen – nastav GitHub Actions a přidej secrets.</div>';
@@ -747,7 +760,7 @@ async function fetchCalendar() {
     content.innerHTML=
       `<div class="cal-group-label">Opakující se</div><div class="event-list">${renderEvents(recurring)}</div>`+
       `<div class="cal-group-label">Jednorázové</div><div class="event-list">${renderEvents(single)}</div>`;
-    if (data.updated) notice.textContent=`Aktualizováno: ${new Date(data.updated).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}`;
+    notice.innerHTML = updatedLabel(data.updated, 180, 'Aktualizováno:');
   } catch(e) { notice.textContent=`Chyba kalendáře: ${e.message}`; }
 }
 
@@ -967,7 +980,9 @@ async function fetchZsCalendar() {
   try {
     const data = await fetchDataJson(ZS_CALENDAR_JSON_URL);
 
-    const events = data.events || [];
+    const now = new Date();
+    const todayYmd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const events = (data.events || []).filter(ev => String(ev.date || '') >= todayYmd);
 
     if (data.error && !events.length) {
       el.innerHTML = '<div class="zs-cal-notice">Akce ZŠ se nepodařilo načíst – zkus znovu později.</div>';
@@ -1009,9 +1024,27 @@ async function fetchZsCalendar() {
 const MENU_DAY_MAP = { 0:'pondeli', 1:'pondeli', 2:'utery', 3:'streda', 4:'ctvrtek', 5:'patek', 6:'pondeli' };
 const MENU_DAY_FULL = { pondeli:'Pondělí', utery:'Úterý', streda:'Středa', ctvrtek:'Čtvrtek', patek:'Pátek' };
 
+// Den k zobrazení: dnes, po 16:00 zítra (dnešní oběd je odbytý). Nesou-li dny
+// datum, první den s jídly od cílového dne dál — škola zveřejňuje příští týden
+// už v pátek, takže samotný den v týdnu nestačí.
+function pickMenuDay(days) {
+  const order = ['pondeli','utery','streda','ctvrtek','patek'];
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (now.getHours() >= 16 ? 1 : 0));
+  const pad = n => String(n).padStart(2, '0');
+  const ymd = `${target.getFullYear()}-${pad(target.getMonth()+1)}-${pad(target.getDate())}`;
+  if (order.some(k => days[k]?.date))
+    return order.find(k => days[k]?.meals?.length && days[k].date >= ymd) || null;
+  // Starší data bez data u dnů: podle dne v týdnu, jinak nejbližší další den
+  const dayKey = MENU_DAY_MAP[target.getDay()];
+  return order.slice(order.indexOf(dayKey)).find(k => days[k]?.meals?.length) || null;
+}
+
 function renderMenuDay(dayKey, data) {
+  const ds = data.days[dayKey].date;
+  const d = ds ? new Date(ds + 'T12:00:00') : null;
   return `
-    <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}</div>
+    <div class="menu-day-label">${MENU_DAY_FULL[dayKey]}${d ? ` ${d.getDate()}. ${d.getMonth()+1}.` : ''}</div>
     <div class="menu-week">${esc(data.week||'')}</div>
     <div class="menu-meals">${data.days[dayKey].meals.map(m=>`<div class="menu-meal">${esc(m)}</div>`).join('')}</div>`;
 }
@@ -1021,26 +1054,19 @@ async function fetchSchoolMenu() {
   try {
     const data = await fetchDataJson(SCHOOL_MENU_URL);
 
-    if (data.error) { el.innerHTML=`<div class="menu-notice">Jídelníček se nepodařilo načíst – zkus znovu později.</div>`; return; }
+    const days = data.days || {};
+    if (data.error && !Object.keys(days).length) { el.innerHTML=`<div class="menu-notice">Jídelníček se nepodařilo načíst – zkus znovu později.</div>`; return; }
+    const staleNote = data.error
+      ? '<div class="menu-notice" style="margin-bottom:6px">⚠ jídelníček se nepodařilo obnovit, zobrazuji poslední známý</div>'
+      : '';
 
-    const dayKey  = MENU_DAY_MAP[new Date().getDay()];
-
-    if (data.days?.[dayKey]?.meals?.length) {
-      el.innerHTML = renderMenuDay(dayKey, data);
+    const dayKey = pickMenuDay(days);
+    if (dayKey) {
+      el.innerHTML = staleNote + renderMenuDay(dayKey, data);
       return;
     }
 
-    // Dnešní den nemá jídla – zkus zobrazit nejbližší dostupný den v týdnu
-    const dayOrder = ['pondeli','utery','streda','ctvrtek','patek'];
-    const todayIdx = dayOrder.indexOf(dayKey);
-    const fallbackKey = dayOrder.slice(todayIdx + 1).find(k => data.days?.[k]?.meals?.length);
-
-    if (fallbackKey) {
-      el.innerHTML = renderMenuDay(fallbackKey, data);
-      return;
-    }
-
-    el.innerHTML=`<div class="menu-notice">Jídelníček pro tento týden zatím není k dispozici${data.week ? ' ('+esc(data.week)+')' : ''}.</div>`;
+    el.innerHTML=staleNote+`<div class="menu-notice">Jídelníček pro tento týden zatím není k dispozici${data.week ? ' ('+esc(data.week)+')' : ''}.</div>`;
 
   } catch(e) {
     el.innerHTML='<div class="menu-notice">data/school_menu.json nenalezen – spusť workflow.</div>';
