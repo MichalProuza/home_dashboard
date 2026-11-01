@@ -41,7 +41,7 @@ home_dashboard/
     ├── tuya.yml                    # fetch_tuya.py (every 30 min + manual)
     ├── netatmo.yml                 # fetch_netatmo.py (every 15 min + manual)
     ├── weather.yml                 # fetch_weather.py (every 30 min + manual)
-    ├── school_menu.yml             # fetch_school_menu.py (weekdays 05:00 UTC)
+    ├── school_menu.yml             # fetch_school_menu.py (daily 05:00 UTC)
     ├── school_calendar.yml         # fetch_school_calendar.py (daily 05:00 UTC)
     ├── calendar.yml                # fetch_calendar.py (every hour + manual)
     └── mstodo.yml                  # fetch_mstodo.py (every 30 min + manual)
@@ -54,8 +54,10 @@ history with bot commits). Instead `scripts/publish_data.sh` pushes the files
 to the root of a dedicated **`data` branch** (auto-created on first run). The
 frontend reads them from
 `https://raw.githubusercontent.com/MichalProuza/home_dashboard/data/<name>.json`
-with a fallback to the local `./data/<name>.json` seed files in `main`
-(used for local development or while the `data` branch does not exist yet).
+(or via the Cloudflare Pages Function `/api/data/`, see `CLOUDFLARE.md`).
+The local `./data/<name>.json` seed files in `main` are used as a fallback
+**only on localhost / `file://`** (`IS_LOCAL`) — in production a silent
+fallback would show months-old seed data as if it were current.
 The `data` branch is disposable — it can be deleted at any time to reset its
 history and will be recreated by the next workflow run (note: deleting it also
 deletes `netatmo_token.enc`, so Netatmo then needs a fresh
@@ -106,8 +108,13 @@ then calls all fetch functions via `Promise.allSettled`, and finally
 Shared helpers at the top of the script: `esc()` (HTML-escapes all external
 strings before they are inserted via `innerHTML`), `fetchJson()` (fetch with
 `cache: 'no-store'`, a 15 s timeout, and an HTTP status check) and
-`fetchDataJson(name)` (loads workflow-generated JSON from the `data` branch
-with a fallback to local `./data/`). Use them for any new section.
+`fetchDataJson(name)` (loads workflow-generated JSON from the `data` branch,
+with a fallback to local `./data/` only when `IS_LOCAL`). Use them for any new
+section. Data age is shown via `updatedLabel(iso, maxMin)` in `index.html`
+(`updatedHtml(iso, maxMin)` in the kiosks): "data z HH:MM", plus the date when
+it is not today, and a red ⚠ with the age once older than `maxMin` minutes
+(limits per section = workflow schedule + slack: Netatmo/Tuya 60, Growatt/
+weather/To Do 90, calendar 180).
 
 ---
 
@@ -193,6 +200,7 @@ GitHub Actions (scheduled / manual)
 GitHub Pages (main) serves index.html
   └─► browser fetches JSON from raw.githubusercontent.com (data branch,
       cache-busted with ?t=Date.now()), fallback to local ./data/ seeds
+      only on localhost
   └─► browser calls Open-Meteo / Microsoft Graph APIs directly
 ```
 
@@ -205,7 +213,7 @@ the pre-built JSON files or is fetched client-side.
 
 | Workflow | Schedule | Runner | Key secrets |
 |----------|----------|--------|-------------|
-| `school_menu.yml` | `0 5 * * 1-5` (05:00 UTC weekdays) + manual | `ubuntu-latest` | — |
+| `school_menu.yml` | `0 5 * * *` (05:00 UTC daily) + manual | `ubuntu-latest` | — |
 | `school_calendar.yml` | `0 5 * * *` (05:00 UTC daily) + manual | `ubuntu-latest` | — |
 | `growatt.yml` | `*/15 4-19 * * *` + hourly at night + manual | `ubuntu-latest` | `GROWATT_USER`, `GROWATT_PASS` |
 | `tuya.yml` | `*/30 * * * *` (every 30 min) + manual | `ubuntu-latest` | `TUYA_*` |
@@ -358,14 +366,20 @@ from the `data` branch before each run so the script can append to it
   "error": null,
   "week": "24.2.-28.2.2025",
   "days": {
-    "pondeli": {"name": "Pondělí", "meals": ["Polévka: ...", "Oběd 1: ..."]},
-    "utery":   {"name": "Úterý",   "meals": [...]},
-    "streda":  {"name": "Středa",  "meals": [...]},
-    "ctvrtek": {"name": "Čtvrtek", "meals": [...]},
-    "patek":   {"name": "Pátek",   "meals": [...]}
+    "pondeli": {"name": "Pondělí", "date": "2025-02-24", "meals": ["Polévka: ...", "Oběd 1: ..."]},
+    "utery":   {"name": "Úterý",   "date": "2025-02-25", "meals": [...]},
+    "streda":  {"name": "Středa",  "date": "2025-02-26", "meals": [...]},
+    "ctvrtek": {"name": "Čtvrtek", "date": "2025-02-27", "meals": [...]},
+    "patek":   {"name": "Pátek",   "date": "2025-02-28", "meals": [...]}
   }
 }
 ```
+`date` is derived from `week` (omitted if the label can't be parsed). The
+frontends pick the first day with meals on or after today (tomorrow after
+16:00) by `date` — the school publishes next week's menu already on Friday, so
+the weekday alone is not enough; without `date` they fall back to the weekday.
+On scrape failure the script keeps the previous `week`/`days` (the workflow
+restores `school_menu.json` from the `data` branch first) and sets `error`.
 
 ### `data/calendar.json`
 ```json
@@ -397,8 +411,10 @@ from the `data` branch before each run so the script can append to it
   ]
 }
 ```
-On scrape failure the script keeps the previously stored `events` and sets
-`error`; the frontend then shows them with a stale-data warning.
+On scrape failure the script keeps the previously stored upcoming `events`
+(the workflow restores `school_calendar.json` from the `data` branch first;
+past events are dropped) and sets `error`; the frontend then shows them with a
+stale-data warning.
 
 ### `data/weather.json`
 ```json

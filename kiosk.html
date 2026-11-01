@@ -112,6 +112,8 @@
     .notice { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink-light); font-style: italic; }
     /* "data z HH:MM" se drží u spodního okraje buňky */
     .updated { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); margin-top: auto; padding-top: 0.6vmin; }
+    .updated.stale { color: #b3261e; font-weight: 700; }
+    body.night .updated.stale { color: #e5675c; }
 
     /* Počasí — trojice dominantních teplot: teď / 10:00 / 14:00 */
     .w-trio { display: table; width: 100%; table-layout: fixed; margin-bottom: 0.9vmin; }
@@ -259,9 +261,14 @@ function fetchJson(url) {
   });
 }
 
+// Záloha ./data/ (seed v main) jen při lokálním vývoji — v produkci by tiše
+// ukázala měsíce stará data jako aktuální
+var IS_LOCAL = /^(localhost|127\.0\.0\.1|)$/.test(location.hostname);
+
 function fetchDataJson(name) {
-  return fetchJson(DATA_BRANCH_BASE + name + '?t=' + Date.now())
-    .catch(function () { return fetchJson('./data/' + name + '?t=' + Date.now()); });
+  var p = fetchJson(DATA_BRANCH_BASE + name + '?t=' + Date.now());
+  if (!IS_LOCAL) return p;
+  return p.catch(function () { return fetchJson('./data/' + name + '?t=' + Date.now()); });
 }
 
 // Safari 12 neumí ISO datum s mikrosekundami → ořež na milisekundy
@@ -274,6 +281,25 @@ function safeDate(iso) {
 function fmtTime(iso) {
   var d = safeDate(iso);
   return d ? d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) : '–';
+}
+
+function fmtAge(min) {
+  if (min < 120) return 'před ' + min + ' min';
+  if (min < 48 * 60) return 'před ' + Math.round(min / 60) + ' h';
+  return 'před ' + Math.round(min / 1440) + ' dny';
+}
+
+// "data z HH:MM" (+ datum, není-li dnešní); starší než maxMin → varování.
+// Limity (min) u volání = plán workflow + rezerva.
+function updatedHtml(iso, maxMin) {
+  var d = safeDate(iso);
+  if (!d) return '<div class="updated stale">⚠ data bez času aktualizace</div>';
+  var now = new Date();
+  var txt = fmtTime(iso);
+  if (d.toDateString() !== now.toDateString()) txt = d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + txt;
+  var age = Math.round((now.getTime() - d.getTime()) / 60000);
+  if (age > maxMin) return '<div class="updated stale">⚠ data z ' + txt + ' (' + fmtAge(age) + ')</div>';
+  return '<div class="updated">data z ' + txt + '</div>';
 }
 
 // Lokální půlnoc z "YYYY-MM-DD" (Date.parse by vrátil UTC)
@@ -365,7 +391,7 @@ function fetchWeather() {
         + '<div class="forecast-icon">' + (WMO_ICON[d.weather_code[i]] || '–') + '</div>'
         + '<div class="forecast-temps">' + Math.round(d.temperature_2m_max[i]) + '° / ' + Math.round(d.temperature_2m_min[i]) + '°</div></div>';
     }
-    html += '</div><div class="updated">data z ' + fmtTime(w.updated) + '</div>';
+    html += '</div>' + updatedHtml(w.updated, 90);
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání počasí</div>';
@@ -400,7 +426,7 @@ function fetchNetatmo() {
     });
     html += '</div>';
     if (data.noise && data.noise.length > 1) html += renderHistoryGraph(data.noise, 'Hluk / 24h', 'dB');
-    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    html += updatedHtml(data.updated, 60);
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání Netatmo</div>';
@@ -467,7 +493,7 @@ function fetchGrowatt() {
       + '<div class="gw-cell-sub">celkem ' + num(dev.total_kwh).toFixed(0) + ' kWh</div></div>'
       + '</div></div>';
     if (data.soc && data.soc.length > 1) html += renderHistoryGraph(data.soc, 'Baterie / 24h', '%');
-    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    html += updatedHtml(data.updated, 90);
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání Growatt</div>';
@@ -488,7 +514,7 @@ function fetchTuya() {
         + '<span class="gate-text">' + txt + '</span>'
         + '<span class="gate-name">' + esc(dev.device_name || '–') + (dev.online === false ? ' · offline' : '') + '</span></div>';
     });
-    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    html += updatedHtml(data.updated, 60);
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání senzorů</div>';
@@ -532,15 +558,30 @@ function fetchSchoolMenu() {
   var el = document.getElementById('menu-content');
   return fetchDataJson('school_menu.json').then(function (data) {
     var keys = ['nedele', 'pondeli', 'utery', 'streda', 'ctvrtek', 'patek', 'sobota'];
+    var days = data.days || {};
     // Po 16:00 už ukaž zítřejší den (dnešní oběd je odbytý)
     var now = new Date();
-    var idx = now.getDay() + (now.getHours() >= 16 ? 1 : 0);
-    var day = (data.days || {})[keys[idx]];
+    var target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (now.getHours() >= 16 ? 1 : 0));
+    var dated = keys.some(function (k) { return days[k] && days[k].date; });
+    var day = null;
+    if (dated) {
+      // Dny nesou datum → první den s jídly od cílového dne dál (škola
+      // zveřejňuje příští týden už v pátek, samotný den v týdnu nestačí)
+      keys.slice(1, 6).forEach(function (k) {
+        var dd = days[k], d = dd && localDate(dd.date);
+        if (!day && d && d.getTime() >= target.getTime() && (dd.meals || []).length) day = dd;
+      });
+    } else {
+      day = days[keys[target.getDay()]];   // starší data bez data u dnů
+    }
+    var html = data.error ? '<div class="notice">⚠ jídelníček se nepodařilo obnovit</div>' : '';
     if (!day || !(day.meals || []).length) {
-      el.innerHTML = '<div class="notice">dnes se nevaří</div>';
+      el.innerHTML = html + '<div class="notice">' + (dated ? 'jídelníček zatím není k dispozici' : 'dnes se nevaří') + '</div>';
       return;
     }
-    var html = '<div class="menu-day-name">' + esc(day.name) + (data.week ? ' · ' + esc(data.week) : '') + '</div>';
+    var dd = localDate(day.date);
+    html += '<div class="menu-day-name">' + esc(day.name)
+      + (dd ? ' ' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '.' : (data.week ? ' · ' + esc(data.week) : '')) + '</div>';
     day.meals.forEach(function (m) { html += '<div class="menu-meal">' + esc(m) + '</div>'; });
     el.innerHTML = html;
   }).catch(function () {
@@ -607,7 +648,7 @@ function fetchMsTodo() {
         + '<div class="' + dueClass + '">' + dueHtml + '</div>'
         + '<div class="todo-title">' + esc(t.title) + '</div></div>';
     });
-    html += '<div class="updated">data z ' + fmtTime(data.updated) + '</div>';
+    html += updatedHtml(data.updated, 90);
     el.innerHTML = html;
   }).catch(function () {
     el.innerHTML = '<div class="notice">chyba načítání úkolů</div>';

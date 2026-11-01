@@ -59,9 +59,11 @@ def fetch():
     old_events = []
     if OUTPUT_PATH.exists():
         try:
+            # Workflow obnoví poslední publikovaná data z větve data; zachovat
+            # je i po opakovaném selhání (error z minula nevadí), jen bez proběhlých akcí
             old_data = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
-            if not old_data.get("error"):
-                old_events = old_data.get("events", [])
+            old_events = [ev for ev in old_data.get("events") or []
+                          if str(ev.get("date", "")) >= today.isoformat()]
         except Exception:
             pass
 
