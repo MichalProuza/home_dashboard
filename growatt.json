@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T04:40:44.432680+00:00",
+  "updated": "2026-11-02T04:50:45.762125+00:00",
   "error": null,
   "plants": [
     {
@@ -17,9 +17,9 @@
           "solar_w": 0.0,
           "battery_pct": 25.0,
           "battery_w": 0.0,
-          "grid_w": 140.0,
+          "grid_w": 240.0,
           "grid_direction": "import",
-          "load_w": 140.0,
+          "load_w": 240.0,
           "today_kwh": 0.0,
           "total_kwh": 18517.5,
           "today_export_kwh": 0.0,
@@ -125,6 +125,10 @@
     },
     {
       "t": 1793594444,
+      "v": 25.0
+    },
+    {
+      "t": 1793595045,
       "v": 25.0
     }
   ]
