@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-02T13:05:17.864382+00:00",
+  "updated": "2026-11-03T04:00:52.244394+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - fotografování",
-      "date": "2026-11-02",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-fotografovani-552_354cs.html"
-    },
     {
       "title": "ZŠ - IT soutěž iBobr - 5. roč.",
       "date": "2026-11-03",
@@ -36,6 +29,13 @@
       "time": "09:00",
       "location": "Horizont - středisko volného času, Ivančice",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/sd-turnaj-deskovych-her-ivancice-469_281cs.html"
+    },
+    {
+      "title": "ZŠ - IT soutěž iBobr - 3.,4. roč.",
+      "date": "2026-11-10",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-it-soutez-ibobr-34-roc-546_348cs.html"
     }
   ]
 }
