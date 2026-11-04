@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-03T12:36:59.376597+00:00",
+  "updated": "2026-11-04T04:00:50.545800+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - IT soutěž iBobr - 5. roč.",
-      "date": "2026-11-03",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-it-soutez-ibobr-5-roc-547_349cs.html"
-    },
     {
       "title": "MŠ - Den s maskou",
       "date": "2026-11-04",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Základní škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-it-soutez-ibobr-34-roc-546_348cs.html"
+    },
+    {
+      "title": "ZŠ - florbalový turnaj Brno",
+      "date": "2026-11-10",
+      "time": "08:00",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-brno-604_400cs.html"
     }
   ]
 }
