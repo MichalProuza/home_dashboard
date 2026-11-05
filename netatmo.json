@@ -1,6 +1,69 @@
 {
-  "updated": "2026-11-05T05:40:47.841650+00:00",
-  "error": "Načtení dat selhalo: 503 Server Error: Service Temporarily Unavailable for url: https://api.netatmo.com/api/getstationsdata",
-  "modules": [],
-  "noise": []
+  "updated": "2026-11-05T05:50:51.446568+00:00",
+  "error": null,
+  "modules": [
+    {
+      "name": "Indoor",
+      "data": {
+        "time_utc": 1793857712,
+        "Temperature": 22.2,
+        "CO2": 471,
+        "Humidity": 40,
+        "Noise": 46,
+        "Pressure": 1035.3,
+        "AbsolutePressure": 980.7,
+        "min_temp": 21.6,
+        "max_temp": 22.2,
+        "date_max_temp": 1793855589,
+        "date_min_temp": 1793841335,
+        "temp_trend": "stable",
+        "pressure_trend": "stable"
+      }
+    },
+    {
+      "name": "NAModule3",
+      "data": {
+        "time_utc": 1793857702,
+        "Rain": 0,
+        "sum_rain_1": 0,
+        "sum_rain_8": 0,
+        "sum_rain_24": 0
+      }
+    },
+    {
+      "name": "Outdoor Module",
+      "data": {
+        "time_utc": 1793857683,
+        "Temperature": 0.2,
+        "Humidity": 85,
+        "min_temp": 0.2,
+        "max_temp": 2.5,
+        "date_max_temp": 1793833434,
+        "date_min_temp": 1793857683,
+        "temp_trend": "down"
+      }
+    }
+  ],
+  "noise": [
+    {
+      "t": 1793772350,
+      "v": 49
+    },
+    {
+      "t": 1793774150,
+      "v": 49
+    },
+    {
+      "t": 1793775950,
+      "v": 42
+    },
+    {
+      "t": 1793777750,
+      "v": 46
+    },
+    {
+      "t": 1793779550,
+      "v": 46
+    }
+  ]
 }
