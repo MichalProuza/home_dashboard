@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-04T12:46:14.415909+00:00",
+  "updated": "2026-11-05T04:00:46.380411+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Den s maskou",
-      "date": "2026-11-04",
-      "time": "07:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-den-s-maskou-494_296cs.html"
-    },
     {
       "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
       "date": "2026-11-05",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-brno-604_400cs.html"
+    },
+    {
+      "title": "ZŠ, MŠ - sv. Martin",
+      "date": "2026-11-11",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-ms-sv-martin-549_351cs.html"
     }
   ]
 }
