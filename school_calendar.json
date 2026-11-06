@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-05T12:55:49.685922+00:00",
+  "updated": "2026-11-06T04:00:50.846194+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-11-05",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-531_333cs.html"
-    },
     {
       "title": "ŠD-Turnaj deskových her Ivančice",
       "date": "2026-11-06",
@@ -36,6 +29,13 @@
       "time": "08:30",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-615_408cs.html"
+    },
+    {
+      "title": "ZŠ, MŠ - sv. Martin",
+      "date": "2026-11-11",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-ms-sv-martin-549_351cs.html"
     }
   ]
 }
