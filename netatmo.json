@@ -1,17 +1,21 @@
 {
-  "updated": "2026-11-07T23:00:48.840747+00:00",
+  "updated": "2026-11-08T01:00:48.883335+00:00",
   "error": null,
   "modules": [
     {
       "name": "Indoor",
       "data": {
-        "time_utc": 1794092134,
-        "Temperature": 21.6,
-        "CO2": 654,
-        "Humidity": 40,
-        "Noise": 40,
-        "Pressure": 1031.9,
-        "AbsolutePressure": 977.5,
+        "time_utc": 1794099411,
+        "Temperature": 21.3,
+        "CO2": 532,
+        "Humidity": 39,
+        "Noise": 36,
+        "Pressure": 1031.6,
+        "AbsolutePressure": 977.2,
+        "min_temp": 21.3,
+        "max_temp": 21.6,
+        "date_max_temp": 1794092437,
+        "date_min_temp": 1794096986,
         "temp_trend": "stable",
         "pressure_trend": "stable"
       }
@@ -19,39 +23,28 @@
     {
       "name": "NAModule3",
       "data": {
-        "time_utc": 1794092128,
+        "time_utc": 1794099409,
         "Rain": 0,
         "sum_rain_1": 0,
-        "sum_rain_8": 0
+        "sum_rain_8": 0,
+        "sum_rain_24": 0
       }
     },
     {
       "name": "Outdoor Module",
       "data": {
-        "time_utc": 1794092083,
-        "Temperature": 0.1,
-        "Humidity": 83,
+        "time_utc": 1794099364,
+        "Temperature": 0.7,
+        "Humidity": 81,
+        "min_temp": 0.2,
+        "max_temp": 0.7,
+        "date_max_temp": 1794097569,
+        "date_min_temp": 1794092699,
         "temp_trend": "stable"
       }
     }
   ],
   "noise": [
-    {
-      "t": 1794006948,
-      "v": 36
-    },
-    {
-      "t": 1794008748,
-      "v": 35
-    },
-    {
-      "t": 1794010548,
-      "v": 36
-    },
-    {
-      "t": 1794012348,
-      "v": 35
-    },
     {
       "t": 1794014148,
       "v": 36
@@ -227,6 +220,22 @@
     {
       "t": 1794091548,
       "v": 37
+    },
+    {
+      "t": 1794093348,
+      "v": 38
+    },
+    {
+      "t": 1794095148,
+      "v": 35
+    },
+    {
+      "t": 1794096948,
+      "v": 36
+    },
+    {
+      "t": 1794098748,
+      "v": 36
     }
   ]
 }
