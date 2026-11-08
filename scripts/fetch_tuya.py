@@ -2,7 +2,7 @@
 """
 Stahuje stav brány (nebo jiného Tuya zařízení) přes Tuya IoT Platform OpenAPI
 a ukládá data do data/tuya.json.
-Spouští se přes GitHub Actions každých 5 minut.
+Spouští se přes GitHub Actions (plán viz workers/scheduler).
 
 Potřebné GitHub Secrets:
   TUYA_ACCESS_ID     – Access ID z Tuya IoT Console (Cloud → projekt → Overview)
@@ -85,9 +85,18 @@ def _headers(access_token: str, method: str, path: str, body: bytes = b"") -> di
 
 
 # ── Tuya API volání ───────────────────────────────────────────────────────────
+# Tuya vrací při opakované žádosti o token stále tentýž access_token, dokud mu
+# nevyprší platnost (2 h). Když běh trefí okamžik těsně před vypršením, token
+# zneplatní mezi dvěma voláními a API odpoví "token invalid" (kód 1010) – pak
+# počkáme, vyžádáme si nový token a volání zopakujeme.
+TOKEN_INVALID_CODES = {1010, 1011}   # token invalid / token expired
+TOKEN_MIN_TTL_S     = 30             # kratší zbytek platnosti → počkat na nový
+TOKEN_RETRIES       = 3
 
-def get_token() -> str:
-    """Získá dočasný access_token."""
+_token = ""
+
+
+def _request_token() -> dict:
     path = "/v1.0/token?grant_type=1"
     t = str(int(time.time() * 1000))
     nonce = ""
@@ -104,35 +113,56 @@ def get_token() -> str:
     data = resp.json()
     if not data.get("success"):
         raise RuntimeError(f"Token chyba: {data.get('msg', data)}")
-    return data["result"]["access_token"]
+    return data["result"]
 
 
-def get_device_status(access_token: str, device_id: str) -> list:
+def get_token() -> str:
+    """Získá dočasný access_token; těsně před vypršením počká na nový."""
+    global _token
+    result = _request_token()
+    ttl = int(result.get("expire_time") or 0)
+    if 0 < ttl < TOKEN_MIN_TTL_S:
+        print(f"INFO: Token vyprší za {ttl} s – čekám na nový.")
+        time.sleep(ttl + 2)
+        result = _request_token()
+        ttl = int(result.get("expire_time") or 0)
+    print(f"INFO: Token platný ještě {ttl} s.")
+    _token = result["access_token"]
+    return _token
+
+
+def _api_get(path: str) -> dict:
+    """GET na Tuya OpenAPI; při zneplatněném tokenu si vyžádá nový a zopakuje."""
+    for attempt in range(TOKEN_RETRIES):
+        resp = SESSION.get(
+            BASE_URL + path,
+            headers=_headers(_token, "GET", path),
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if (data.get("success") or data.get("code") not in TOKEN_INVALID_CODES
+                or attempt == TOKEN_RETRIES - 1):
+            return data
+        print(f"WARN: {data.get('msg')} (kód {data.get('code')}) – nový token, pokus {attempt + 2}.")
+        time.sleep(2 * (attempt + 1))
+        get_token()
+    return data
+
+
+def get_device_status(device_id: str) -> list:
     """Vrátí seznam data pointů zařízení."""
-    path = f"/v1.0/iot-03/devices/{device_id}/status"
-    resp = SESSION.get(
-        BASE_URL + path,
-        headers=_headers(access_token, "GET", path),
-        timeout=10,
-    )
-    resp.raise_for_status()
-    data = resp.json()
+    data = _api_get(f"/v1.0/iot-03/devices/{device_id}/status")
     if not data.get("success"):
         raise RuntimeError(f"Status chyba: {data.get('msg', data)}")
     return data.get("result", [])
 
 
-def get_device_info(access_token: str, device_id: str) -> dict:
+def get_device_info(device_id: str) -> dict:
     """Vrátí základní informace o zařízení (jméno, online stav…)."""
-    path = f"/v1.0/iot-03/devices/{device_id}"
-    resp = SESSION.get(
-        BASE_URL + path,
-        headers=_headers(access_token, "GET", path),
-        timeout=10,
-    )
-    resp.raise_for_status()
-    data = resp.json()
+    data = _api_get(f"/v1.0/iot-03/devices/{device_id}")
     if not data.get("success"):
+        print(f"WARN: Info o zařízení {device_id}: {data.get('msg', data)}")
         return {}
     return data.get("result", {})
 
@@ -180,14 +210,14 @@ def interpret_gate(dps: list) -> dict:
 
 
 # ── Pomocná funkce pro jedno zařízení ─────────────────────────────────────────
-def fetch_device(token: str, device_id: str) -> dict:
+def fetch_device(device_id: str) -> dict:
     """Stáhne info a stav jednoho zařízení, vrátí slovník pro výstupní JSON."""
-    info = get_device_info(token, device_id)
+    info = get_device_info(device_id)
     device_name = info.get("name", device_id)
     online = info.get("online", None)
     print(f"INFO: Zařízení: {device_name}, online: {online}")
 
-    dps = get_device_status(token, device_id)
+    dps = get_device_status(device_id)
     print(f"INFO: Data pointy: {dps}")
 
     gate = interpret_gate(dps)
@@ -208,13 +238,13 @@ def fetch():
 
     try:
         print(f"INFO: Připojuji se k Tuya OpenAPI ({HOST})…")
-        token = get_token()
+        get_token()
         print(f"INFO: Token získán. Zpracovávám {len(DEVICE_IDS)} zařízení.")
 
         devices = []
         for device_id in DEVICE_IDS:
             print(f"INFO: Načítám zařízení {device_id}…")
-            devices.append(fetch_device(token, device_id))
+            devices.append(fetch_device(device_id))
 
         output = {
             "updated": now_utc,

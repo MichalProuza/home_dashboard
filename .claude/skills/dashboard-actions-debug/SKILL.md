@@ -88,6 +88,14 @@ other's credentials. Both workflows carry `concurrency: {group: …,
 cancel-in-progress: false}`. If such a source dies intermittently around
 schedule boundaries, check that the group is still there.
 
+**A Tuya access token expiring mid-run.** Tuya hands out the same access token
+until its 2 h validity runs out, so a run that lands right before expiry gets
+`token invalid` (code 1010) a few milliseconds later — the JSON then carries
+`"Status chyba: token invalid"` and no devices until the next run. Random
+times, never two runs in a row. `fetch_tuya.py` therefore waits out a token
+with < 30 s left and retries any call that hits 1010 with a fresh token
+(`fix: Tuya – nový token při „token invalid"`).
+
 **An empty token file wiping a valid stored token.** If loading the encrypted
 token fails and the script writes an empty file anyway, the source is bricked
 until the seed secret is reissued (`fix: nemazat platný uložený Netatmo token
