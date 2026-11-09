@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09T04:00:45.814917+00:00",
+  "updated": "2026-11-09T13:32:28.473507+00:00",
   "error": null,
   "week": "9. 11 .- 13.11.2026",
   "days": {
@@ -34,8 +34,8 @@
       "name": "Čtvrtek",
       "meals": [
         "ovocná kapsička",
-        "špenátová polévka 1,7",
-        "kuřecí steak, brambory, listový salát 7",
+        "zeleninový vývar 1,9",
+        "farmářský guláš, pletýnka 1",
         "sedlácká bageta, pomazánka budapešť, mandarinka1,7"
       ]
     },
@@ -43,8 +43,8 @@
       "name": "Pátek",
       "meals": [
         "zapečený toust, paprika 1,7",
-        "zeleninový vývar 1,9",
-        "farmářský guláš, pletýnka 1",
+        "špenátová polévka 1,7",
+        "kuřecí steak, brambory, listový salát 7",
         "croissant s máslem 1,7"
       ]
     }
