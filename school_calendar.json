@@ -1,7 +1,14 @@
 {
-  "updated": "2026-11-10T04:00:50.417813+00:00",
+  "updated": "2026-11-10T13:15:02.595393+00:00",
   "error": null,
   "events": [
+    {
+      "title": "ZŠ - florbalový turnaj",
+      "date": "2026-11-10",
+      "time": "08:30",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-615_408cs.html"
+    },
     {
       "title": "ZŠ - IT soutěž iBobr - 3.,4. roč.",
       "date": "2026-11-10",
@@ -15,13 +22,6 @@
       "time": "08:00",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-brno-604_400cs.html"
-    },
-    {
-      "title": "ZŠ - florbalový turnaj",
-      "date": "2026-11-10",
-      "time": "08:30",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-615_408cs.html"
     },
     {
       "title": "ZŠ, MŠ - sv. Martin",
