@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10T11:00:48.921196+00:00",
+  "updated": "2026-11-10T13:00:47.548296+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -225,11 +225,6 @@
     },
     {
       "title": "R5 deal",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "Rumánek web",
       "due": null,
       "important": false
     }
