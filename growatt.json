@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10T05:50:47.543022+00:00",
+  "updated": "2026-11-10T06:00:48.393147+00:00",
   "error": null,
   "plants": [
     {
@@ -16,14 +16,14 @@
           "status": 6,
           "solar_w": 0.0,
           "battery_pct": 25.0,
-          "battery_w": 0.0,
-          "grid_w": 2120.0,
+          "battery_w": 0.9,
+          "grid_w": 380.0,
           "grid_direction": "import",
-          "load_w": 2120.0,
+          "load_w": 380.0,
           "today_kwh": 0.0,
           "total_kwh": 18605.0,
           "today_export_kwh": 0.0,
-          "today_import_kwh": 2.1
+          "today_import_kwh": 2.3
         },
         {
           "sn": "meter",
@@ -35,10 +35,6 @@
     }
   ],
   "soc": [
-    {
-      "t": 1794204046,
-      "v": 25.0
-    },
     {
       "t": 1794204647,
       "v": 25.0
@@ -161,6 +157,10 @@
     },
     {
       "t": 1794289847,
+      "v": 25.0
+    },
+    {
+      "t": 1794290448,
       "v": 25.0
     }
   ]
