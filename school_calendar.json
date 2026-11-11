@@ -1,28 +1,7 @@
 {
-  "updated": "2026-11-10T13:15:02.595393+00:00",
+  "updated": "2026-11-11T04:00:45.527161+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - florbalový turnaj",
-      "date": "2026-11-10",
-      "time": "08:30",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-615_408cs.html"
-    },
-    {
-      "title": "ZŠ - IT soutěž iBobr - 3.,4. roč.",
-      "date": "2026-11-10",
-      "time": "08:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-it-soutez-ibobr-34-roc-546_348cs.html"
-    },
-    {
-      "title": "ZŠ - florbalový turnaj Brno",
-      "date": "2026-11-10",
-      "time": "08:00",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-florbalovy-turnaj-brno-604_400cs.html"
-    },
     {
       "title": "ZŠ, MŠ - sv. Martin",
       "date": "2026-11-11",
@@ -36,6 +15,27 @@
       "time": "08:00",
       "location": "Kuřim",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-532_334cs.html"
+    },
+    {
+      "title": "ZŠ - třídní schůzky",
+      "date": "2026-11-18",
+      "time": "17:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-tridni-schuzky-554_356cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-11-19",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-533_335cs.html"
+    },
+    {
+      "title": "MŠ - Fotografování v obou třídách",
+      "date": "2026-11-23",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fotografovani-v-obou-tridach-582_384cs.html"
     }
   ]
 }
