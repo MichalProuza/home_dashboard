@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-11T12:25:41.303018+00:00",
+  "updated": "2026-11-12T04:00:44.185187+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ, MŠ - sv. Martin",
-      "date": "2026-11-11",
-      "time": "17:00",
-      "location": "Základní škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-ms-sv-martin-549_351cs.html"
-    },
     {
       "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
       "date": "2026-11-12",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fotografovani-v-obou-tridach-582_384cs.html"
+    },
+    {
+      "title": "MŠ - Focení dětí",
+      "date": "2026-11-23",
+      "time": "08:00",
+      "location": "Mateřská škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-foceni-deti-524_326cs.html"
     }
   ]
 }
