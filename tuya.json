@@ -1,5 +1,54 @@
 {
-  "updated": "2026-11-12T21:00:45.187116+00:00",
-  "error": "Status chyba: token invalid",
-  "devices": []
+  "updated": "2026-11-12T23:00:45.141578+00:00",
+  "error": null,
+  "devices": [
+    {
+      "device_name": "Garáž ",
+      "online": true,
+      "gate_open": true,
+      "dp_used": "switch",
+      "raw_dps": [
+        {
+          "code": "switch",
+          "value": true
+        },
+        {
+          "code": "battery",
+          "value": 21
+        }
+      ]
+    },
+    {
+      "device_name": "Brána",
+      "online": false,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 100
+        }
+      ]
+    },
+    {
+      "device_name": "Sklep",
+      "online": false,
+      "gate_open": false,
+      "dp_used": "doorcontact_state",
+      "raw_dps": [
+        {
+          "code": "doorcontact_state",
+          "value": false
+        },
+        {
+          "code": "battery_percentage",
+          "value": 44
+        }
+      ]
+    }
+  ]
 }
