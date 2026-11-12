@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-12T19:00:54.183942+00:00",
-  "error": "Načtení úkolů selhalo: 502 Server Error: Bad Gateway for url: https://graph.microsoft.com/v1.0/me/todo/lists",
+  "updated": "2026-11-12T21:01:02.891579+00:00",
+  "error": "Načtení úkolů selhalo: HTTPSConnectionPool(host='graph.microsoft.com', port=443): Read timed out. (read timeout=15)",
   "list": "Vranov",
   "tasks": []
 }
