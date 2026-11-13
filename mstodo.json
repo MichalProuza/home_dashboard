@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-13T04:01:01.515977+00:00",
-  "error": "Načtení úkolů selhalo: HTTPSConnectionPool(host='graph.microsoft.com', port=443): Read timed out. (read timeout=15)",
+  "updated": "2026-11-13T04:10:48.999725+00:00",
+  "error": "Načtení úkolů selhalo: 503 Server Error: Service Unavailable for url: https://graph.microsoft.com/v1.0/me/todo/lists",
   "list": "Vranov",
   "tasks": []
 }
