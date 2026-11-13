@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-13T05:51:01.961635+00:00",
+  "updated": "2026-11-13T06:01:00.841142+00:00",
   "error": "Načtení úkolů selhalo: HTTPSConnectionPool(host='graph.microsoft.com', port=443): Read timed out. (read timeout=15)",
   "list": "Vranov",
   "tasks": []
