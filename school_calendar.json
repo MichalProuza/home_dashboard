@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-12T13:31:17.017203+00:00",
+  "updated": "2026-11-13T04:00:45.706952+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-11-12",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-532_334cs.html"
-    },
     {
       "title": "ZŠ - třídní schůzky",
       "date": "2026-11-18",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Mateřská škola, Vranov",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-foceni-deti-524_326cs.html"
+    },
+    {
+      "title": "ZŠ - Příběhy ze špajzky - Jezírko - 4.třída",
+      "date": "2026-11-25",
+      "time": "08:00",
+      "location": "Jezírko",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-pribehy-ze-spajzky-jezirko-4trida-525_327cs.html"
     }
   ]
 }
