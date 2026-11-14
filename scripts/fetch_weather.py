@@ -35,15 +35,22 @@ URL = (
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "weather.json"
 OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-RETRIES = 5          # Open-Meteo občas vrací přechodné 5xx/429
-BACKOFF_S = 10       # čekání mezi pokusy: 10, 20, 30, 40 s
+RETRIES = 3          # Open-Meteo občas vrací přechodné 5xx/429
+BACKOFF_S = 10       # čekání mezi pokusy: 10, 20 s
+TIMEOUT = (10, 20)   # (connect, read) — škrcená IP runneru se nevzpamatuje, nemá cenu čekat déle
+
+# Návratový kód pro přechodný výpadek (timeout / 5xx / 429 i po opakování).
+# Open-Meteo škrtí část sdílených IP GitHub runnerů, takže zhruba čtvrtina běhů
+# skončí timeoutem; další běh dostane jinou IP a projde. Workflow tento kód
+# bere jako varování (nepublikuje, ale nepadá) — stáří dat hlídá frontend.
+EXIT_TRANSIENT = 75  # EX_TEMPFAIL
 
 
 def get_with_retry():
     last_exc = None
     for attempt in range(1, RETRIES + 1):
         try:
-            res = requests.get(URL, timeout=30)
+            res = requests.get(URL, timeout=TIMEOUT)
             res.raise_for_status()
             return res
         except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as e:
@@ -72,6 +79,16 @@ def fetch():
             "daily": body["daily"],
             "hourly": body.get("hourly"),
         }
+    except (requests.ConnectionError, requests.Timeout) as e:
+        print(f"WARNING: Open-Meteo je dočasně nedostupné: {e}")
+        sys.exit(EXIT_TRANSIENT)
+    except requests.HTTPError as e:
+        status = getattr(e.response, "status_code", None)
+        if status in (429, 500, 502, 503, 504):
+            print(f"WARNING: Open-Meteo je dočasně nedostupné: {e}")
+            sys.exit(EXIT_TRANSIENT)
+        print(f"ERROR: Stažení počasí selhalo: {e}")
+        sys.exit(1)
     except Exception as e:
         print(f"ERROR: Stažení počasí selhalo: {e}")
         sys.exit(1)
