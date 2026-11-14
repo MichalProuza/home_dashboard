@@ -36,6 +36,7 @@ home_dashboard/
 ├── functions/api/                  # Cloudflare Pages Functions: data/[name].js (data proxy), refresh.js (button)
 ├── workers/scheduler/              # Cloudflare Worker with Cron Trigger — runs the fetch workflows on schedule
 ├── garmin-watchface/               # Garmin watch face (Connect IQ, separate project)
+├── README.md                       # Czech overview for people: data flow, frontends, sources, required secrets, local run
 ├── Odkazy.md                        # Useful links (Tuya, etc.)
 ├── .claude/skills/                 # Project skills + check scripts (see "Skills" below)
 └── .github/workflows/
