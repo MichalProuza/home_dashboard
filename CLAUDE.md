@@ -245,6 +245,12 @@ All workflows follow the same pattern:
 4. Run script (injects secrets via `env:`)
 5. `bash scripts/publish_data.sh "<commit message>" <file>.json` → `data` branch
 
+`fetch_weather.py` exits with code 75 on a transient Open-Meteo outage
+(timeout / 5xx / 429 after retries — Open-Meteo throttles part of the shared
+GitHub runner IPs, roughly a quarter of runs). `weather.yml` turns that into a
+warning and skips the publish step instead of failing; the frontend's data-age
+warning covers a prolonged outage.
+
 `netatmo.yml` and `mstodo.yml` additionally load the stored encrypted refresh
 token from the `data` branch before running the script, and use a
 `concurrency` group so two runs can't invalidate each other's rotating token.
