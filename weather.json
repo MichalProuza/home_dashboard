@@ -1,12 +1,12 @@
 {
-  "updated": "2026-11-19T06:50:43.044302+00:00",
+  "updated": "2026-11-19T07:00:42.851628+00:00",
   "error": null,
   "current": {
-    "time": "2026-11-19T07:45",
+    "time": "2026-11-19T08:00",
     "interval": 900,
     "temperature_2m": 5.7,
     "weather_code": 3,
-    "wind_speed_10m": 8.1,
+    "wind_speed_10m": 8.4,
     "relative_humidity_2m": 84,
     "precipitation": 0.0
   },
