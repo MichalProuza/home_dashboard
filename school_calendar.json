@@ -1,14 +1,7 @@
 {
-  "updated": "2026-11-19T14:06:59.791167+00:00",
+  "updated": "2026-11-20T04:00:46.068048+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-11-19",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-533_335cs.html"
-    },
     {
       "title": "MŠ - Fotografování v obou třídách",
       "date": "2026-11-23",
@@ -36,6 +29,13 @@
       "time": "08:00",
       "location": "Kuřim",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-534_336cs.html"
+    },
+    {
+      "title": "ZŠ - Hvězdárna a planetárium Brno - 1. ročník",
+      "date": "2026-11-26",
+      "time": "08:30",
+      "location": "Brno",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hvezdarna-a-planetarium-brno-1-rocnik-566_368cs.html"
     }
   ]
 }
