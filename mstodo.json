@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T07:00:48.286273+00:00",
+  "updated": "2026-11-20T08:59:26.997810+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -229,7 +229,22 @@
       "important": false
     },
     {
-      "title": "Rumánek web",
+      "title": "vysát",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "vytřít",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "opláchnout hračky",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "přilepit zásuvku",
       "due": null,
       "important": false
     }
