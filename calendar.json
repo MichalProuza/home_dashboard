@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T11:00:54.486523+00:00",
+  "updated": "2026-11-21T13:00:45.154740+00:00",
   "error": null,
   "recurring": [
     {
@@ -23,12 +23,6 @@
   ],
   "single": [
     {
-      "summary": "hasiči",
-      "date": "2026-11-21T08:00:00+00:00",
-      "all_day": false,
-      "location": ""
-    },
-    {
       "summary": "Vracov turnaj",
       "date": "2026-11-22T07:00:00+00:00",
       "all_day": false,
@@ -37,6 +31,12 @@
     {
       "summary": "házená brno",
       "date": "2026-12-06T13:00:00+00:00",
+      "all_day": false,
+      "location": ""
+    },
+    {
+      "summary": "Noční trail",
+      "date": "2026-12-12T15:00:00+00:00",
       "all_day": false,
       "location": ""
     }
