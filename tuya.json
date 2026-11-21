@@ -1,10 +1,10 @@
 {
-  "updated": "2026-11-21T05:00:46.010827+00:00",
+  "updated": "2026-11-21T05:10:43.368760+00:00",
   "error": null,
   "devices": [
     {
       "device_name": "Garáž ",
-      "online": false,
+      "online": true,
       "gate_open": true,
       "dp_used": "switch",
       "raw_dps": [
