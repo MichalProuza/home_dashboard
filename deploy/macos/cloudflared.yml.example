@@ -1,0 +1,25 @@
+# Konfigurace cloudflared tunnelu domácího serveru — zkopíruj do
+# ~/.config/home_dashboard/cloudflared.yml a doplň <…>. Postup v HOMESERVER.md.
+#
+# Tunel vystavuje JEN lokální server (127.0.0.1:8787) a JEN na jednom
+# hostname, který je v Cloudflare Access chráněný politikou „Service Auth"
+# (service token pro Pages Functions). Nic jiného z Macu ven nejde.
+
+tunnel: <TUNNEL_UUID>
+credentials-file: /Users/<uživatel>/.cloudflared/<TUNNEL_UUID>.json
+
+ingress:
+  - hostname: dashboard-data.prouza.co.uk
+    service: http://127.0.0.1:8787
+    originRequest:
+      # Druhá pojistka: cloudflared sám ověří Access JWT (Cf-Access-Jwt-Assertion)
+      # a bez platného nepustí požadavek k serveru — i kdyby se Access aplikace
+      # omylem smazala / rozbila. teamName = <team>.cloudflareaccess.com,
+      # audTag = „Application Audience (AUD) Tag" Access aplikace.
+      access:
+        required: true
+        teamName: <team>
+        audTag:
+          - <AUD_TAG>
+  # Vše ostatní odmítnout
+  - service: http_status:404

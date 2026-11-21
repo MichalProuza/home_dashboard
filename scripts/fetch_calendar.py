@@ -10,6 +10,10 @@ import sys
 from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, write_json
+
 try:
     import requests
 except ImportError:
@@ -29,8 +33,7 @@ ICS_URL = os.environ.get("CALENDAR_ICS_URL", "")
 DAYS_AHEAD = int(os.environ.get("CALENDAR_DAYS_AHEAD", "30"))
 MAX_EACH = int(os.environ.get("CALENDAR_MAX_EACH", "3"))  # max na každou skupinu
 
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "calendar.json"
-OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUTPUT_PATH = DATA_DIR / "calendar.json"
 
 try:
     from zoneinfo import ZoneInfo
@@ -41,13 +44,7 @@ except Exception:
 
 def safe_write_error(msg: str):
     now_utc = datetime.now(timezone.utc).isoformat()
-    OUTPUT_PATH.write_text(
-        json.dumps(
-            {"updated": now_utc, "error": msg, "recurring": [], "single": []},
-            ensure_ascii=False, indent=2,
-        ),
-        encoding="utf-8",
-    )
+    write_json(OUTPUT_PATH, {"updated": now_utc, "error": msg, "recurring": [], "single": []})
     print(f"ERROR: {msg}")
 
 
@@ -151,7 +148,7 @@ def fetch():
         "single": single,
     }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(
         f"✓ Uloženo: {len(recurring)} opakujících se, {len(single)} jednorázových "
         f"→ {OUTPUT_PATH}  ({now_utc_str})"

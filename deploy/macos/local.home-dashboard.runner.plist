@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Šablona — install.sh doplní __…__ a uloží do ~/Library/LaunchAgents/.
+     Runner: spouští scripts/fetch_*.py podle rozvrhu (scripts/local/run.py). -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.home-dashboard.runner</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__PYTHON__</string>
+    <string>__REPO__/scripts/local/run.py</string>
+    <string>--log-file</string>
+    <string>__LOGS__/runner.log</string>
+    <string>daemon</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__REPO__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HD_HOME</key>
+    <string>__HD_HOME__</string>
+    <key>HD_ENV_FILE</key>
+    <string>__ENV_FILE__</string>
+    <key>PYTHONUTF8</key>
+    <string>1</string>
+    <key>PATH</key>
+    <string>/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+  <!-- Jen pády / tracebacky; běžný log je runner.log (s rotací) -->
+  <key>StandardOutPath</key>
+  <string>__LOGS__/runner.launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>__LOGS__/runner.launchd.log</string>
+</dict>
+</plist>

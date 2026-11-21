@@ -13,6 +13,11 @@
 //   GH_ACTIONS_TOKEN – fine-grained GitHub token, oprávnění Actions: Read and
 //                      write na repo MichalProuza/home_dashboard. Po přidání
 //                      redeploy. Postup viz CLOUDFLARE.md.
+//
+// S DATA_SOURCE=home (viz functions/api/data/[name].js a HOMESERVER.md) se
+// místo workflowů volá POST <HOME_ORIGIN>/refresh na domácím serveru
+// (scripts/local/server.py) s Access service tokenem — ochranu proti
+// opakování do 3 min tam dělá server sám. Odpověď má stejný tvar.
 
 const REPO = 'MichalProuza/home_dashboard';
 const REF = 'main';
@@ -24,6 +29,9 @@ const MIN_INTERVAL_MS = 3 * 60 * 1000;
 export async function onRequestPost({ request, env }) {
   if (request.headers.get('X-Dashboard-Refresh') !== '1') {
     return json({ error: 'chybí hlavička X-Dashboard-Refresh' }, 400);
+  }
+  if ((env.DATA_SOURCE || 'github').trim().toLowerCase() === 'home') {
+    return refreshHome(env);
   }
   if (!env.GH_ACTIONS_TOKEN) {
     return json({ error: 'chybí GH_ACTIONS_TOKEN' }, 500);
@@ -69,6 +77,40 @@ export async function onRequestPost({ request, env }) {
     return json({ error: `spuštění selhalo (${failed[0]})` }, 502);
   }
   return json({ status: 'started', started: WORKFLOWS.length - failed.length, failed });
+}
+
+// Domácí server za cloudflared + Access (service token)
+async function refreshHome(env) {
+  const origin = String(env.HOME_ORIGIN || '').replace(/\/+$/, '');
+  if (!origin || !env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
+    return json({ error: 'chybí HOME_ORIGIN nebo CF_ACCESS_CLIENT_ID/SECRET' }, 500);
+  }
+  let res;
+  try {
+    res = await fetch(`${origin}/refresh`, {
+      method: 'POST',
+      headers: {
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
+        'X-Dashboard-Refresh': '1',
+        'User-Agent': 'home-dashboard',
+      },
+      redirect: 'manual',
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch (e) {
+    return json({ error: 'domácí server neodpovídá' }, 502);
+  }
+  let body = null;
+  try {
+    body = await res.json();
+  } catch (e) {
+    // přihlašovací stránka Access apod.
+  }
+  if (res.status !== 200 || !body) {
+    return json({ error: `spuštění selhalo (domácí server HTTP ${res.status})` }, 502);
+  }
+  return json(body);
 }
 
 function json(body, status = 200) {

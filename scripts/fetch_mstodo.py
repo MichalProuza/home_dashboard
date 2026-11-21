@@ -8,6 +8,9 @@ a nezvládne interaktivní OAuth přihlášení v prohlížeči.
 Stejně jako u Netatma rotuje refresh token při použití, proto se aktuální
 refresh token udržuje zašifrovaný v data/mstodo_token.enc, který workflow
 publikuje do větve "data" a před dalším během zase načte.
+Na domácím serveru (HD_MODE=local, viz HOMESERVER.md) se mstodo_token.enc ukládá
+lokálně do adresáře state (hd_common.STATE_DIR) a secrets se čtou
+z ~/.config/home_dashboard/env místo z GitHub Secrets.
 
 Potřebné GitHub Secrets:
   MSTODO_CLIENT_ID      – ID aplikace (klienta) z https://portal.azure.com
@@ -35,6 +38,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, STATE_DIR, write_bytes, write_json
+
 try:
     import requests
 except ImportError:
@@ -60,10 +67,8 @@ if not CLIENT_ID or not TOKEN_KEY:
     print("ERROR: Chybí MSTODO_CLIENT_ID nebo MSTODO_TOKEN_KEY.")
     sys.exit(1)
 
-DATA_DIR    = Path(__file__).parent.parent / "data"
 OUTPUT_PATH = DATA_DIR / "mstodo.json"
-TOKEN_PATH  = DATA_DIR / "mstodo_token.enc"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+TOKEN_PATH  = STATE_DIR / "mstodo_token.enc"
 
 TOKEN_URL = f"https://login.microsoftonline.com/{TENANT}/oauth2/v2.0/token"
 GRAPH     = "https://graph.microsoft.com/v1.0"
@@ -93,7 +98,7 @@ def load_refresh_candidates() -> list:
 
 
 def save_refresh_token(token: str):
-    TOKEN_PATH.write_bytes(FERNET.encrypt(token.encode()))
+    write_bytes(TOKEN_PATH, FERNET.encrypt(token.encode()))
 
 
 # ── Microsoft identity platform / Graph ──────────────────────────────────────
@@ -170,7 +175,7 @@ def write_output(error, list_name=None, tasks=None):
         "list":    list_name or LIST_NAME,
         "tasks":   tasks or [],
     }
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}" + (f"  (error: {error})" if error else ""))
 
 

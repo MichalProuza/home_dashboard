@@ -12,6 +12,10 @@ import time
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, write_json
+
 try:
     import requests
     from bs4 import BeautifulSoup
@@ -20,8 +24,7 @@ except ImportError:
     sys.exit(1)
 
 URL = "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/"
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "school_calendar.json"
-OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUTPUT_PATH = DATA_DIR / "school_calendar.json"
 
 MAX_EVENTS = 5
 MAX_RETRIES = 3
@@ -90,7 +93,7 @@ def fetch():
             "error": str(last_exc),
             "events": old_events,
         }
-        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+        write_json(OUTPUT_PATH, output)
         print(f"✓ Uloženo do {OUTPUT_PATH}")
         return
 
@@ -176,7 +179,7 @@ def fetch():
             "events": old_events,
         }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}")
 
 

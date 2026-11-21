@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Šablona — install.sh doplní __…__ a uloží do ~/Library/LaunchAgents/.
+     cloudflared tunnel: vystaví 127.0.0.1:__PORT__ na hostname chráněném Access
+     service tokenem. Konfigurace ~/.config/home_dashboard/cloudflared.yml
+     (vzor cloudflared.yml.example, postup HOMESERVER.md). -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.home-dashboard.cloudflared</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__CLOUDFLARED__</string>
+    <string>tunnel</string>
+    <string>--no-autoupdate</string>
+    <string>--loglevel</string>
+    <string>warn</string>
+    <string>--config</string>
+    <string>__CF_CONFIG__</string>
+    <string>run</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+  <key>StandardOutPath</key>
+  <string>__LOGS__/cloudflared.log</string>
+  <key>StandardErrorPath</key>
+  <string>__LOGS__/cloudflared.log</string>
+</dict>
+</plist>

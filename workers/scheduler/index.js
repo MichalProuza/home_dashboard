@@ -26,7 +26,9 @@ function pragueTime(date) {
   return { h: get('hour'), m: get('minute') };
 }
 
-// Které workflowy spustit v daném 10min slotu
+// Které workflowy spustit v daném 10min slotu.
+// Kopie je v scripts/local/run.py (pick_sources, domácí server, HOMESERVER.md) —
+// při změně rozvrhu upravit obojí.
 export function pickWorkflows(date) {
   const { h, m } = pragueTime(date);
   const firstSlot = m < 10;

@@ -29,6 +29,10 @@ that already bit this repo:
 #!/usr/bin/env python3
 """Co skript dělá + jaké GitHub Secrets potřebuje."""   # docstring in Czech
 
+# Před čtením os.environ: v HD_MODE=local (domácí Mac) načte konfiguraci
+# z ~/.config/home_dashboard/env; DATA_DIR je data/ v Actions, jinak lokální.
+from hd_common import DATA_DIR, write_json
+
 API_KEY = os.environ.get("MYSRC_API_KEY", "")
 # Workflow předává env vždy — i prázdné, když secret chybí. Proto `or`,
 # ne default v get(): prázdný string by přebil výchozí hodnotu.
@@ -38,8 +42,16 @@ if not API_KEY:
     print("ERROR: Chybí MYSRC_API_KEY.")
     sys.exit(1)
 
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "mysrc.json"
+OUTPUT_PATH = DATA_DIR / "mysrc.json"
+# … a zápis vždy přes write_json(OUTPUT_PATH, output) (atomicky: tmp + rename)
 ```
+
+- **`hd_common` for paths and writes.** The same script runs in GitHub
+  Actions and on the home server (`HD_MODE=local`, see `HOMESERVER.md`). Never
+  hard-code `data/`; use `DATA_DIR` for JSON and `STATE_DIR` for rotating
+  token files (`*_token.enc`), and write with `write_json` / `write_bytes`.
+  A new source must also be added to `SOURCES` (and the schedule lists) in
+  `scripts/local/run.py`, and its deps to `deploy/macos/requirements.txt`.
 
 - **`or` instead of a `get()` default for optional env vars.** GitHub Actions
   passes every declared `env:` key, empty string included, when the secret is

@@ -6,6 +6,9 @@ a ukládá je do data/netatmo.json. Spouští se přes GitHub Actions.
 Netatmo refresh tokeny při použití rotují (starý přestane platit), proto se
 aktuální refresh token udržuje zašifrovaný v data/netatmo_token.enc, který
 workflow publikuje do větve "data" a před dalším během zase načte.
+Na domácím serveru (HD_MODE=local, viz HOMESERVER.md) se netatmo_token.enc ukládá
+lokálně do adresáře state (hd_common.STATE_DIR) a secrets se čtou
+z ~/.config/home_dashboard/env místo z GitHub Secrets.
 
 Potřebné GitHub Secrets:
   NETATMO_CLIENT_ID     – Client ID aplikace z https://dev.netatmo.com
@@ -26,6 +29,10 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, STATE_DIR, write_bytes, write_json
 
 try:
     import requests
@@ -49,10 +56,8 @@ if not CLIENT_ID or not CLIENT_SECRET or not TOKEN_KEY:
     print("ERROR: Chybí NETATMO_CLIENT_ID, NETATMO_CLIENT_SECRET nebo NETATMO_TOKEN_KEY.")
     sys.exit(1)
 
-DATA_DIR    = Path(__file__).parent.parent / "data"
 OUTPUT_PATH = DATA_DIR / "netatmo.json"
-TOKEN_PATH  = DATA_DIR / "netatmo_token.enc"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+TOKEN_PATH  = STATE_DIR / "netatmo_token.enc"
 
 API = "https://api.netatmo.com"
 FERNET = Fernet(base64.urlsafe_b64encode(hashlib.sha256(TOKEN_KEY.encode()).digest()))
@@ -80,7 +85,7 @@ def load_refresh_candidates() -> list:
 
 
 def save_refresh_token(token: str):
-    TOKEN_PATH.write_bytes(FERNET.encrypt(token.encode()))
+    write_bytes(TOKEN_PATH, FERNET.encrypt(token.encode()))
 
 
 # ── Netatmo API ───────────────────────────────────────────────────────────────
@@ -194,7 +199,7 @@ def write_output(error, modules=None, noise=None):
         "modules": modules or [],
         "noise":   noise or [],
     }
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}" + (f"  (error: {error})" if error else ""))
 
 
