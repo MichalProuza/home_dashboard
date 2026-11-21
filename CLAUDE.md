@@ -23,7 +23,11 @@ home_dashboard/
 │   ├── fetch_school_calendar.py    # School (ZŠ) event plan scraper
 │   ├── fetch_calendar.py           # Google Calendar events via iCal
 │   ├── fetch_mstodo.py             # Microsoft To Do tasks (rotating token) — server-side so the kiosk can show them
-│   └── publish_data.sh             # Publishes data/*.json to the "data" branch
+│   ├── hd_common.py                # Shared: DATA_DIR/STATE_DIR, atomic write_json/write_bytes; HD_MODE=local loads ~/.config/home_dashboard/env (home server)
+│   ├── publish_data.sh             # Publishes data/*.json to the "data" branch
+│   └── local/                      # Home server (prepared, NOT switched on — see HOMESERVER.md)
+│       ├── run.py                  # Runner: schedule copied from pickWorkflows(), per-source flock, `daemon` / `once` / `plan`
+│       └── server.py               # stdlib HTTP server on 127.0.0.1: GET /data/<x>.json, POST /refresh (3 min guard), GET /healthz
 ├── data/                           # Seed/fallback only — live data is on the "data" branch
 │   ├── growatt.json
 │   ├── tuya.json
@@ -33,10 +37,13 @@ home_dashboard/
 │   ├── school_calendar.json
 │   ├── calendar.json
 │   └── mstodo.json
-├── functions/api/                  # Cloudflare Pages Functions: data/[name].js (data proxy), refresh.js (button)
+├── functions/api/                  # Cloudflare Pages Functions: data/[name].js (data proxy), refresh.js (button); both switch on env DATA_SOURCE=github (default) | home
+├── deploy/macos/                   # Home server on the Mac: launchd plist templates (runner, server, cloudflared), install.sh / uninstall.sh, env.example, cloudflared.yml.example, requirements.txt, import-data-branch.sh
 ├── workers/scheduler/              # Cloudflare Worker with Cron Trigger — runs the fetch workflows on schedule
 ├── garmin-watchface/               # Garmin watch face (Connect IQ, separate project)
 ├── README.md                       # Czech overview for people: data flow, frontends, sources, required secrets, local run
+├── CLOUDFLARE.md                   # Cloudflare Pages + Access + tokens + Worker scheduler (current production setup)
+├── HOMESERVER.md                   # Home server (Mac) variant: setup, tunnel + Access service token, switch-over checklist, rollback
 ├── Odkazy.md                        # Useful links (Tuya, etc.)
 ├── .claude/skills/                 # Project skills + check scripts (see "Skills" below)
 └── .github/workflows/
@@ -224,6 +231,19 @@ GitHub Pages (main) serves index.html
 No server-side rendering; no API gateway. All dynamic data either comes from
 the pre-built JSON files or is fetched client-side.
 
+**Home server variant (prepared, not active).** With `DATA_SOURCE=home` set in
+Cloudflare Pages, the Pages Functions read `<HOME_ORIGIN>/data/<x>.json` and
+POST `<HOME_ORIGIN>/refresh` on a home Mac (cloudflared tunnel, Cloudflare
+Access service token `CF_ACCESS_CLIENT_ID/SECRET`, optional
+`DATA_FALLBACK=github`) instead of the `data` branch / `workflow_dispatch`.
+There `scripts/local/run.py` runs the same `fetch_*.py` with `HD_MODE=local`
+(config from `~/.config/home_dashboard/env`, chmod 600; JSON to
+`~/Library/Application Support/home_dashboard/data/`, rotating tokens to
+`…/state/`). Unset `DATA_SOURCE` = `github` = today's behaviour. Responses of
+`/api/data/*` carry `X-Data-Source: github|home|github-fallback`. The runner's
+schedule must be kept identical to `pickWorkflows()` (check with
+`run.py plan --day …`). Full procedure: `HOMESERVER.md`.
+
 ---
 
 ## GitHub Actions workflows
@@ -263,8 +283,15 @@ token from the `data` branch before running the script, and use a
 - Read credentials from environment variables; exit with code 1 if missing.
 - Use `safe_float(val, default=0.0)` helper for untrusted numeric values.
 - Always write a JSON file with the shape `{"updated": "<ISO UTC>", "error": null|"string", ...}`.
-- Output path is always `Path(__file__).parent.parent / "data" / "<name>.json"`.
+- Output path is always `DATA_DIR / "<name>.json"` and rotating token files
+  `STATE_DIR / "<name>_token.enc"`, both from `scripts/hd_common.py`
+  (imported **before** reading `os.environ`). Write with `write_json()` /
+  `write_bytes()` (atomic temp file + rename). Without `HD_MODE` both dirs are
+  the repo's `data/` (GitHub Actions, unchanged); with `HD_MODE=local` they are
+  outside the repo and the secrets come from `~/.config/home_dashboard/env`.
 - Scripts are standalone — run locally by setting the required env vars.
+- A new source must also be added to `SOURCES` + the schedule lists in
+  `scripts/local/run.py` and its deps to `deploy/macos/requirements.txt`.
 
 Local test run example:
 ```bash
@@ -320,6 +347,9 @@ letter-spacing 0.18 em, `--ink-light` colour).
    and `esc`).
 6. **Wire up**: add `fetch<Name>()` to the `Promise.allSettled(...)` inside
    `initAll()`, and commit a seed `data/<name>.json` to `main` as fallback.
+7. **Home server**: add the source to `SOURCES` (and the schedule lists) in
+   `scripts/local/run.py`, deps to `deploy/macos/requirements.txt`, secrets to
+   `deploy/macos/env.example`.
 
 ---
 

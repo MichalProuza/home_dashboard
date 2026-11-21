@@ -40,6 +40,11 @@ GitHub Actions  ──►  scripts/fetch_*.py  ──►  data/<zdroj>.json
   z `raw.githubusercontent.com` a tlačítko jen znovu načte data.
 - Repozitář i větev `data` jsou veřejné, takže publikovaný JSON (včetně názvů
   úkolů a událostí kalendáře) je veřejně čitelný. Důvody jsou v `CLOUDFLARE.md`.
+- **Domácí server (připraveno, nepřepnuto).** V `HOMESERVER.md` je varianta,
+  kdy data sbírá domácí Mac (`scripts/local/`, `deploy/macos/`) a Pages
+  Functions je čtou přes cloudflared tunnel chráněný Access service tokenem
+  (`DATA_SOURCE=home`). Pak by Actions ani větev `data` nebyly potřeba a repo
+  by šlo přepnout na private. Výchozí `DATA_SOURCE=github` = dnešní stav.
 
 ## Frontendy
 
@@ -94,6 +99,9 @@ Počasí a oba školní zdroje žádné přihlašovací údaje nepotřebují.
 | Pages projekt a Worker plánovače | `GH_ACTIONS_TOKEN` | Actions: Read and write |
 
 Oba tokeny jsou fine-grained, omezené na tento repozitář, a mají expiraci.
+Pro přepnutí na domácí server přibudou v Pages `DATA_SOURCE`, `HOME_ORIGIN`,
+`CF_ACCESS_CLIENT_ID`, `CF_ACCESS_CLIENT_SECRET` (a volitelně `DATA_FALLBACK`),
+viz `HOMESERVER.md`.
 Postup nasazení, Cloudflare Access a údržba jsou v `CLOUDFLARE.md`. Worker
 plánovače se nenasazuje automaticky: po změně `workers/scheduler/index.js` je
 potřeba kód do Workeru vložit znovu.
@@ -122,7 +130,9 @@ TUYA_ACCESS_ID=… TUYA_ACCESS_SECRET=… TUYA_DEVICE_ID=… python3 scripts/fet
 ```
 
 Závislosti jednotlivých skriptů jsou v kroku „Install dependencies"
-příslušného workflow. Výstup takového běhu do `main` necommituj
+příslušného workflow (všechny dohromady v `deploy/macos/requirements.txt`).
+S `HD_MODE=local` skript čte konfiguraci z `~/.config/home_dashboard/env`
+a zapisuje mimo repo — to je režim domácího serveru, viz `HOMESERVER.md`. Výstup takového běhu do `main` necommituj
 (`git checkout -- data/`).
 
 ## Kontroly
@@ -133,7 +143,7 @@ Automatické testy tu nejsou. Před commitem pomáhají tři skripty:
 bash .claude/skills/kiosk-safari12/scripts/check_compat.sh                  # kiosky × Safari 12
 python3 .claude/skills/dashboard-data-source/scripts/validate_data_json.py  # tvar data/*.json
 bash .claude/skills/dashboard-frontend/scripts/check_parity.sh              # zdroj ve všech třech frontendech
-python3 -m py_compile scripts/*.py
+python3 -m py_compile scripts/*.py scripts/local/*.py
 ```
 
 ## Další dokumentace
@@ -141,5 +151,7 @@ python3 -m py_compile scripts/*.py
 - `CLAUDE.md` – podrobná mapa repozitáře: sekce dashboardu, schémata JSON,
   konvence skriptů a commitů.
 - `CLOUDFLARE.md` – nasazení na Cloudflare Pages, Access, tokeny, plánovač.
+- `HOMESERVER.md` – sběr dat na domácím Macu (runner, HTTP server, cloudflared,
+  launchd), checklist přepnutí a rollback.
 - `.claude/skills/README.md` – projektové skilly pro Claude Code a kontrolní
   skripty.

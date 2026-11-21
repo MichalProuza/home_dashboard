@@ -22,6 +22,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, write_json
+
 try:
     import requests
 except ImportError:
@@ -52,8 +56,7 @@ REGION_HOSTS = {
 HOST = REGION_HOSTS.get(REGION, "openapi.tuyaeu.com")
 BASE_URL = f"https://{HOST}"
 
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "tuya.json"
-OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUTPUT_PATH = DATA_DIR / "tuya.json"
 
 # Sdílená session – drží spojení mezi voláními (méně TLS handshaků)
 SESSION = requests.Session()
@@ -230,7 +233,7 @@ def fetch():
             "devices": [],
         }
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}")
 
 

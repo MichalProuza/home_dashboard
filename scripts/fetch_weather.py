@@ -14,6 +14,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, write_json
+
 try:
     import requests
 except ImportError:
@@ -32,8 +36,7 @@ URL = (
     "&timezone=Europe%2FPrague&forecast_days=5"
 )
 
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "weather.json"
-OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUTPUT_PATH = DATA_DIR / "weather.json"
 
 RETRIES = 3          # Open-Meteo občas vrací přechodné 5xx/429
 BACKOFF_S = 10       # čekání mezi pokusy: 10, 20 s
@@ -93,7 +96,7 @@ def fetch():
         print(f"ERROR: Stažení počasí selhalo: {e}")
         sys.exit(1)
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}  ({now_utc})")
 
 if __name__ == "__main__":

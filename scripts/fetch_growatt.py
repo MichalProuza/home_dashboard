@@ -17,6 +17,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Výstupní adresář + atomický zápis; v HD_MODE=local (domácí server) navíc
+# načte konfiguraci z ~/.config/home_dashboard/env — proto před čtením os.environ
+from hd_common import DATA_DIR, write_json
+
 try:
     import growattServer
 except ImportError:
@@ -38,8 +42,7 @@ if not API_TOKEN and (not USERNAME or not PASSWORD):
     sys.exit(1)
 
 # ── Výstupní soubor ───────────────────────────────────────────────────────────
-OUTPUT_PATH = Path(__file__).parent.parent / "data" / "growatt.json"
-OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUTPUT_PATH = DATA_DIR / "growatt.json"
 
 def safe_float(val, default=0.0):
     """Převede hodnotu na float; zvládne i řetězce s jednotkou ('142 W', '0.7 kWh')."""
@@ -310,7 +313,7 @@ def fetch():
     else:
         output = {"updated": now_utc, "error": None, "plants": plants, "soc": soc_history}
 
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(OUTPUT_PATH, output)
     print(f"✓ Uloženo do {OUTPUT_PATH}  ({now_utc})")
 
 if __name__ == "__main__":

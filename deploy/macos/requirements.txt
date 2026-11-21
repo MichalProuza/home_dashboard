@@ -1,0 +1,10 @@
+# Závislosti všech fetch skriptů dohromady (sjednocené kroky „Install
+# dependencies" z .github/workflows/*.yml) + tzdata pro rozvrh runneru.
+# growattServer >= 2.x vyžaduje Python 3.12+.
+requests
+cryptography
+beautifulsoup4
+icalendar
+recurring-ical-events
+growattServer
+tzdata

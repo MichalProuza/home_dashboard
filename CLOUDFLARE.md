@@ -25,14 +25,24 @@ zůstává veřejně čitelná** přes `raw.githubusercontent.com`. Bráno jako 
 riziko (neinzerovaná URL). Plné soukromí dat by vyžadovalo private repo +
 přesun sběru dat mimo Actions (domácí cron / VPS).
 
+**Připraveno, nepřepnuto:** sběr dat na domácím Macu (MacBook Air M1) —
+runner + HTTP server + cloudflared tunnel za Access service tokenem; Pages
+Functions mají přepínač `DATA_SOURCE=github|home` (výchozí `github` = stav
+popsaný v tomto dokumentu). Postup, checklist přepnutí a rollback:
+**`HOMESERVER.md`**.
+
 ## Jak je to poskládané
 
 - `functions/api/data/[name].js` — Pages Function, čte `data` větev přes
   `GH_DATA_TOKEN`, vrací JSON. Povoluje jen názvy `*.json` (žádný path traversal).
+  S `DATA_SOURCE=home` čte místo toho domácí server (`HOME_ORIGIN` +
+  `CF_ACCESS_CLIENT_ID/SECRET`, volitelně `DATA_FALLBACK=github`), viz
+  `HOMESERVER.md`. Hlavička `X-Data-Source` říká, odkud data přišla.
 - `functions/api/refresh.js` — Pages Function pro tlačítko „obnovit" (kiosky i
   index.html): přes `GH_ACTIONS_TOKEN` ručně spustí workflowy Netatmo, Tuya,
   Growatt, Počasí a To Do (`workflow_dispatch`); frontend pak data znovu načte
   po 1 a 2 minutách. Ruční běh v posledních 3 min → nespouští znovu.
+  S `DATA_SOURCE=home` volá `POST <HOME_ORIGIN>/refresh` na domácím serveru.
 - `index.html` i `kiosk.html` — `DATA_BRANCH_BASE` se přepíná podle domény:
   - na `*.github.io` → veřejné `raw`,
   - jinde (Cloudflare doména, i `localhost`) → same-origin `/api/data/`.
