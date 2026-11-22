@@ -1,20 +1,20 @@
 {
-  "updated": "2026-11-22T11:00:45.834703+00:00",
+  "updated": "2026-11-22T13:00:46.238566+00:00",
   "error": null,
   "modules": [
     {
       "name": "Indoor",
       "data": {
-        "time_utc": 1795345065,
-        "Temperature": 22,
-        "CO2": 458,
+        "time_utc": 1795352041,
+        "Temperature": 22.1,
+        "CO2": 567,
         "Humidity": 39,
-        "Noise": 37,
-        "Pressure": 1014.3,
-        "AbsolutePressure": 960.8,
+        "Noise": 58,
+        "Pressure": 1012.9,
+        "AbsolutePressure": 959.5,
         "min_temp": 21,
-        "max_temp": 22,
-        "date_max_temp": 1795344459,
+        "max_temp": 22.3,
+        "date_max_temp": 1795346582,
         "date_min_temp": 1795321515,
         "temp_trend": "stable",
         "pressure_trend": "down"
@@ -23,7 +23,7 @@
     {
       "name": "NAModule3",
       "data": {
-        "time_utc": 1795345064,
+        "time_utc": 1795352036,
         "Rain": 0,
         "sum_rain_1": 0,
         "sum_rain_8": 0,
@@ -33,34 +33,18 @@
     {
       "name": "Outdoor Module",
       "data": {
-        "time_utc": 1795345026,
-        "Temperature": 5,
-        "Humidity": 77,
+        "time_utc": 1795351997,
+        "Temperature": 2.9,
+        "Humidity": 79,
         "min_temp": -3,
-        "max_temp": 5,
-        "date_max_temp": 1795344718,
+        "max_temp": 5.1,
+        "date_max_temp": 1795345333,
         "date_min_temp": 1795326056,
-        "temp_trend": "up"
+        "temp_trend": "down"
       }
     }
   ],
   "noise": [
-    {
-      "t": 1795259745,
-      "v": 47
-    },
-    {
-      "t": 1795261545,
-      "v": 50
-    },
-    {
-      "t": 1795263345,
-      "v": 40
-    },
-    {
-      "t": 1795265145,
-      "v": 42
-    },
     {
       "t": 1795266945,
       "v": 37
@@ -236,6 +220,22 @@
     {
       "t": 1795344345,
       "v": 36
+    },
+    {
+      "t": 1795346145,
+      "v": 36
+    },
+    {
+      "t": 1795347945,
+      "v": 36
+    },
+    {
+      "t": 1795349745,
+      "v": 38
+    },
+    {
+      "t": 1795351545,
+      "v": 61
     }
   ]
 }
