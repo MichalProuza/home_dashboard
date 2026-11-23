@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T05:40:55.111679+00:00",
+  "updated": "2026-11-23T05:50:45.353276+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -225,16 +225,6 @@
     },
     {
       "title": "R5 deal",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "opláchnout hračky",
-      "due": null,
-      "important": false
-    },
-    {
-      "title": "přilepit zásuvku",
       "due": null,
       "important": false
     }
