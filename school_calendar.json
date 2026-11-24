@@ -1,21 +1,7 @@
 {
-  "updated": "2026-11-23T15:40:53.064634+00:00",
+  "updated": "2026-11-24T04:00:46.179114+00:00",
   "error": null,
   "events": [
-    {
-      "title": "MŠ - Fotografování v obou třídách",
-      "date": "2026-11-23",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-fotografovani-v-obou-tridach-582_384cs.html"
-    },
-    {
-      "title": "MŠ - Focení dětí",
-      "date": "2026-11-23",
-      "time": "08:00",
-      "location": "Mateřská škola, Vranov",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/ms-foceni-deti-524_326cs.html"
-    },
     {
       "title": "ZŠ - Příběhy ze špajzky - Jezírko - 4.třída",
       "date": "2026-11-25",
@@ -36,6 +22,20 @@
       "time": "08:30",
       "location": "Brno",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hvezdarna-a-planetarium-brno-1-rocnik-566_368cs.html"
+    },
+    {
+      "title": "ZŠ, MŠ - rozsvícení vánočního stromu",
+      "date": "2026-11-28",
+      "time": "16:30",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-ms-rozsviceni-vanocniho-stromu-551_353cs.html"
+    },
+    {
+      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
+      "date": "2026-12-03",
+      "time": "08:00",
+      "location": "Kuřim",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-535_337cs.html"
     }
   ]
 }
