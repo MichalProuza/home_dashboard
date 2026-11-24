@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-24T05:10:43.028230+00:00",
+  "updated": "2026-11-24T05:20:55.613757+00:00",
   "error": null,
   "current": {
-    "time": "2026-11-24T06:00",
+    "time": "2026-11-24T06:15",
     "interval": 900,
     "temperature_2m": -1.2,
     "weather_code": 2,
