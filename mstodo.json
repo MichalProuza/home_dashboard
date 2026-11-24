@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T10:17:52.925486+00:00",
+  "updated": "2026-11-24T11:00:47.531134+00:00",
   "error": null,
   "list": "Vranov",
   "tasks": [
@@ -225,6 +225,11 @@
     },
     {
       "title": "R5 deal",
+      "due": null,
+      "important": false
+    },
+    {
+      "title": "Nářadí posilovna",
       "due": null,
       "important": false
     }
