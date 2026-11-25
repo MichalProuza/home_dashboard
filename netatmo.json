@@ -1,17 +1,21 @@
 {
-  "updated": "2026-11-24T23:00:51.501803+00:00",
+  "updated": "2026-11-25T01:00:52.159058+00:00",
   "error": null,
   "modules": [
     {
       "name": "Indoor",
       "data": {
-        "time_utc": 1795560682,
-        "Temperature": 21.5,
-        "CO2": 569,
-        "Humidity": 37,
-        "Noise": 37,
-        "Pressure": 1028.5,
-        "AbsolutePressure": 974.2,
+        "time_utc": 1795567957,
+        "Temperature": 21.2,
+        "CO2": 496,
+        "Humidity": 36,
+        "Noise": 36,
+        "Pressure": 1027,
+        "AbsolutePressure": 972.8,
+        "min_temp": 21.2,
+        "max_temp": 21.5,
+        "date_max_temp": 1795561288,
+        "date_min_temp": 1795567047,
         "temp_trend": "stable",
         "pressure_trend": "stable"
       }
@@ -19,39 +23,28 @@
     {
       "name": "NAModule3",
       "data": {
-        "time_utc": 1795560673,
+        "time_utc": 1795567954,
         "Rain": 0,
         "sum_rain_1": 0,
-        "sum_rain_8": 0
+        "sum_rain_8": 0,
+        "sum_rain_24": 0
       }
     },
     {
       "name": "Outdoor Module",
       "data": {
-        "time_utc": 1795560660,
-        "Temperature": -0.8,
-        "Humidity": 76,
-        "temp_trend": "stable"
+        "time_utc": 1795567941,
+        "Temperature": -3.8,
+        "Humidity": 80,
+        "min_temp": -3.8,
+        "max_temp": -0.9,
+        "date_max_temp": 1795561276,
+        "date_min_temp": 1795567633,
+        "temp_trend": "down"
       }
     }
   ],
   "noise": [
-    {
-      "t": 1795475750,
-      "v": 37
-    },
-    {
-      "t": 1795477550,
-      "v": 36
-    },
-    {
-      "t": 1795479350,
-      "v": 36
-    },
-    {
-      "t": 1795481150,
-      "v": 36
-    },
     {
       "t": 1795482950,
       "v": 36
@@ -227,6 +220,22 @@
     {
       "t": 1795560350,
       "v": 37
+    },
+    {
+      "t": 1795562150,
+      "v": 36
+    },
+    {
+      "t": 1795563950,
+      "v": 36
+    },
+    {
+      "t": 1795565750,
+      "v": 36
+    },
+    {
+      "t": 1795567550,
+      "v": 35
     }
   ]
 }
