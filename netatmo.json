@@ -1,29 +1,29 @@
 {
-  "updated": "2026-11-26T03:00:48.212430+00:00",
+  "updated": "2026-11-26T04:00:48.119425+00:00",
   "error": null,
   "modules": [
     {
       "name": "Indoor",
       "data": {
-        "time_utc": 1795661664,
-        "Temperature": 21.3,
-        "CO2": 437,
+        "time_utc": 1795665304,
+        "Temperature": 21.5,
+        "CO2": 440,
         "Humidity": 35,
-        "Noise": 35,
-        "Pressure": 1021.3,
-        "AbsolutePressure": 967.4,
+        "Noise": 36,
+        "Pressure": 1020.9,
+        "AbsolutePressure": 967,
         "min_temp": 21.1,
         "max_temp": 21.5,
         "date_max_temp": 1795647714,
         "date_min_temp": 1795655598,
         "temp_trend": "stable",
-        "pressure_trend": "stable"
+        "pressure_trend": "down"
       }
     },
     {
       "name": "NAModule3",
       "data": {
-        "time_utc": 1795661659,
+        "time_utc": 1795665300,
         "Rain": 0,
         "sum_rain_1": 0,
         "sum_rain_8": 0,
@@ -33,26 +33,18 @@
     {
       "name": "Outdoor Module",
       "data": {
-        "time_utc": 1795661659,
-        "Temperature": -0.8,
+        "time_utc": 1795665300,
+        "Temperature": -0.9,
         "Humidity": 82,
-        "min_temp": -0.8,
+        "min_temp": -1,
         "max_temp": -0.5,
         "date_max_temp": 1795647970,
-        "date_min_temp": 1795660121,
+        "date_min_temp": 1795664992,
         "temp_trend": "stable"
       }
     }
   ],
   "noise": [
-    {
-      "t": 1795576547,
-      "v": 36
-    },
-    {
-      "t": 1795578347,
-      "v": 36
-    },
     {
       "t": 1795580147,
       "v": 35
@@ -236,6 +228,14 @@
     {
       "t": 1795661147,
       "v": 36
+    },
+    {
+      "t": 1795662947,
+      "v": 36
+    },
+    {
+      "t": 1795664747,
+      "v": 35
     }
   ]
 }
