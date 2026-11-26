@@ -1,21 +1,17 @@
 {
-  "updated": "2026-11-26T21:00:44.793306+00:00",
+  "updated": "2026-11-26T23:00:45.172090+00:00",
   "error": null,
   "modules": [
     {
       "name": "Indoor",
       "data": {
-        "time_utc": 1795726789,
-        "Temperature": 21.8,
-        "CO2": 733,
-        "Humidity": 37,
-        "Noise": 36,
-        "Pressure": 1019,
-        "AbsolutePressure": 965.2,
-        "min_temp": 21.1,
-        "max_temp": 22.5,
-        "date_max_temp": 1795711062,
-        "date_min_temp": 1795655598,
+        "time_utc": 1795733459,
+        "Temperature": 21.5,
+        "CO2": 528,
+        "Humidity": 36,
+        "Noise": 35,
+        "Pressure": 1019.3,
+        "AbsolutePressure": 965.5,
         "temp_trend": "stable",
         "pressure_trend": "stable"
       }
@@ -23,44 +19,23 @@
     {
       "name": "NAModule3",
       "data": {
-        "time_utc": 1795726785,
+        "time_utc": 1795733450,
         "Rain": 0,
         "sum_rain_1": 0,
-        "sum_rain_8": 0,
-        "sum_rain_24": 0
+        "sum_rain_8": 0
       }
     },
     {
       "name": "Outdoor Module",
       "data": {
-        "time_utc": 1795726772,
-        "Temperature": -2.1,
-        "Humidity": 89,
-        "min_temp": -2.1,
-        "max_temp": -0.5,
-        "date_max_temp": 1795647970,
-        "date_min_temp": 1795721593,
+        "time_utc": 1795733437,
+        "Temperature": -2.3,
+        "Humidity": 88,
         "temp_trend": "stable"
       }
     }
   ],
   "noise": [
-    {
-      "t": 1795641344,
-      "v": 37
-    },
-    {
-      "t": 1795643144,
-      "v": 37
-    },
-    {
-      "t": 1795644944,
-      "v": 36
-    },
-    {
-      "t": 1795646744,
-      "v": 36
-    },
     {
       "t": 1795648544,
       "v": 36
@@ -236,6 +211,22 @@
     {
       "t": 1795725944,
       "v": 37
+    },
+    {
+      "t": 1795727744,
+      "v": 36
+    },
+    {
+      "t": 1795729544,
+      "v": 36
+    },
+    {
+      "t": 1795731344,
+      "v": 36
+    },
+    {
+      "t": 1795733144,
+      "v": 35
     }
   ]
 }
