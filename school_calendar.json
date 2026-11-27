@@ -1,21 +1,7 @@
 {
-  "updated": "2026-11-26T14:42:55.612981+00:00",
+  "updated": "2026-11-27T04:00:43.725723+00:00",
   "error": null,
   "events": [
-    {
-      "title": "ZŠ - Hvězdárna a planetárium Brno - 1. ročník",
-      "date": "2026-11-26",
-      "time": "08:30",
-      "location": "Brno",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-hvezdarna-a-planetarium-brno-1-rocnik-566_368cs.html"
-    },
-    {
-      "title": "ZŠ (4.,5.), MŠ výběr - školní plavání",
-      "date": "2026-11-26",
-      "time": "08:00",
-      "location": "Kuřim",
-      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-45-ms-vyber-skolni-plavani-534_336cs.html"
-    },
     {
       "title": "ZŠ, MŠ - rozsvícení vánočního stromu",
       "date": "2026-11-28",
@@ -36,6 +22,20 @@
       "time": "08:00",
       "location": "Vranov u Brna",
       "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-ms-navsteva-mikulase-496_298cs.html"
+    },
+    {
+      "title": "ZŠ - program Bouře v kapse - 5. roč.",
+      "date": "2026-12-09",
+      "time": "08:00",
+      "location": "Základní škola, Vranov",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-program-boure-v-kapse-5-roc-616_409cs.html"
+    },
+    {
+      "title": "ZŠ - Jezírko - Sojčí lumpárny - 3.ročník",
+      "date": "2026-12-09",
+      "time": "08:30",
+      "location": "Jezírko",
+      "url": "https://www.skolavranov.cz/zakladni-skola/plan-akci-zs/zs-jezirko-sojci-lumparny-3rocnik-475_287cs.html"
     }
   ]
 }
